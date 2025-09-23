@@ -780,7 +780,7 @@ $(document).ready(function () {
   });
   // Update Dashboard
   $('#updateDash').click(function () {
-    $(this).text("Please wait...");
+    $(this).text("S'il vous plaît, attendez...");
     $('#cfgSave, #updateDash, #updateRoLink').prop('disabled', true).fadeTo('fast', 0.15);
     $.ajax({
       type: 'POST',
