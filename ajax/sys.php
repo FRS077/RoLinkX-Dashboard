@@ -242,10 +242,19 @@ function switchFSState($changeFS)
 /* Update dashboard */
 function updateDashboard()
 {
+    // Active un mode plein écran ou autre préparation si besoin
     toggleFS(true);
-    exec("/usr/bin/sudo bash /opt/rolink/scripts/update_dash.sh", $reply);
-    $result = ($reply[0] == 'Finished!') ? 'Maj réussie' : 'Maj Échec!';
+
+    // Lancement du script avec sudo car il peut nécessiter des droits élevés
+    // Attention : 'sudoers' doit être configuré pour permettre l'exécution sans mot de passe
+    exec("/usr/bin/sudo /var/www/html/scripts/update_dash.sh", $reply);
+
+    // Vérifie si la première ligne retournée est 'Finished!' pour savoir si c'est OK
+    $result = (isset($reply[0]) && $reply[0] === 'Finished!') ? 'Maj réussie' : 'Maj Échec!';
+
+    // Désactive le mode plein écran ou nettoyage
     toggleFS(false);
+
     return $result;
 }
 
