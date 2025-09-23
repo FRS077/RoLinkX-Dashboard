@@ -243,7 +243,7 @@ function switchFSState($changeFS)
 function updateDashboard()
 {
     toggleFS(true);
-    exec("/usr/bin/sudo /opt/rolink/scripts/init update_dash", $reply);
+    exec("/usr/bin/sudo /opt/rolink/scripts/update_dash.sh", $reply);
     $result = ($reply[0] == 'Finished!') ? 'Maj réussie' : 'Maj Échec!';
     toggleFS(false);
     return $result;
