@@ -243,7 +243,7 @@ function switchFSState($changeFS)
 function updateDashboard()
 {
     toggleFS(true);
-	exec("sudo update_dash.sh", $reply);
+	exec("sudo update_dash.sh");
     $result = ($reply[0] == 'Finished!') ? 'Update succeeded!' : 'Update failed!';
     toggleFS(false);
     return $result;
