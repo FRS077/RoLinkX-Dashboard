@@ -239,23 +239,13 @@ function switchFSState($changeFS)
     echo 'File system status changed!';
 }
 
-/* Update dashboard */
+//* Update dashboard */
 function updateDashboard()
 {
-    // Active un mode plein écran ou autre préparation si besoin
     toggleFS(true);
-	
-
-    // Lancement du script avec sudo car il peut nécessiter des droits élevés
-    // Attention : 'sudoers' doit être configuré pour permettre l'exécution sans mot de passe
     exec("/usr/bin/sudo update_dash.sh", $reply);
-
-    // Vérifie si la première ligne retournée est 'Finished!' pour savoir si c'est OK
-    $result = (isset($reply[0]) && $reply[0] === 'Finished!') ? 'Maj réussie' : 'Maj Échec!';
-
-    // Désactive le mode plein écran ou nettoyage
+    $result = ($reply[0] == 'Finished!') ? 'Update succeeded!' : 'Update failed!';
     toggleFS(false);
-
     return $result;
 }
 
