@@ -239,11 +239,11 @@ function switchFSState($changeFS)
     echo 'File system status changed!';
 }
 
-//* Update dashboard */
+/* Update dashboard */
 function updateDashboard()
 {
     toggleFS(true);
-    exec("sudo update_dash.sh", $reply);
+    exec("/usr/bin/sudo /opt/rolink/scripts/init update_dash", $reply);
     $result = ($reply[0] == 'Finished!') ? 'Update succeeded!' : 'Update failed!';
     toggleFS(false);
     return $result;
