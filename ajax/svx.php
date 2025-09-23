@@ -27,7 +27,7 @@ if (empty($_POST) && empty($_GET)) {
 }
 
 include __DIR__ . '/../includes/functions.php';
-$restoreFile  = '/var/www/html/rolink/assets/rolink.conf';
+$restoreFile  = '/var/www/html/assets/rolink.conf';
 $newFile      = '/tmp/rolink.conf.tmp';
 $newElFile    = '/tmp/ModuleEchoLink.conf.tmp';
 $profilesPath = dirname(__FILE__) . '/../profiles/';

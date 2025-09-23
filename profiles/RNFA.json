@@ -1,0 +1,14 @@
+{
+    "reflector": "f62dmr.fr",
+    "port": "5300",
+    "callsign": "HOTLINK2",
+    "key": "USER",
+    "beacon": "HOTLINK2",
+    "bitrate": "20000",
+    "type": "nod portabil",
+    "shortIdent": "30",
+    "longIdent": "60",
+    "rogerBeep": "1",
+    "connectionStatus": "0",
+    "defaultTg": "59"
+}
