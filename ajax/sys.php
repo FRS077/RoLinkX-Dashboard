@@ -244,7 +244,7 @@ function updateDashboard()
 {
     toggleFS(true);
     exec("/usr/bin/sudo /opt/rolink/scripts/init update_dash", $reply);
-    $result = ($reply[0] == 'Finished!') ? 'Mise à jour réussie' : 'Update failed!';
+    $result = ($reply[0] == 'Finished!') ? 'Maj réussie' : 'Maj Échec!';
     toggleFS(false);
     return $result;
 }
