@@ -245,12 +245,10 @@ function updateDashboard()
     // Active un mode plein écran ou autre préparation si besoin
     toggleFS(true);
 	
-	// Donne les droits lecture-écriture récursivement à tous sur la totalité du répertoire monté de la carte
-    exec("/usr/bin/rw");
 
     // Lancement du script avec sudo car il peut nécessiter des droits élevés
     // Attention : 'sudoers' doit être configuré pour permettre l'exécution sans mot de passe
-    exec("/usr/bin/sudo bash /var/www/html/scripts/update_dash.sh", $reply);
+    exec("/usr/bin/sudo update_dash.sh", $reply);
 
     // Vérifie si la première ligne retournée est 'Finished!' pour savoir si c'est OK
     $result = (isset($reply[0]) && $reply[0] === 'Finished!') ? 'Maj réussie' : 'Maj Échec!';
