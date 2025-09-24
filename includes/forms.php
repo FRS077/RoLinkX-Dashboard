@@ -1077,7 +1077,6 @@ function logsForm()
                             <option value="" disabled>-Log file-</option>
                             <option value="1" selected>Syslog</option>
                             <option value="2">RNFA</option>
-                            <option value="3">Direwolf</option>
                         </select>
                     </div>
                 </div>
