@@ -35,7 +35,7 @@ dashPassword('check');
 $version    = version();
 $eventsData = 'var events=0';
 $ajaxData   = 'var auto_refresh = setInterval( function () { cpuData(); gpioStatus(); }, 3000);';
-if ($version && $version['date'] > 24092025) {
+if ($version && $version['date'] > 25092025) {
     $ajaxData   = '';
     $eventsData = 'var events=1; var timeOutTimer=180;';
 }
