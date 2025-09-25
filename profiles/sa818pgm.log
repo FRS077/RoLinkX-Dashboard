@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 {"date":1758817275,"frequency":"438.7875","deviation":"0","ctcssRx":"0038","ctcssTx":"0000","squelch":"4","volume":"6","filter":"0,0,0"}
+=======
+{"date":1758645417,"frequency":"466.0000","deviation":"0","ctcssRx":"0006","ctcssTx":"0000","squelch":"3","volume":"6","filter":"0,0,0"}
+>>>>>>> e956e11499cf78082c0485b4f958f938213d8b3c

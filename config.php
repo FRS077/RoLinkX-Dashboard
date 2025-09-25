@@ -15,6 +15,10 @@ return array (
   'cfgKernel' => 'true',
   'cfgDetectSa' => 'true',
   'cfgFreeSpace' => 'true',
+<<<<<<< HEAD
   'cfgTempOffset' => 'true',
+=======
+  'cfgTempOffset' => 'false',
+>>>>>>> e956e11499cf78082c0485b4f958f938213d8b3c
   'cfgAutoConnect' => 'true',
 );
