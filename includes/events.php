@@ -86,48 +86,39 @@ while (true) {
     }
 
     // Add CPU Load & Temp to array
-if ($firstStart || $delay >= 15) {
-    $firstStart = false;
-    $cpuStatus = [];
-    exec("top -bn1 | awk '/Cpu/ { print $2}'", $cpuStatus);
-
-    $cpuLoad = (isset($cpuStatus[0]) && is_numeric($cpuStatus[0])) ? floatval($cpuStatus[0]) : 0;
-    $cpuData["cl"] = $cpuLoad;
-
-    // Lecture de la température CPU avec gestion d'erreur
-    $rawTemp = @file_get_contents("/sys/devices/virtual/thermal/thermal_zone0/temp");
-    $cpuTemp = $rawTemp ? number_format(((int)$rawTemp / 1000), 1) : null;
-
-    if ($cpuTemp !== null) {
-        // Application de l'offset si demandé dans la config
-        $avecOffset = (isset($config['cfgTempOffset']) && $config['cfgTempOffset'] === 'true');
-        $cpuData["ct"] = $avecOffset ? ($cpuTemp + 38) : $cpuTemp;
-    }
-
-    $delay = 0;
-
-    // On évite d'envoyer une mise à jour si les valeurs n'ont pas changé
-    if (isset($prevData['cpuLoad']) && $prevData['cpuLoad'] == $cpuLoad) {
-        continue;
-    }
-    if (isset($prevData['cpuTemp']) && $prevData['cpuTemp'] == $cpuTemp) {
-        if (isset($cpuData["ct"])) {
-            unset($cpuData["ct"]);
+    if ($firstStart || $delay >= 15) {
+        $firstStart = false;
+        exec("top -bn1 | awk '/Cpu/ { print $2}'", $cpuStatus);
+        if (isset($cpuStatus[0]) && is_numeric($cpuStatus[0])) {
+            $cpuLoad = $cpuStatus[0];
         }
+        $rawTemp = file_get_contents(
+            "/sys/devices/virtual/thermal/thermal_zone0/temp"
+        );
+        $cpuTemp       = number_format((int) $rawTemp / 1000, 1);
+        $cpuData["cl"] = $cpuLoad;
+        $cpuData["ct"] = ($config['cfgTempOffset'] == 'true') ? $cpuTemp + 38 : $cpuTemp;
+        $delay         = 0;
+        if ($prevData['cpuLoad'] == $cpuLoad) {
+            continue;
+        }
+        if ($prevData['cpuTemp'] == $cpuTemp) {
+            if (isset($cpuData["ct"])) {
+                unset($cpuData["ct"]);
+            }
+
+        }
+        $jsonCpu = json_encode($cpuData);
+        echo "id: $id\nretry: 1000\ndata: $jsonCpu\n\n";
+        flush();
+        ++$id;
+        $prevData['cpuLoad'] = $cpuLoad;
+        $prevData['cpuTemp'] = $cpuTemp;
     }
-
-    $jsonCpu = json_encode($cpuData);
-    echo "id: $id\nretry: 1000\ndata: $jsonCpu\n\n";
-    flush();
-    $id++;
-    $prevData['cpuLoad'] = $cpuLoad;
-    $prevData['cpuTemp'] = $cpuTemp;
-}
-$delay++;
-usleep(200000);
-if (connection_aborted()) {
-    exit();
-}
-
+    $delay++;
+    usleep(200000);
+    if (connection_aborted()) {
+        exit();
+    }
 
 }

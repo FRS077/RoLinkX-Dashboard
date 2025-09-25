@@ -661,10 +661,6 @@ function sa818Form()
         '1,0,1' => 'Enable Pre/De-Emphasis & Low Pass',
         '1,1,1' => 'Enable All',
     ];
-<<<<<<< HEAD
-=======
-	
->>>>>>> e956e11499cf78082c0485b4f958f938213d8b3c
 $sa818Form = '<h4 class="mt-2 alert alert-danger fw-bold">Programmation du SA818 ou SA868</h4>
     <div class="card mb-2">
         <h4 class="card-header fs-5">Fréquence</h4>
@@ -672,53 +668,25 @@ $sa818Form = '<h4 class="mt-2 alert alert-danger fw-bold">Programmation du SA818
             <div class="form-floating mb-1">
                 <select id="sa_grp" class="form-select" aria-label="Fréquence (MHz)">
                 <option selected disabled>Sélectionnez une valeur</option>
-				<optgroup label="------- PMR446 (pas 12.5 kHz) -------">';
-    for ($f = 446.00625 ; $f <= 446.19375; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-}
-
-$sa818Form .= '</optgroup>
-                <optgroup label="------- RELAIS 446.200 -------">';
-    for ($f = 446.200 ; $f <= 446.200; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
+				<optgroup label="------- 466 467 MHz (pas 12.5 kHz) -------">';
+				
+    for ($f = 466.000; $f <= 467.000; $f += 0.0125) {
+        $freqFmt = str_replace('000', '00', sprintf("%0.4f", $f));
+        $freqFmt = (strlen($freqFmt) == 8) ? str_replace(',0', '', preg_replace('/\d$/', ',$0', $freqFmt)) : $freqFmt;
+        $sa818Form .= '<option ' . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : null) . ' value="' . sprintf("%0.4f", $f) . '">' . $freqFmt . '</option>' . PHP_EOL;
     }
 	
-$sa818Form .= '</optgroup>
-                <optgroup label="------- 430 - 440 MHz (pas 12.5 kHz) -------">';
-    for ($f = 430 ; $f <= 466; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
+	$sa818Form .= '</optgroup>
+                <optgroup label="------- 438 - 440 MHz (pas 12.5 kHz) -------">';
+    for ($f = 438.000 ; $f <= 440 ; $f += 0.0125) {
+        $sa818Form .= '<option ' . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : null) . ' value="' . sprintf("%0.4f", $f) . '">' . sprintf("%0.3f", $f) . '</option>' . PHP_EOL;
+	
+	}
+	$sa818Form .= '</optgroup>
+                <optgroup label="------- 446 - 446.2 MHz (pas 12.5 kHz) --------">';
+    for ($f = 446.000 ; $f <= 446.200 ; $f += 0.0125) {
+        $sa818Form .= '<option ' . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : null) . ' value="' . sprintf("%0.4f", $f) . '">' . sprintf("%0.3f", $f) . '</option>' . PHP_EOL;
     }
-
     $sa818Form .= '</select>
             <label for="sa_grp">Fréquence (MHz)</label>
         </div>
@@ -1121,7 +1089,6 @@ function ttyForm()
     return $ttyFrame;
 }
 
-
 /* Config */
 function cfgForm()
 {
@@ -1261,11 +1228,7 @@ function cfgForm()
         $isOnline = checkdnsrr('google.com');
         // Check if RoLink version is capable of updates and if we're connected to the internet
         //if ($version['date'] > 20211204 && $isOnline) {
-<<<<<<< HEAD
  //           $configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2">Dashboard update</button>';
-=======
-         $configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2">Dashboard update</button>';
->>>>>>> e956e11499cf78082c0485b4f958f938213d8b3c
  //           $configData .= '<button id="updateRoLink" type="button" class="btn btn-warning btn-lg mx-2">RNFA update</button>';
  //       }
         $configData .= ($isOnline) ? null : '<button type="button" class="btn btn-dark btn-lg mx-2">Pas d’accès à Internet</button>';
