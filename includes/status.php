@@ -407,8 +407,11 @@ function getReflector($ext = 0)
                 break;
         }
     }
-    $showNodes = ($config['cfgRefNodes'] == 'true' && $conStatus == 'established') ? ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
-    return '<div class="input-group mb-2">
+	// Affichage automatique sans collapsed, aria-expanded=true
+    $showNodes = ($config['cfgRefNodes'] == 'true' && $conStatus == 'established') ? 
+        ' role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="true" aria-controls="refStations"' 
+        : '';
+	    return '<div class="input-group mb-2">
         <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
         <input type="text" class="form-control" placeholder="' . $refHost . '" readonly>
     </div>';
