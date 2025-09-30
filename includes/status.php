@@ -407,13 +407,13 @@ function getReflector($ext = 0)
                 break;
         }
     }
-	// Affichage automatique sans collapsed, aria-expanded=true
+    // Modification : afficher la liste des nodes dépliée par défaut (pas de "collapsed")
     $showNodes = ($config['cfgRefNodes'] == 'true' && $conStatus == 'established') ? 
         ' role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="true" aria-controls="refStations"' 
         : '';
-	    return '<div class="input-group mb-2">
-        <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
-        <input type="text" class="form-control" placeholder="' . $refHost . '" readonly>
+    return '<div class="input-group mb-2">
+        <span class="input-group-text' . $showNodes . '" style="width: 6.5rem;' . $stateColor . '">' . htmlspecialchars($refHost) . '</span>
+        <input type="text" class="form-control" placeholder="' . htmlspecialchars($refHost) . '" readonly>
     </div>';
 }
 
@@ -424,13 +424,12 @@ function getRefNodes()
     if (!$status) {
         return false;
     }
-
     $logFilePath       = '/tmp/svxlink.log';
     $baseCacheFileName = '/tmp/nodes_cache_' . $status . '.txt';
     if (file_exists($baseCacheFileName)) {
         return file_get_contents($baseCacheFileName);
     }
-    // Delete other cache files
+    // Supprimer autres fichiers cache sauf celui en cours
     foreach (glob('/tmp/nodes_cache_*.txt') as $file) {
         if ($file !== $baseCacheFileName) {
             unlink($file);
@@ -440,7 +439,8 @@ function getRefNodes()
     if (empty($logLines)) {
         return false;
     }
-    $stationHTML = '<div id="refStations" class="accordion-collapse collapse">
+    // Modification : ajouter la classe "show" pour afficher la liste des nodes par défaut
+    $stationHTML = '<div id="refStations" class="accordion-collapse collapse show">
         <div class="accordion-body">
             <div class="row">' . PHP_EOL;
     foreach ($logLines as $line) {
@@ -452,12 +452,10 @@ function getRefNodes()
                 if (strpos($node, '-P') !== false) {
                     $typeBackground = 'primary';
                 }
-
                 if (strpos($node, '-M') !== false) {
                     $typeBackground = 'warning';
                 }
-
-                $stationHTML .= '<div class="col col-lg-2 badge badge-' . $typeBackground . ' m-1" style="font-weight: 400;">' . $node . '</div>' . PHP_EOL;
+                $stationHTML .= '<div class="col col-lg-2 badge badge-' . $typeBackground . ' m-1" style="font-weight: 400;">' . htmlspecialchars($node) . '</div>' . PHP_EOL;
             }
             break;
         }
@@ -468,6 +466,7 @@ function getRefNodes()
     file_put_contents($baseCacheFileName, $stationHTML);
     return $stationHTML;
 }
+
 
 /* Get SVX Callsign    */
 function getCallSign()
