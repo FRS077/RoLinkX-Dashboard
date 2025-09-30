@@ -668,55 +668,25 @@ $sa818Form = '<h4 class="mt-2 alert alert-danger fw-bold">Programmation du SA818
             <div class="form-floating mb-1">
                 <select id="sa_grp" class="form-select" aria-label="Fréquence (MHz)">
                 <option selected disabled>Sélectionnez une valeur</option>
-				<optgroup label="------- PMR446 (pas 12.5 kHz) -------">';
-    for ($f = 446.00625 ; $f <= 446.19375; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-}
-
-$sa818Form .= '</optgroup>
-                <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- RELAIS 446.200 -------">';
-    for ($f = 446.200 ; $f <= 446.200; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
+				<optgroup label="------- 430 - 434 MHz (pas 12.5 kHz) -------">';
+				
+    for ($f = 430.000; $f <= 435.000; $f += 0.0125) {
+        $freqFmt = str_replace('000', '00', sprintf("%0.4f", $f));
+        $freqFmt = (strlen($freqFmt) == 8) ? str_replace(',0', '', preg_replace('/\d$/', ',$0', $freqFmt)) : $freqFmt;
+        $sa818Form .= '<option ' . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : null) . ' value="' . sprintf("%0.4f", $f) . '">' . $freqFmt . '</option>' . PHP_EOL;
     }
 	
-$sa818Form .= '</optgroup>
-                <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- 430 - 440 MHz (pas 12.5 kHz) -------">';
-    for ($f = 430 ; $f <= 440; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
+	$sa818Form .= '</optgroup>
+                <optgroup label="------- 438 - 440 MHz (pas 12.5 kHz) -------">';
+    for ($f = 438.000 ; $f <= 440 ; $f += 0.0125) {
+        $sa818Form .= '<option ' . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : null) . ' value="' . sprintf("%0.4f", $f) . '">' . sprintf("%0.3f", $f) . '</option>' . PHP_EOL;
+	
+	}
+	$sa818Form .= '</optgroup>
+                <optgroup label="------- 446 - 446.2 MHz (pas 12.5 kHz) --------">';
+    for ($f = 446.000 ; $f <= 446.200 ; $f += 0.0125) {
+        $sa818Form .= '<option ' . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : null) . ' value="' . sprintf("%0.4f", $f) . '">' . sprintf("%0.3f", $f) . '</option>' . PHP_EOL;
     }
-
     $sa818Form .= '</select>
             <label for="sa_grp">Fréquence (MHz)</label>
         </div>
