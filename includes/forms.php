@@ -1258,9 +1258,21 @@ function cfgForm()
         $isOnline = checkdnsrr('google.com');
         // Check if RoLink version is capable of updates and if we're connected to the internet
         //if ($version['date'] > 20211204 && $isOnline) {
-            $configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2">Dashboard update</button>';
- //           $configData .= '<button id="updateRoLink" type="button" class="btn btn-warning btn-lg mx-2">RNFA update</button>';
- //       }
+// Pour des raisons de sécurité, vérifier méthode POST
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    // Exécuter ta commande shell
+    // Pense à mettre rw et update-dash.sh dans un path accessible ou utiliser chemin absolu
+
+    $cmd = 'rw && ./update-dash.sh 2>&1';
+    $output = shell_exec($cmd);
+
+    // Renvoyer le résultat ou un message simple
+    echo $output ?: "Commande exécutée";
+} else {
+    http_response_code(405);
+    echo "Méthode non autorisée";
+}
         $configData .= ($isOnline) ? null : '<button type="button" class="btn btn-dark btn-lg mx-2">Pas d’accès à Internet</button>';
     }
     // Show "Make Read-only" button
