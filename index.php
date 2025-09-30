@@ -205,7 +205,7 @@ switch ($page) {
 $versionFile = __DIR__ . '/version';
 if (is_readable($versionFile)) {
     $version = trim(file_get_contents($versionFile));
-    echo " - Version $version";
+    echo " - Dashboard Version $version";
 }
 ?>
 </div>
