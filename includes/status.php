@@ -380,41 +380,6 @@ function getSVXLinkStatus($ext = 0)
 }
 
 /* Get Reflector address */
-function getReflector($ext = 0)
-{
-    $config    = include __DIR__ . '/../config.php';
-    $cfgFile   = '/opt/rolink/conf/rolink.conf';
-    $conStatus = $stateColor = $prevStatus = '';
-    if (is_file($cfgFile)) {
-        preg_match('/HOST=(\S+)/', file_get_contents($cfgFile), $reply);
-    }
-    $refHost = (!empty($reply)) ? $reply[1] : 'RNFA';
-    preg_match_all('/(Could not open GPIO|Disconnected|established)/', file_get_contents('/tmp/svxlink.log'), $logData);
-    if (!empty($logData) && getSVXLinkStatus(1)) {
-        $statusData = (isset($logData[0][array_key_last($logData[0]) - 1])) ? $logData[0][array_key_last($logData[0]) - 1] : null;
-        $prevStatus = (count($logData) > 1) ? $statusData : null;
-        $conStatus  = ($prevStatus == 'Could not open GPIO') ? 'GPIO' : $logData[0][array_key_last($logData[0])];
-        switch ($conStatus) {
-            case "established":
-                $stateColor = 'background:lightgreen;';
-                break;
-            case "Disconnected":
-                $stateColor = 'background:tomato;';
-                break;
-            case "GPIO":
-                $stateColor = 'background:red;';
-                $refHost    = 'Check your GPIO!';
-                break;
-        }
-    }
-    $showNodes = ($config['cfgRefNodes'] == 'true' && $conStatus == 'established') ? ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
-    return '<div class="input-group mb-2">
-        <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
-        <input type="text" class="form-control" placeholder="' . $refHost . '" readonly>
-    </div>';
-}
-
-/* Get Reflector connected nodes */
 function getRefNodes()
 {
     $status = getSVXLinkStatus(1);
@@ -437,9 +402,13 @@ function getRefNodes()
     if (empty($logLines)) {
         return false;
     }
-    $stationHTML = '<div id="refStations" class="accordion-collapse collapse">
-        <div class="accordion-body">
-            <div class="row">' . PHP_EOL;
+
+    // Bouton pour afficher/masquer les nœuds
+    $stationHTML = '<button id="toggleRefNodes" class="btn btn-secondary mb-2" onclick="toggleRefNodes()">Afficher/Masquer les nœuds</button>' . PHP_EOL;
+    // Conteneur visible par défaut
+    $stationHTML .= '<div id="refStations" style="display: block;">' . PHP_EOL;
+    $stationHTML .= '<div class="accordion-body"><div class="row">' . PHP_EOL;
+
     foreach ($logLines as $line) {
         if (preg_match('/Connected nodes:\s(.*)/', $line, $matches)) {
             $nodes = explode(', ', $matches[1]);
@@ -449,19 +418,29 @@ function getRefNodes()
                 if (strpos($node, '-P') !== false) {
                     $typeBackground = 'primary';
                 }
-
                 if (strpos($node, '-M') !== false) {
                     $typeBackground = 'warning';
                 }
-
                 $stationHTML .= '<div class="col col-lg-2 badge badge-' . $typeBackground . ' m-1" style="font-weight: 400;">' . $node . '</div>' . PHP_EOL;
             }
             break;
         }
     }
-    $stationHTML .= '</div>
-        </div>
-        </div>' . PHP_EOL;
+
+    $stationHTML .= '</div></div></div>' . PHP_EOL;
+
+    // Script JavaScript pour toggle
+    $stationHTML .= '<script>
+    function toggleRefNodes() {
+        var refDiv = document.getElementById("refStations");
+        if (refDiv.style.display === "none" || refDiv.style.display === "") {
+            refDiv.style.display = "block";
+        } else {
+            refDiv.style.display = "none";
+        }
+    }
+    </script>' . PHP_EOL;
+
     file_put_contents($baseCacheFileName, $stationHTML);
     return $stationHTML;
 }
