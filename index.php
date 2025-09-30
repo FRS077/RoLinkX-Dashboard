@@ -199,7 +199,15 @@ switch ($page) {
             <div id="sysmsg"></div>
         </div>
         <footer class="page-footer fixed-bottom font-small bg-light">
-        <div class="text-center small p-2">2024 Copyright <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">Razvan / YO6NAM</a> -  Modification par FRS077 en 2025 pour le réseau RNFA
+<div class="text-center small p-2">
+2024 Copyright <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">Razvan / YO6NAM</a> - Modification par FRS077 en 2025 pour le réseau RNFA
+<?php
+$versionFile = __DIR__ . '/version';
+if (is_readable($versionFile)) {
+    $version = trim(file_get_contents($versionFile));
+    echo " - Version $version";
+}
+?>
 </div>
 </div>
 		</footer>
