@@ -1258,7 +1258,7 @@ function cfgForm()
         $isOnline = checkdnsrr('google.com');
         // Check if RoLink version is capable of updates and if we're connected to the internet
         //if ($version['date'] > 20211204 && $isOnline) {
-            $configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2"> Mettre à jour le Dashboard</button>';
+			$configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2">Mettre à jour le Dashboard</button>';
  //           $configData .= '<button id="updateRoLink" type="button" class="btn btn-warning btn-lg mx-2">RNFA update</button>';
  //       }
         $configData .= ($isOnline) ? null : '<button type="button" class="btn btn-dark btn-lg mx-2">Pas d’accès à Internet</button>';
@@ -1269,4 +1269,15 @@ function cfgForm()
     }
     $configData .= '</div>' . PHP_EOL;
     return $configData;
+}
+
+$script_path = '/usr/local/bin/update-dash.sh';
+
+// Exécution avec sudo, capture sortie et code retour
+exec("sudo bash $script_path 2>&1", $output, $return_var);
+
+if ($return_var === 0) {
+    echo "Mise à jour réussie :\n" . implode("\n", $output);
+} else {
+    echo "Erreur lors de la mise à jour :\n" . implode("\n", $output);
 }
