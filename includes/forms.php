@@ -17,6 +17,37 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
+?>
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>RoLinkX Dashboard</title>
+</head>
+<body>
+
+<!-- Assurez-vous qu'il y a un bouton avec cet ID dans la page -->
+<button id="updateDash">Mettre à jour le dashboard</button>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const updateButton = document.getElementById('updateDash');
+    if (updateButton) {
+        updateButton.addEventListener('click', function() {
+            fetch('update-dashboard.php', { method: 'POST' })
+                .then(response => response.text())
+                .then(data => alert(data))
+                .catch(error => alert('Erreur : ' + error));
+        });
+    } else {
+        console.warn('Element with id "updateDash" not found.');
+    }
+});
+</script>
+
+
+<?php
 
 /*
  * Forms module
