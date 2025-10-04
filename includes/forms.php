@@ -1,6 +1,6 @@
 <?php
 /*
- *   RoLinkX Dashboard v4.0 @ 2025 By FRS077
+ *   RoLinkX Dashboard v3.7
  *   Copyright (C) 2024 by Razvan Marin YO6NAM / www.xpander.ro
  *
  *   This program is free software; you can redistribute it and/or modify
