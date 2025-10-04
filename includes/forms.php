@@ -17,51 +17,6 @@
  *   along with this program; if not, write to the Free Software
  *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
  */
-?>
-
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <title>RoLinkX Dashboard</title>
-</head>
-<body>
-
-<!-- Assurez-vous qu'il y a un bouton avec cet ID dans la page -->
-<button id="updateDash">Mettre à jour le dashboard</button>
-
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const updateButton = document.getElementById('updateDash');
-    if (updateButton) {
-        updateButton.addEventListener('click', function() {
-            fetch('update-dashboard.php', { method: 'POST' })
-                .then(response => response.text())
-                .then(data => alert(data))
-                .catch(error => alert('Erreur : ' + error));
-        });
-    } else {
-        console.warn('Element with id "updateDash" not found.');
-    }
-});
-</script>
-
-<?php
-// Lancement du script de mise à jour système
-$script_path = '/usr/local/bin/update-dash.sh';
-
-// Exécution avec sudo, capture sortie et code retour
-exec("sudo bash " . escapeshellarg($script_path) . " 2>&1", $output, $return_var);
-
-if ($return_var === 0) {
-    echo "Mise à jour réussie :\n" . implode("\n", $output);
-} else {
-    echo "Erreur lors de la mise à jour :\n" . implode("\n", $output);
-}
-</body>
-</html>
-
-<?php
 
 /*
  * Forms module
@@ -1303,7 +1258,7 @@ function cfgForm()
         $isOnline = checkdnsrr('google.com');
         // Check if RoLink version is capable of updates and if we're connected to the internet
         //if ($version['date'] > 20211204 && $isOnline) {
-		$configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2">Mettre à jour le Dashboard</button>';
+            $configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2">Mettre à jour le Dashboard</button>';
  //           $configData .= '<button id="updateRoLink" type="button" class="btn btn-warning btn-lg mx-2">RNFA update</button>';
  //       }
         $configData .= ($isOnline) ? null : '<button type="button" class="btn btn-dark btn-lg mx-2">Pas d’accès à Internet</button>';
