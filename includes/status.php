@@ -530,7 +530,7 @@ function getFileSystem()
     $stateFS      = ($fileSystemStatus[0] == 'rw') ? 'Read/Write' : 'Read-only';
     $stateFSColor = ($fileSystemStatus[0] == 'rw') ? 'background:red;color: white;' : 'background:lightgreen;';
     return '<div class="input-group mb-2">
-        <button data-bs-toggle="tooltip" title="Click to toggle between <b>Read-Only</b> and <b>Read/Write</b> state" class="btn" style="' . $stateFSColor . 'width: 6.5rem;" value="' . $fileSystemStatus[0] . '" type="button" id="changeFS">Système des fichiers</button>
+        <button data-bs-toggle="tooltip" title="Cliquez pour passer de l’état <b>Lecture seule</b> à l’état <b>Lecture/Écriture﻿" class="btn" style="' . $stateFSColor . 'width: 6.5rem;" value="' . $fileSystemStatus[0] . '" type="button" id="changeFS">Système des fichiers</button>
         <input type="text" class="form-control" placeholder="' . $stateFS . '" readonly>
     </div>';
 }
