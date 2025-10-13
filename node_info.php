@@ -1,6 +1,7 @@
 <?php
 $jsonFile = '/opt/rolink/conf/rolink.json';
 
+// Activer l’affichage des erreurs (pour debug)
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
@@ -62,6 +63,39 @@ function backupFile($filePath) {
     return copy($filePath, $backup) ? $backup : false;
 }
 
+function remountFilesystemRW($mountPoint = '/') {
+    exec("sudo mount -o remount,rw " . escapeshellarg($mountPoint) . " 2>&1", $output, $returnVar);
+    return ($returnVar === 0);
+}
+
+function remountFilesystemRO($mountPoint = '/') {
+    exec("sudo mount -o remount,ro " . escapeshellarg($mountPoint) . " 2>&1", $output, $returnVar);
+    return ($returnVar === 0);
+}
+
+function sauvegardeJsonAvecRemount($jsonFile, $data) {
+    $mountPoint = '/';  // Modifier si nécessaire selon point de montage
+
+    if (!remountFilesystemRW($mountPoint)) {
+        return ['success' => false, 'message' => 'Impossible de passer le système de fichiers en lecture-écriture.'];
+    }
+
+    if (!backupFile($jsonFile)) {
+        remountFilesystemRO($mountPoint);
+        return ['success' => false, 'message' => 'Sauvegarde de sécurité impossible.'];
+    }
+
+    $result = file_put_contents($jsonFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
+
+    remountFilesystemRO($mountPoint);
+
+    if ($result === false) {
+        return ['success' => false, 'message' => 'Écriture du fichier JSON échouée.'];
+    }
+
+    return ['success' => true, 'message' => 'Sauvegarde réalisée avec succès.'];
+}
+
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $content = file_get_contents($jsonFile);
     $data = json_decode($content, true);
@@ -71,15 +105,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if (isset($_POST[$key])) $data[$key] = $_POST[$key];
     }
 
-    if (!backupFile($jsonFile)) {
-        $message = '<div class="alert alert-danger text-center p-2 mb-3">Erreur sauvegarde impossible.</div>';
-    }
+    $saveResult = sauvegardeJsonAvecRemount($jsonFile, $data);
 
-    $res = file_put_contents($jsonFile, json_encode($data, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE));
-    if ($res === false) {
-        $message .= '<div class="alert alert-danger text-center p-2">Erreur écriture JSON.</div>';
+    if (!$saveResult['success']) {
+        $message = '<div class="alert alert-danger text-center p-2 mb-3">' . htmlspecialchars($saveResult['message']) . '</div>';
     } else {
-        $message .= '<div class="alert alert-success text-center p-2">Modifications sauvegardées.</div>';
+        $message = '<div class="alert alert-success text-center p-2">' . htmlspecialchars($saveResult['message']) . '</div>';
     }
 } else {
     $content = file_get_contents($jsonFile);
