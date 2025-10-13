@@ -188,7 +188,7 @@ function sa818()
 function hostName()
 {
     return '<div class="input-group mb-2">
-        <button data-bs-toggle="tooltip" title="Click to change the current hostname to the value declared on SVXLink page as <b>Callsign (Beacon)</b>" class="btn btn-dark" style="width: 6.5rem;" type="button" id="switchHostName">Host Name</button>
+        <button data-bs-toggle="tooltip" title="Cliquez pour changer le nom d’hôte actuel en la valeur déclarée sur la page SVXLink sous <b>Indicatif (Balise)</b>﻿" class="btn btn-dark" style="width: 6.5rem;" type="button" id="switchHostName">Host Name</button>
         <input type="text" class="form-control" placeholder="' . gethostname() . '" readonly>
     </div>';
 }
