@@ -93,7 +93,7 @@ for ($i = 1; $i <= $maxNetworks; $i++) {
     if (${"wn$i"} == '-') {
          ${"network$i"} = '';
     } elseif (${"wn$i"} && strlen(${"wk$i"}) < 8) {
-		echo 'Network <b>'. ${"wn$i"} .'</b> : Invalid network security key lenght!';
+		echo 'Network <b>'. ${"wn$i"} .'</b> : Clé de sécurité réseau non valide !';
 		exit(1);
     } elseif (${"wn$i"} && ${"wn$i"} != $storedNetwork[$i - 1]) {
         ${"network$i"} = ${"wn$i"};
@@ -127,7 +127,7 @@ if ($weHaveData) {
     file_put_contents($wpaTemp, $wpaData);
     exec("/usr/bin/sudo /usr/bin/cp $wpaTemp $wpaFile");
     toggleFS(false);
-    echo 'New data stored.<br/>Restart Wi-Fi now or reboot!';
+    echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
 } else {
     echo 'No new data, so nothing changed';
 }
