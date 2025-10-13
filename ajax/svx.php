@@ -503,7 +503,7 @@ if (!empty($frmLoadProfile)) {
 if (!empty($frmDelProfile)) {
     toggleFS(true);
     unlink($profilesPath . $frmDelProfile);
-    echo 'Profile "' . basename($frmDelProfile, '.json') . '" has been deleted';
+    echo 'Profile "' . basename($frmDelProfile, '.json') . '" a été supprimé';
     toggleFS(false);
     exit(0);
 }
@@ -607,14 +607,14 @@ if ($changes > 0) {
         file_put_contents($tmpRefFile, $nfoParams);
         exec("/usr/bin/sudo /usr/bin/cp $tmpRefFile $cfgRefFile");
     }
-    $msgOut .= 'Configuration updated (' . $changes . ' change(s) applied)<br/>Redémarrage du service HotLink...';
-    $msgOut .= ($newProfile) ? '<br/>Profile saved as ' . basename($proFileName, '.json') : '';
+    $msgOut .= 'Configuration mise à jour (' . $changes . ' modification(s) appliquée(s))<br/>Redémarrage du service HotLink...';
+    $msgOut .= ($newProfile) ? '<br/>Profil enregistré sous ' . basename($proFileName, '.json') : '';
 
     // All done, start SVXLink service
     serviceControl('rolink.service', 'start');
 } else {
     $msgOut .= 'No new data to process.<br/>Keeping original configuration.';
-    $msgOut .= ($newProfile) ? '<br/>Profile saved as ' . basename($proFileName, '.json') : '';
+    $msgOut .= ($newProfile) ? '<br/>Profil enregistré sous ' . basename($proFileName, '.json') : '';
 }
 toggleFS(false);
 echo $msgOut;
