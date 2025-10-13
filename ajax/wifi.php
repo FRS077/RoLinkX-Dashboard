@@ -109,7 +109,7 @@ $wpaData = 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 ap_scan=1
 fast_reauth=1
-country=RO' . PHP_EOL;
+country=FR' . PHP_EOL;
 for ($i = 1; $i <= $maxNetworks; $i++) {
     if (!empty(${"network$i"})) {
         $psk = (strlen(${"authKey$i"}) < 32) ? wpa_passphrase(${"network$i"}, ${"authKey$i"}) : ${"authKey$i"};
