@@ -58,7 +58,7 @@ if (isset($_GET['getProxyList'])) {
 
 // Retrieve POST vars (defaults if empty values to avoid locking the config file)
 $frmProfile     = (isset($_POST['prn'])) ? filter_input(INPUT_POST, 'prn', FILTER_SANITIZE_ADD_SLASHES) : '';
-$frmReflector   = (empty($_POST['ref'])) ? 'rolink.network' : preg_replace('/^(http(s)?:\/\/)?(www.)?|(\/)/i', '', filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_ADD_SLASHES));
+$frmReflector   = (empty($_POST['ref'])) ? 'f62dmr.fr' : preg_replace('/^(http(s)?:\/\/)?(www.)?|(\/)/i', '', filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_ADD_SLASHES));
 $frmPort        = (empty($_POST['prt'])) ? '5300' : filter_input(INPUT_POST, 'prt', FILTER_SANITIZE_NUMBER_INT);
 $frmCallsign    = (empty($_POST['cal'])) ? 'USER' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'cal', FILTER_SANITIZE_ADD_SLASHES));
 $frmAuthKey     = (empty($_POST['key'])) ? 'USER' : trim(filter_input(INPUT_POST, 'key', FILTER_SANITIZE_ADD_SLASHES));
@@ -72,19 +72,19 @@ $frmRogerBeep   = (empty($_POST['rgr'])) ? '1' : filter_input(INPUT_POST, 'rgr',
 $frmRxGPIO      = (empty($_POST['rxp'])) ? 'gpio10' : filter_input(INPUT_POST, 'rxp', FILTER_SANITIZE_ADD_SLASHES);
 $frmTxGPIO      = (empty($_POST['txp'])) ? 'gpio7' : filter_input(INPUT_POST, 'txp', FILTER_SANITIZE_ADD_SLASHES);
 $frmDefaultTg   = (empty($_POST['dtg'])) ? '59' : trim(filter_input(INPUT_POST, 'dtg', FILTER_SANITIZE_NUMBER_INT));
-$frmMonitorTgs  = (empty($_POST['mtg'])) ? '59' : filter_input(INPUT_POST, 'mtg', FILTER_SANITIZE_ADD_SLASHES);
+$frmMonitorTgs  = (empty($_POST['mtg'])) ? '59,62' : filter_input(INPUT_POST, 'mtg', FILTER_SANITIZE_ADD_SLASHES);
 $frmTgTimeOut   = (empty($_POST['tgt'])) ? '30' : filter_input(INPUT_POST, 'tgt', FILTER_SANITIZE_NUMBER_INT);
 $frmACStatus    = (empty($_POST['acs'])) ? '0' : filter_input(INPUT_POST, 'acs', FILTER_SANITIZE_NUMBER_INT);
 $frmDeEmphasis  = (empty($_POST['rxe'])) ? '0' : filter_input(INPUT_POST, 'rxe', FILTER_SANITIZE_NUMBER_INT);
 $frmPreEmphasis = (empty($_POST['txe'])) ? '0' : filter_input(INPUT_POST, 'txe', FILTER_SANITIZE_NUMBER_INT);
 $frmMasterGain  = (empty($_POST['mag'])) ? '0' : filter_input(INPUT_POST, 'mag', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $frmLimiter     = (empty($_POST['lim'])) ? '0' : filter_input(INPUT_POST, 'lim', FILTER_SANITIZE_NUMBER_FLOAT);
-$frmReconnectS  = (empty($_POST['res'])) ? '0' : filter_input(INPUT_POST, 'res', FILTER_SANITIZE_NUMBER_INT);
+$frmReconnectS  = (empty($_POST['res'])) ? '5' : filter_input(INPUT_POST, 'res', FILTER_SANITIZE_NUMBER_INT);
 $frmTxTimeOut   = (empty($_POST['txt'])) ? '240' : filter_input(INPUT_POST, 'txt', FILTER_SANITIZE_NUMBER_INT);
 $frmSqlDelay    = (empty($_POST['sqd'])) ? '100' : filter_input(INPUT_POST, 'sqd', FILTER_SANITIZE_NUMBER_INT);
 $frmDelProfile  = (empty($_POST['prd'])) ? '' : filter_input(INPUT_POST, 'prd', FILTER_SANITIZE_ADD_SLASHES);
 $frmFanStart    = (empty($_POST['fan'])) ? '0' : filter_input(INPUT_POST, 'fan', FILTER_SANITIZE_NUMBER_INT);
-$frmModules     = (empty($_POST['mod'])) ? '0' : filter_input(INPUT_POST, 'mod', FILTER_SANITIZE_NUMBER_INT);
+$frmModules     = (empty($_POST['mod'])) ? '2' : filter_input(INPUT_POST, 'mod', FILTER_SANITIZE_NUMBER_INT);
 $frmTxDelay     = (empty($_POST['txd'])) ? '875' : filter_input(INPUT_POST, 'txd', FILTER_SANITIZE_NUMBER_INT);
 
 /* EchoLink module */
