@@ -1259,6 +1259,8 @@ function cfgForm()
         // Check if RoLink version is capable of updates and if we're connected to the internet
         //if ($version['date'] > 20211204 && $isOnline) {
   //          $configData .= '<button id="updateDash" type="button" class="btn btn-primary btn-lg mx-2"> Mettre à jour le Dashboard</button>';
+ $configData .= '<a href="/includes/update-dash.php" class="btn btn-primary btn-lg mx-2" onclick="return confirm(\'Confirmez-vous la mise à jour du Dashboard ?\');">Mettre à jour le Dashboard</a>';
+
  //           $configData .= '<button id="updateRoLink" type="button" class="btn btn-warning btn-lg mx-2">RNFA update</button>';
  //       }
         $configData .= ($isOnline) ? null : '<button type="button" class="btn btn-dark btn-lg mx-2">Pas d’accès à Internet</button>';
