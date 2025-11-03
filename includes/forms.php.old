@@ -702,25 +702,8 @@ $sa818Form .= '</optgroup>
 	
 $sa818Form .= '</optgroup>
                 <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- UHF 430 - 440 MHz (pas 12.5 kHz) -------">';
+                <optgroup label="------- 430 - 440 MHz (pas 12.5 kHz) -------">';
     for ($f = 430 ; $f <= 440; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-	
-	// construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-    }
-	
-$sa818Form .= '</optgroup>
-                <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- VHF 144 - 146 MHz (pas 12.5 kHz) -------">';
-    for ($f = 144 ; $f <= 146; $f += 0.0125) {
     // format avec 4 décimales
     $freqFmt = number_format($f, 5, ',', ''); 
     // ajout de l’unité MHz
