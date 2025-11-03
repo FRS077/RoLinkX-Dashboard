@@ -253,8 +253,8 @@ $(document).ready(function () {
     $(this).prop('disabled', true).fadeTo('fast', 0.15);
     $('#sysmsg').iziModal('destroy');
     $('#sysmsg').iziModal({
-      title: 'Sending data, please wait...',
-      width: '46vh',
+      title: 'Envoi des données, veuillez patienter...',
+      width: '55vh',
       icon: 'icon-warning',
       headerColor: '#941919',
       autoOpen: 5,
