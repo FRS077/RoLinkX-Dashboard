@@ -239,7 +239,7 @@ function getCpuStats($ajax = 0)
         $thermalZone = file('/sys/devices/virtual/thermal/thermal_zone0/temp', FILE_IGNORE_NEW_LINES);
         $rawTemp     = ($config['cfgTempOffset'] == 'true') ? $thermalZone[0] + 38000 : $thermalZone[0];
         $cpuTemp     = substr($rawTemp, 0, -3);
-        $tempWarning = ($cpuTemp > 60) ? 'bg-warning text-dark' : '';
+        $tempWarning = ($cpuTemp > 70) ? 'bg-warning text-dark' : '';
         $svxState    = getSVXLinkStatus(1);
         return json_encode(array($avgLoad, $cpuTemp . '℃', $tempWarning, $svxState));
     }
@@ -595,7 +595,8 @@ function dtmfSender()
                     <button data-bs-toggle="tooltip" title="Disable the link and stop audio to and from the reflector you are connected to." id="sendDTMF_DisableLink" type="button" class="btn btn-info mb-1" value="55#">Disable &#128279;</button>
                     <button data-bs-toggle="tooltip" title="Switch to Talk Group 59" id="sendDTMF_TG9" type="button" class="btn btn-info mb-1" value="55159#">TG#59</button>
                     <button data-bs-toggle="tooltip" title="Switch to Talk Group 62" id="sendDTMF_TG62" type="button" class="btn btn-info mb-1" value="55162#">TG#62</button>
-                    <button data-bs-toggle="tooltip" title="Enable the parrot and test your audio. <em>Note : After 60 seconds of inactivity the parrot will be disabled and audio will resume the normal flow." id="sendDTMF_ParrotOn" type="button" class="btn btn-info mb-1" value="1#">Parrot On</button>
+                     <button data-bs-toggle="tooltip" title="Switch to Talk Group 100" id="sendDTMF_TG100" type="button" class="btn btn-info mb-1" value="551100#">TG#100</button>
+					<button data-bs-toggle="tooltip" title="Enable the parrot and test your audio. <em>Note : After 60 seconds of inactivity the parrot will be disabled and audio will resume the normal flow." id="sendDTMF_ParrotOn" type="button" class="btn btn-info mb-1" value="1#">Parrot On</button>
                     <button data-bs-toggle="tooltip" title="Disable the parrot module (if already active)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info mb-1" value="#">Parrot Off</button>
                 </div>
                 <button data-bs-toggle="tooltip" title="Cliquez pour envoyer les données depuis le <b>Command</b> input field" data-bs-placement="bottom" id="sendDTMF" type="button" class="btn btn-danger btn-lg">Send</button>
