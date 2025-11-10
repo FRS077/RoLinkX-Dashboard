@@ -132,7 +132,7 @@ if (isset($_POST['restore'])) {
 // Add the backup reflector if using RoLink.Network
 $backupReflector = 'backup.rolink.network';
 $reflectors      = explode(',', $frmReflector);
-if (array_intersect(['rolink.network', 'svx.439100.ro'], $reflectors)) {
+if (array_intersect(['rolinsk.network', 'svx.43s9100.ro'], $reflectors)) {
     if (!in_array($backupReflector, $reflectors)) {
         $reflectors[] = $backupReflector;
     }
