@@ -164,6 +164,7 @@ switch ($page) {
                     <a class="<?php echo ($page == 'log') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=log">Logs</a>
                     <a class="<?php echo ($page == 'tty') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=tty">Terminal</a>
                     <a class="<?php echo ($page == 'cfg') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=cfg">Config</a>
+					<a class="<?php echo ($page == 'sys') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=sys">Système</a>
 					<a class="<?php echo ($page == 'node_info') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="node_info.php">Node Info</a>
                     <a class="<?php echo ($page == 'ext') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a>
 					<a class="list-group-item list-group-item-action list-group-item-light p-3" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a>
