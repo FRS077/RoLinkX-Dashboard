@@ -772,7 +772,7 @@ $sa818Form .= '</optgroup>
             <select id="sa_sql" class="form-select" aria-label="Squelch">
                 <option selected disabled>Sélectionnez une valeur</option>';
     /* Generate squelch values */
-    for ($sq = 1; $sq <= 8; $sq += 1) {
+    for ($sq = 3; $sq <= 8; $sq += 1) {
         $selected = ($lastPgmData['squelch'] == $sq) ? ' selected' : '';
         $sa818Form .= '<option value="' . $sq . '"' . $selected . '>' . $sq . '</option>' . PHP_EOL;
     }
