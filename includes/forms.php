@@ -1093,8 +1093,8 @@ function logsForm()
                     <div id="log_selector">
                         <select id="log">
                             <option value="" disabled>-Log file-</option>
-                            <option value="1" selected>Syslog</option>
                             <option value="2">RNFA</option>
+							<option value="1" selected>Syslog</option>
                         </select>
                     </div>
                 </div>
