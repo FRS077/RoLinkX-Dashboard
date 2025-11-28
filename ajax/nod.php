@@ -129,12 +129,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <title>Configuration Node_Info</title>
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
-    body {
-        background-color: #f8f9fa;
-        padding: 30px;
-        font-family: Arial, sans-serif;
-        color: #444;
-    }
+   body {
+    background-color: #f8f9fa;
+    padding: 30px;
+    font-family: Arial, sans-serif;
+    color: #444;
+    border: 3px solid #1872d1 !important;
+    border-radius: 15px !important;
+    max-width: 1200px !important;
+    margin: 20px auto !important;
+    box-sizing: border-box;
+}
     h2 {
         background-color: #3498db;
         color: white;
