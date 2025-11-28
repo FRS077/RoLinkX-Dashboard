@@ -264,6 +264,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <?php else: ?>
             <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">
         <?php endif; ?>
+    <?php else: ?>
+        <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">
+    <?php endif; ?>
 <?php endforeach; ?>
 <button type="submit" class="btn w-40">Sauvegarder les modifications</button>
 </form>
