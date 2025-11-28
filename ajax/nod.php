@@ -130,15 +130,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 <style>
     body {
-    background-color: #f8f9fa;
-    padding: 30px;
-    font-family: Arial, sans-serif;
-    color: #444;
-    border: 2px solid #1872d1;  /* ← Bordure bleue foncée */
-    border-radius: 15px;        /* ← Coins arrondis */
-    margin: 0 auto;             /* ← Centre la page */
-    max-width: 1200px;          /* ← Largeur max */
-}
+        background-color: #f8f9fa;
+        padding: 30px;
+        font-family: Arial, sans-serif;
+        color: #444;
+    }
     h2 {
         background-color: #3498db;
         color: white;
