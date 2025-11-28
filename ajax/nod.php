@@ -263,7 +263,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <input type="hidden" name="<?= htmlspecialchars($key) ?>" value="<?= htmlspecialchars($value) ?>">
     <?php endif; ?>
 <?php endforeach; ?>
-<button type="submit" class="btn w-100">Sauvegarder les modifications</button>
+<button type="submit" class="btn w-50">Sauvegarder les modifications</button>
 </form>
 <p class="text-center mt-3 text-muted" style="max-width:720px;margin:auto;">Sauvegarde automatique dans /opt/rolink/conf/ à chaque modification.</p>
 
