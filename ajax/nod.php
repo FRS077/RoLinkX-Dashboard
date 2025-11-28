@@ -175,7 +175,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         padding: 14px 44px;
         border-radius: 10px;
         color: white;
-        font-weight: 700;
+        font-weight: 600;
         box-shadow: 0 5px 15px rgb(38 149 255 / 0.6);
         transition: background-color 0.3s ease;
         display: block;
@@ -266,7 +266,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <button type="submit" class="btn w-40">Sauvegarder les modifications</button>
 </form>
 <p class="text-center mt-3 text-muted" style="max-width:720px;margin:auto;">Sauvegarde automatique dans /opt/rolink/conf/ à chaque modification.</p>
-
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
