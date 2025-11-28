@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     padding: 30px;
     font-family: Arial, sans-serif;
     color: #444;
-    border: 2px solid ##0a0a0a !important;
+    border: 2px solid #0a0a0a !important;
     border-radius: 15px !important;
     max-width: 1200px !important;
     margin: 20px auto !important;
