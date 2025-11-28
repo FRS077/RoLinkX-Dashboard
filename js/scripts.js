@@ -62,9 +62,9 @@ function cpuData() {
         $('#cpuTemp').removeClass('bg-warning text-dark');
       }
       if (data[3]) {
-        $('#resvx').text('Restart RoLink');
+        $('#resvx').text('Restart HotLink');
       } else {
-        $('#resvx').text('Start RoLink');
+        $('#resvx').text('Start HotLink');
       }
     }
   });
