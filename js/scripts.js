@@ -528,7 +528,7 @@ $(document).ready(function () {
   });
   // Power Off OS
   $('#halt').click(function () {
-    if (confirm("Are you sure you want to power off?")) {
+    if (confirm("Êtes-vous sûr de vouloir éteindre l'appareil ?")) {
       $(this).prop('disabled', true).fadeTo('fast', 0.15);
       $.ajax({
         type: 'POST',
@@ -582,7 +582,7 @@ $(document).ready(function () {
       success: function (data) {
         if (data == true) {
           $('#resvx').prop('disabled', false).fadeTo('fast', 1);
-          $('#sysmsg').showNotice('RoLink service has been (re)started', 3000);
+          $('#sysmsg').showNotice('HotLink a été redémarré.', 3000);
           setTimeout(function () {
             $('#svxStatus').load('includes/status.php?svxStatus');
             $('#refContainer').load('includes/status.php?svxReflector');
@@ -603,7 +603,7 @@ $(document).ready(function () {
       success: function (data) {
         if (data == true) {
           $('#endsvx').prop('disabled', false).fadeTo('fast', 1);
-          $('#sysmsg').showNotice('RoLink service has been stopped', 3000);
+          $('#sysmsg').showNotice('HotLink a été arrêté.', 3000);
           setTimeout(function () {
             $('#svxStatus').load('includes/status.php?svxStatus');
             $('#refContainer').load('includes/status.php?svxReflector');
@@ -613,7 +613,7 @@ $(document).ready(function () {
     });
   });
   $('#switchHostName').click(function() {
-    if (confirm("Are you sure you want to switch the hostname? This action may require a system reboot.")) {
+    if (confirm("Etes-vous sûr de vouloir modifier le nom d'hôte ? Cette action peut nécessiter un redémarrage du système..")) {
       $(this).prop('disabled', true).fadeTo('fast', 0.15);
       $.ajax({
         type: 'POST',
@@ -637,7 +637,7 @@ $(document).ready(function () {
   });
   // Latency check
   $('#latencyCheck').click(function () {
-    $(this).html('<span role="status" class="spinner-border spinner-border-sm mx-2"></span>Please wait...');
+    $(this).html('<span role="status" class="spinner-border spinner-border-sm mx-2"></span>Attendez svp...');
     $('#latencyCheck').prop('disabled', true).fadeTo('fast', 0.15);
     $.ajax({
       type: 'POST',
