@@ -60,9 +60,9 @@ if (isset($_GET['getProxyList'])) {
 $frmProfile     = (isset($_POST['prn'])) ? filter_input(INPUT_POST, 'prn', FILTER_SANITIZE_ADD_SLASHES) : '';
 $frmReflector   = (empty($_POST['ref'])) ? 'f62dmr.fr' : preg_replace('/^(http(s)?:\/\/)?(www.)?|(\/)/i', '', filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_ADD_SLASHES));
 $frmPort        = (empty($_POST['prt'])) ? '5300' : filter_input(INPUT_POST, 'prt', FILTER_SANITIZE_NUMBER_INT);
-$frmCallsign    = (empty($_POST['cal'])) ? 'FRSXXX' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'cal', FILTER_SANITIZE_ADD_SLASHES));
+$frmCallsign    = (empty($_POST['cal'])) ? 'USER' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'cal', FILTER_SANITIZE_ADD_SLASHES));
 $frmAuthKey     = (empty($_POST['key'])) ? 'USER' : trim(filter_input(INPUT_POST, 'key', FILTER_SANITIZE_ADD_SLASHES));
-$frmBeacon      = (empty($_POST['clb'])) ? 'FRSXXX' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'clb', FILTER_SANITIZE_ADD_SLASHES));
+$frmBeacon      = (empty($_POST['clb'])) ? 'USER' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'clb', FILTER_SANITIZE_ADD_SLASHES));
 $frmVoice       = (empty($_POST['vop'])) ? 'fr_FR' : filter_input(INPUT_POST, 'vop', FILTER_SANITIZE_ADD_SLASHES);
 $frmShortId     = (empty($_POST['sid'])) ? '30' : filter_input(INPUT_POST, 'sid', FILTER_SANITIZE_ADD_SLASHES);
 $frmLongId      = (empty($_POST['lid'])) ? '60' : filter_input(INPUT_POST, 'lid', FILTER_SANITIZE_ADD_SLASHES);
