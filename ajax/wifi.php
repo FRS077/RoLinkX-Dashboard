@@ -93,7 +93,7 @@ for ($i = 1; $i <= $maxNetworks; $i++) {
     if (${"wn$i"} == '-') {
          ${"network$i"} = '';
     } elseif (${"wn$i"} && strlen(${"wk$i"}) < 8) {
-		echo 'Network <b>'. ${"wn$i"} .'</b> : Clé de sécurité réseau non valide !';
+		echo 'Network <b>'. ${"wn$i"} .'</b> : Invalid network security key lenght!';
 		exit(1);
     } elseif (${"wn$i"} && ${"wn$i"} != $storedNetwork[$i - 1]) {
         ${"network$i"} = ${"wn$i"};
@@ -109,7 +109,7 @@ $wpaData = 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 ap_scan=1
 fast_reauth=1
-country=FR' . PHP_EOL;
+country=RO' . PHP_EOL;
 for ($i = 1; $i <= $maxNetworks; $i++) {
     if (!empty(${"network$i"})) {
         $psk = (strlen(${"authKey$i"}) < 32) ? wpa_passphrase(${"network$i"}, ${"authKey$i"}) : ${"authKey$i"};
@@ -127,7 +127,7 @@ if ($weHaveData) {
     file_put_contents($wpaTemp, $wpaData);
     exec("/usr/bin/sudo /usr/bin/cp $wpaTemp $wpaFile");
     toggleFS(false);
-    echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
+    echo 'New data stored.<br/>Restart Wi-Fi now or reboot!';
 } else {
     echo 'No new data, so nothing changed';
 }

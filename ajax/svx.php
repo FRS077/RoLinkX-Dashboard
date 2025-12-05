@@ -27,7 +27,7 @@ if (empty($_POST) && empty($_GET)) {
 }
 
 include __DIR__ . '/../includes/functions.php';
-$restoreFile  = '/var/www/html/assets/rolink.conf';
+$restoreFile  = '/var/www/html/rolink/assets/rolink.conf';
 $newFile      = '/tmp/rolink.conf.tmp';
 $newElFile    = '/tmp/ModuleEchoLink.conf.tmp';
 $profilesPath = dirname(__FILE__) . '/../profiles/';
@@ -58,34 +58,34 @@ if (isset($_GET['getProxyList'])) {
 
 // Retrieve POST vars (defaults if empty values to avoid locking the config file)
 $frmProfile     = (isset($_POST['prn'])) ? filter_input(INPUT_POST, 'prn', FILTER_SANITIZE_ADD_SLASHES) : '';
-$frmReflector   = (empty($_POST['ref'])) ? 'f62dmr.fr' : preg_replace('/^(http(s)?:\/\/)?(www.)?|(\/)/i', '', filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_ADD_SLASHES));
-$frmPort        = (empty($_POST['prt'])) ? '5300' : filter_input(INPUT_POST, 'prt', FILTER_SANITIZE_NUMBER_INT);
-$frmCallsign    = (empty($_POST['cal'])) ? 'FRSXXX' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'cal', FILTER_SANITIZE_ADD_SLASHES));
-$frmAuthKey     = (empty($_POST['key'])) ? 'USER' : trim(filter_input(INPUT_POST, 'key', FILTER_SANITIZE_ADD_SLASHES));
-$frmBeacon      = (empty($_POST['clb'])) ? 'FRSXXX' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'clb', FILTER_SANITIZE_ADD_SLASHES));
-$frmVoice       = (empty($_POST['vop'])) ? 'fr_FR' : filter_input(INPUT_POST, 'vop', FILTER_SANITIZE_ADD_SLASHES);
-$frmShortId     = (empty($_POST['sid'])) ? '30' : filter_input(INPUT_POST, 'sid', FILTER_SANITIZE_ADD_SLASHES);
-$frmLongId      = (empty($_POST['lid'])) ? '60' : filter_input(INPUT_POST, 'lid', FILTER_SANITIZE_ADD_SLASHES);
-$frmType        = (empty($_POST['tip'])) ? '1' : filter_input(INPUT_POST, 'tip', FILTER_SANITIZE_ADD_SLASHES);
+$frmReflector   = (empty($_POST['ref'])) ? 'rolink.network' : preg_replace('/^(http(s)?:\/\/)?(www.)?|(\/)/i', '', filter_input(INPUT_POST, 'ref', FILTER_SANITIZE_ADD_SLASHES));
+$frmPort        = (empty($_POST['prt'])) ? '1234' : filter_input(INPUT_POST, 'prt', FILTER_SANITIZE_NUMBER_INT);
+$frmCallsign    = (empty($_POST['cal'])) ? 'YO1XYZ-P' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'cal', FILTER_SANITIZE_ADD_SLASHES));
+$frmAuthKey     = (empty($_POST['key'])) ? 'password' : trim(filter_input(INPUT_POST, 'key', FILTER_SANITIZE_ADD_SLASHES));
+$frmBeacon      = (empty($_POST['clb'])) ? 'YO1XYZ' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'clb', FILTER_SANITIZE_ADD_SLASHES));
+$frmVoice       = (empty($_POST['vop'])) ? 'en_US' : filter_input(INPUT_POST, 'vop', FILTER_SANITIZE_ADD_SLASHES);
+$frmShortId     = (empty($_POST['sid'])) ? '0' : filter_input(INPUT_POST, 'sid', FILTER_SANITIZE_ADD_SLASHES);
+$frmLongId      = (empty($_POST['lid'])) ? '0' : filter_input(INPUT_POST, 'lid', FILTER_SANITIZE_ADD_SLASHES);
+$frmType        = (empty($_POST['tip'])) ? 'nod portabil' : filter_input(INPUT_POST, 'tip', FILTER_SANITIZE_ADD_SLASHES);
 $frmBitrate     = (empty($_POST['cbr'])) ? '20000' : filter_input(INPUT_POST, 'cbr', FILTER_SANITIZE_ADD_SLASHES);
-$frmRogerBeep   = (empty($_POST['rgr'])) ? '1' : filter_input(INPUT_POST, 'rgr', FILTER_SANITIZE_NUMBER_INT);
+$frmRogerBeep   = (empty($_POST['rgr'])) ? '0' : filter_input(INPUT_POST, 'rgr', FILTER_SANITIZE_NUMBER_INT);
 $frmRxGPIO      = (empty($_POST['rxp'])) ? 'gpio10' : filter_input(INPUT_POST, 'rxp', FILTER_SANITIZE_ADD_SLASHES);
 $frmTxGPIO      = (empty($_POST['txp'])) ? 'gpio7' : filter_input(INPUT_POST, 'txp', FILTER_SANITIZE_ADD_SLASHES);
-$frmDefaultTg   = (empty($_POST['dtg'])) ? '59' : trim(filter_input(INPUT_POST, 'dtg', FILTER_SANITIZE_NUMBER_INT));
-$frmMonitorTgs  = (empty($_POST['mtg'])) ? '59' : filter_input(INPUT_POST, 'mtg', FILTER_SANITIZE_ADD_SLASHES);
+$frmDefaultTg   = (empty($_POST['dtg'])) ? '226' : trim(filter_input(INPUT_POST, 'dtg', FILTER_SANITIZE_NUMBER_INT));
+$frmMonitorTgs  = (empty($_POST['mtg'])) ? '226++' : filter_input(INPUT_POST, 'mtg', FILTER_SANITIZE_ADD_SLASHES);
 $frmTgTimeOut   = (empty($_POST['tgt'])) ? '30' : filter_input(INPUT_POST, 'tgt', FILTER_SANITIZE_NUMBER_INT);
-$frmACStatus    = (empty($_POST['acs'])) ? '1' : filter_input(INPUT_POST, 'acs', FILTER_SANITIZE_NUMBER_INT);
+$frmACStatus    = (empty($_POST['acs'])) ? '0' : filter_input(INPUT_POST, 'acs', FILTER_SANITIZE_NUMBER_INT);
 $frmDeEmphasis  = (empty($_POST['rxe'])) ? '0' : filter_input(INPUT_POST, 'rxe', FILTER_SANITIZE_NUMBER_INT);
 $frmPreEmphasis = (empty($_POST['txe'])) ? '0' : filter_input(INPUT_POST, 'txe', FILTER_SANITIZE_NUMBER_INT);
 $frmMasterGain  = (empty($_POST['mag'])) ? '0' : filter_input(INPUT_POST, 'mag', FILTER_SANITIZE_NUMBER_FLOAT, FILTER_FLAG_ALLOW_FRACTION);
 $frmLimiter     = (empty($_POST['lim'])) ? '0' : filter_input(INPUT_POST, 'lim', FILTER_SANITIZE_NUMBER_FLOAT);
-$frmReconnectS  = (empty($_POST['res'])) ? '5' : filter_input(INPUT_POST, 'res', FILTER_SANITIZE_NUMBER_INT);
-$frmTxTimeOut   = (empty($_POST['txt'])) ? '280' : filter_input(INPUT_POST, 'txt', FILTER_SANITIZE_NUMBER_INT);
-$frmSqlDelay    = (empty($_POST['sqd'])) ? '100' : filter_input(INPUT_POST, 'sqd', FILTER_SANITIZE_NUMBER_INT);
+$frmReconnectS  = (empty($_POST['res'])) ? '0' : filter_input(INPUT_POST, 'res', FILTER_SANITIZE_NUMBER_INT);
+$frmTxTimeOut   = (empty($_POST['txt'])) ? '180' : filter_input(INPUT_POST, 'txt', FILTER_SANITIZE_NUMBER_INT);
+$frmSqlDelay    = (empty($_POST['sqd'])) ? '500' : filter_input(INPUT_POST, 'sqd', FILTER_SANITIZE_NUMBER_INT);
 $frmDelProfile  = (empty($_POST['prd'])) ? '' : filter_input(INPUT_POST, 'prd', FILTER_SANITIZE_ADD_SLASHES);
 $frmFanStart    = (empty($_POST['fan'])) ? '0' : filter_input(INPUT_POST, 'fan', FILTER_SANITIZE_NUMBER_INT);
-$frmModules     = (empty($_POST['mod'])) ? '1' : filter_input(INPUT_POST, 'mod', FILTER_SANITIZE_NUMBER_INT);
-$frmTxDelay     = (empty($_POST['txd'])) ? '300' : filter_input(INPUT_POST, 'txd', FILTER_SANITIZE_NUMBER_INT);
+$frmModules     = (empty($_POST['mod'])) ? '0' : filter_input(INPUT_POST, 'mod', FILTER_SANITIZE_NUMBER_INT);
+$frmTxDelay     = (empty($_POST['txd'])) ? '875' : filter_input(INPUT_POST, 'txd', FILTER_SANITIZE_NUMBER_INT);
 
 /* EchoLink module */
 $frmElCallsign        = preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'el_cal', FILTER_SANITIZE_ADD_SLASHES));
@@ -103,7 +103,7 @@ $frmElProxyPassword = trim(filter_input(INPUT_POST, 'el_pxpw', FILTER_SANITIZE_A
 if (isset($_POST['dtmfCommand'])) {
     $dtmfCommand = (!empty($_POST['dtmfCommand'])) ? filter_input(INPUT_POST, 'dtmfCommand', FILTER_SANITIZE_ADD_SLASHES) : null;
     if (!is_link('/tmp/dtmf')) {
-        echo "HotLink ne fonctionne pas !";
+        echo "RoLink is not running!";
         return false;
     }
     if (!empty($dtmfCommand)) {
@@ -117,7 +117,7 @@ if (isset($_POST['dtmfCommand'])) {
 /* Process restore command */
 if (isset($_POST['restore'])) {
     if (!is_file($restoreFile)) {
-        echo "Restauration des données impossible!";
+        echo "Restore data not available!";
         exit(1);
     }
     toggleFS(true);
@@ -125,14 +125,14 @@ if (isset($_POST['restore'])) {
     exec("/usr/bin/sudo /usr/bin/cp /tmp/rolink.conf.tmp /opt/rolink/conf/rolink.conf");
     toggleFS(false);
     serviceControl('rolink.service', 'restart');
-    echo "La configuration a été rétablie à ses valeurs par défaut.";
+    echo "RoLink configuration restored to defaults";
     exit(0);
 }
 
 // Add the backup reflector if using RoLink.Network
 $backupReflector = 'backup.rolink.network';
 $reflectors      = explode(',', $frmReflector);
-if (array_intersect(['rolinsk.network', 'svx.43s9100.ro'], $reflectors)) {
+if (array_intersect(['rolink.network', 'svx.439100.ro'], $reflectors)) {
     if (!in_array($backupReflector, $reflectors)) {
         $reflectors[] = $backupReflector;
     }
@@ -244,7 +244,7 @@ $profiles['callsign']         = $callSignValue;
 $profiles['key']              = $authKeyValue;
 $profiles['beacon']           = $beaconValue;
 $profiles['bitrate']          = $codecBitrateValue;
-$profiles['type']             = 'Node';
+$profiles['type']             = 'nod portabil';
 $profiles['shortIdent']       = $shortIdentValue;
 $profiles['longIdent']        = $longIdentValue;
 $profiles['rogerBeep']        = $rogerBeepValue;
@@ -286,7 +286,7 @@ if ($beaconValue != $frmBeacon) {
 $oldVar[1] = '/(HOST=)(\S+)/';
 $newVar[1] = '${1}' . $frmReflector;
 
-if (version_compare($version['number'], '1.7.99.65', '>') && empty($varRefHosts)) {
+if (version_compare($version['number'], '1.7.99.62', '>') && empty($varRefHosts)) {
     // Upgrade config file to new version
     $newVar[1] = '#${1}' . $frmReflector . PHP_EOL . 'HOSTS=' . $frmReflector . ':' . $frmPort;
 }
@@ -297,7 +297,7 @@ if ($reflectorValue != $frmReflector) {
 
 $oldVar[2] = '/(PORT=)(\d+)/';
 $newVar[2] = '${1}' . $frmPort;
-if (version_compare($version['number'], '1.7.99.65', '>') && empty($varPorts)) {
+if (version_compare($version['number'], '1.7.99.62', '>') && empty($varPorts)) {
     // Upgrade config file to new version
     $newVar[2] = '#${1}' . $frmPort . PHP_EOL . 'HOST_PORT=' . $frmPort;
 }
@@ -607,14 +607,14 @@ if ($changes > 0) {
         file_put_contents($tmpRefFile, $nfoParams);
         exec("/usr/bin/sudo /usr/bin/cp $tmpRefFile $cfgRefFile");
     }
-    $msgOut .= 'Configuration mise à jour (' . $changes . ' modification(s) appliquée(s)<br/>Redémarrage du service HotLink...';
-    $msgOut .= ($newProfile) ? '<br/>Profil enregistré sous ' . basename($proFileName, '.json') : '';
+    $msgOut .= 'Configuration updated (' . $changes . ' change(s) applied)<br/>Restarting RoLink service...';
+    $msgOut .= ($newProfile) ? '<br/>Profile saved as ' . basename($proFileName, '.json') : '';
 
     // All done, start SVXLink service
     serviceControl('rolink.service', 'start');
 } else {
-    $msgOut .= 'Aucune nouvelle donnée à traiter.<br/>Conservation de la configuration d origine.';
-    $msgOut .= ($newProfile) ? '<br/>Profil enregistré sous ' . basename($proFileName, '.json') : '';
+    $msgOut .= 'No new data to process.<br/>Keeping original configuration.';
+    $msgOut .= ($newProfile) ? '<br/>Profile saved as ' . basename($proFileName, '.json') : '';
 }
 toggleFS(false);
 echo $msgOut;
