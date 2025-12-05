@@ -22,7 +22,7 @@
  * Index page
  */
 
-$pages = array("wifi", "svx", "sa", "log", "nod", "aprs", "tty", "cfg");
+$pages = array("wifi", "svx", "sa", "log", "aprs", "tty", "cfg");
 $page  = (null !== filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS)) ? $_GET['p'] : '';
 
 // Common functions
@@ -74,15 +74,12 @@ switch ($page) {
     case "tty":
         $htmlOutput = ttyForm();
         break;
-	case "nod":
-        $htmlOutput = nodForm();
-        break;
     case "cfg":
         $htmlOutput = cfgForm();
         break;
     default:
         $svxAction  = (getSVXLinkStatus(1)) ? 'Restart' : 'Start';
-        $htmlOutput = '<h4 class="m-2 mt-2 alert alert-success fw-bold talker">' . ($detect->isMobile() ? '&nbsp;' : 'Statut') . '<span id="onair" class="badge position-absolute top-50 start-50 translate-middle"></span></h4>
+        $htmlOutput = '<h4 class="m-2 mt-2 alert alert-success fw-bold talker">' . ($detect->isMobile() ? '&nbsp;' : 'Status') . '<span id="onair" class="badge position-absolute top-50 start-50 translate-middle"></span></h4>
     <div class="card m-2">
     <div class="card-body">';
         $htmlOutput .= ($config['cfgHostname'] == 'true' && $rolink) ? hostName() : null;
@@ -103,10 +100,10 @@ switch ($page) {
         $htmlOutput .= ($rolink) ? getFileSystem() . PHP_EOL : null;
         $htmlOutput .= ($rolink) ? getRemoteVersion() . PHP_EOL : null;
         $htmlOutput .= ($rolink) ? '<div class="d-grid gap-2 col-7 mx-auto">
-    <button id="resvx" class="btn btn-warning btn-lg">' . $svxAction . ' Hotlink</button>
-    <button id="endsvx" class="btn btn-dark btn-lg">Stop Hotlink</button>
+    <button id="resvx" class="btn btn-warning btn-lg">' . $svxAction . ' RoLink</button>
+    <button id="endsvx" class="btn btn-dark btn-lg">Stop RoLink</button>
     <button id="reboot" class="btn btn-primary btn-lg">Reboot</button>
-    <button id="halt" class="btn btn-danger btn-lg">Mise hors tension</button>
+    <button id="halt" class="btn btn-danger btn-lg">Power Off</button>
     </div>
     </div>
     </div>' : null;
@@ -119,13 +116,13 @@ switch ($page) {
 }
 ?>
 <!DOCTYPE html>
-<html lang="fr">
+<html lang="en">
     <head>
         <meta charset="utf-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="HotLink Dashboard" />
-        <meta name="author" content="FRS077" />
-        <title>HotLink Dashboard - <?php echo gethostname(); ?></title>
+        <meta name="description" content="RoLinkX Dashboard" />
+        <meta name="author" content="YO6NAM" />
+        <title>RoLinkX Dashboard - <?php echo gethostname(); ?></title>
         <link rel="apple-touch-icon" sizes="57x57" href="assets/fav/apple-icon-57x57.png">
         <link rel="apple-touch-icon" sizes="60x60" href="assets/fav/apple-icon-60x60.png">
         <link rel="apple-touch-icon" sizes="72x72" href="assets/fav/apple-icon-72x72.png">
@@ -155,20 +152,18 @@ switch ($page) {
             <div class="border-end bg-white" id="sidebar-wrapper">
                 <div class="sidebar-heading border-bottom bg-light fw-bold">
                     <a href="./" class="text-decoration-none" style="color:purple">
-                        <i class="icon-dashboard" style="font-size:26px;color:purple;vertical-align: middle;padding: 0 4px 4px 0;"></i>HotLink Dashboard
+                        <i class="icon-dashboard" style="font-size:26px;color:purple;vertical-align: middle;padding: 0 4px 4px 0;"></i>RoLinkX Dashboard
                     </a>
                 </div>
-                 <div class="list-group list-group-flush">
-                    <a class="<?php echo ($page == '') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./">📊 Statut</a>
-                    <a class="<?php echo ($page == 'wifi') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=wifi">📶 WiFi</a>
-                    <a class="<?php echo ($page == 'svx') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=svx">🗣️ SVXLink</a>
-                    <a class="<?php echo ($page == 'sa') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=sa">📻 SA818</a>
-                    <a class="<?php echo ($page == 'log') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=log">📋 Logs</a>
-                    <a class="<?php echo ($page == 'tty') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=tty">💻 Terminal</a>
-                    <a class="<?php echo ($page == 'cfg') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=cfg">⚙️ Config</a>
-					<a class="<?php echo ($page == 'nod') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=nod">ℹ️ Node Info</a>
-					<a class="<?php echo ($page == 'ext') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">🌐 RNFA</a>
-                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="https://www.facebook.com/groups/1067389751809869" target="_blank">📘 Facebook</a>
+                <div class="list-group list-group-flush">
+                    <a class="<?php echo ($page == '') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./">Status</a>
+                    <a class="<?php echo ($page == 'wifi') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=wifi">WiFi</a>
+                    <a class="<?php echo ($page == 'svx') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=svx">SVXLink</a>
+                    <a class="<?php echo ($page == 'sa') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=sa">SA818</a>
+                    <a class="<?php echo ($page == 'aprs') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=aprs">APRS</a>
+                    <a class="<?php echo ($page == 'log') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=log">Logs</a>
+                    <a class="<?php echo ($page == 'tty') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=tty">Terminal</a>
+                    <a class="<?php echo ($page == 'cfg') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=cfg">Config</a>
                 </div>
             </div>
             <div id="page-content-wrapper">
@@ -177,22 +172,19 @@ switch ($page) {
                         <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                         <span class="navbar-toggler-icon"></span>
                         </button>
-                        <h1 class="sidebar-heading bg-light fw-light mt-1 text-dark"><a href="./" class="text-decoration-none" style="color:black">HotLink Dashboard</a></h1>
+                        <h1 class="sidebar-heading bg-light fw-light mt-1 text-dark"><a href="./" class="text-decoration-none" style="color:black">RoLinkX Dashboard</a></h1>
                         <i class="icon-dashboard" style="font-size:40px;color:purple"></i>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <li class="nav-item"><a class="<?php echo ($page == '') ? 'active p-2' : ''; ?> nav-link" href="./">Statut</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == '') ? 'active p-2' : ''; ?> nav-link" href="./">Status</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'wifi') ? 'active p-2' : ''; ?> nav-link" href="./?p=wifi">WiFi</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'svx') ? 'active p-2' : ''; ?> nav-link" href="./?p=svx">SVXLink</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'sa') ? 'active p-2' : ''; ?> nav-link" href="./?p=sa">SA818</a></li>
-                                <!--<li class="nav-item"><a class="<?php echo ($page == 'aprs') ? 'active p-2' : ''; ?> nav-link" href="./?p=aprs">APRS</a></li>-->
+                                <li class="nav-item"><a class="<?php echo ($page == 'aprs') ? 'active p-2' : ''; ?> nav-link" href="./?p=aprs">APRS</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'log') ? 'active p-2' : ''; ?> nav-link" href="./?p=log">Logs</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">Terminal</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">Config</a></li>
-								<li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" style="color:#cdd6f4 !important;" href="./?p=nod">Node Info</a></li>
-								<li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a>
-								<li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a>
-						   </ul>
+                            </ul>
                         </div>
                     </div>
                 </nav>
@@ -203,18 +195,8 @@ switch ($page) {
             <div id="sysmsg"></div>
         </div>
         <footer class="page-footer fixed-bottom font-small bg-light">
-<div class="text-center small p-2">
-2024 Copyright <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">Razvan / YO6NAM</a> - Modification par FRS077 en 2025 pour le réseau RNFA
-<?php
-$versionFile = __DIR__ . '/version';
-if (is_readable($versionFile)) {
-    $version = trim(file_get_contents($versionFile));
-    echo " - Dashboard version $version";
-}
-?>
-</div>
-</div>
-		</footer>
+            <div class="text-center small p-2">v3.7 © 2024 Copyright <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">Razvan / YO6NAM</a></div>
+        </footer>
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
         <script src="js/iziModal.min.js"></script>
