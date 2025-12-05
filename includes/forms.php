@@ -1136,6 +1136,30 @@ function ttyForm()
     return $ttyFrame;
 }
 
+/* Node info */
+function nodForm()
+{
+    $env = checkEnvironment();
+    if ($env) return $env;
+
+    $nodData = '<h4 class="mt-2 alert alert-dark fw-bold">Node info</h4>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-12">
+                <iframe id="nodFrame" 
+                        src="ajax/nod.php" 
+                        style="width:100%; height:65vh; border:none; overflow:auto; background:#f8f9fa;"
+                        frameborder="0"
+                        onload="this.style.opacity=\'1\'"
+                        onerror="this.contentDocument.body.innerHTML=\'<div class=\\"alert alert-danger p-4 text-center\\"><strong>Erreur ajax/nod.php</strong><br>Vérifiez les logs serveur</div>\'">
+                </iframe>
+            </div>
+        </div>
+    </div>';
+    return $nodData;
+}
+
+
 /* Config */
 function cfgForm()
 {
@@ -1281,6 +1305,8 @@ function cfgForm()
  //       }
         $configData .= ($isOnline) ? null : '<button type="button" class="btn btn-dark btn-lg mx-2">Pas d’accès à Internet</button>';
     }
+	
+
     // Show "Make Read-only" button
     if (!preg_match('/ro,ro/', file_get_contents('/etc/fstab'))) {
         $configData .= '</div><div class="d-flex justify-content-center m-2"><button id="makeRO" type="button" class="btn btn-dark btn-lg">Make FS Read-Only</button>';
@@ -1288,3 +1314,4 @@ function cfgForm()
     $configData .= '</div>' . PHP_EOL;
     return $configData;
 }
+
