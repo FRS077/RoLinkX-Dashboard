@@ -503,7 +503,7 @@ if (!empty($frmLoadProfile)) {
 if (!empty($frmDelProfile)) {
     toggleFS(true);
     unlink($profilesPath . $frmDelProfile);
-    echo 'Profile "' . basename($frmDelProfile, '.json') . '" has been deleted';
+    echo 'Profile "' . basename($frmDelProfile, '.json') . '" a été supprimé﻿';
     toggleFS(false);
     exit(0);
 }
