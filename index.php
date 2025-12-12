@@ -51,7 +51,7 @@ if (in_array($page, $pages)) {
     include __DIR__ . '/includes/status.php';
 }
 
-$rolink = (is_file($cfgFile)) ? true : false;
+$rolink = (isset($cfgFile) && is_file($cfgFile)) ? true : false;
 
 switch ($page) {
     case "wifi":
@@ -74,7 +74,7 @@ switch ($page) {
     case "tty":
         $htmlOutput = ttyForm();
         break;
-	case "nod":
+    case "nod":
         $htmlOutput = nodForm();
         break;
     case "cfg":
@@ -141,13 +141,32 @@ switch ($page) {
         <link rel="icon" type="image/png" sizes="16x16" href="assets/fav/favicon-16x16.png">
         <link rel="manifest" href="manifest.json">
         <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
+        <meta name="msapplication-TileImage" content="assets/fav/ms-icon-144x144.png">
         <meta name="theme-color" content="#ffffff">
         <link href="css/styles.css?_=<?php echo cacheBuster('css/styles.css'); ?>" rel="stylesheet" />
         <link href="css/select2.min.css" rel="stylesheet" />
         <link href="css/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
         <link href="css/jquery.toast.min.css" rel="stylesheet" />
         <link href="css/iziModal.min.css" rel="stylesheet" />
+        <style>
+            .version-blink {
+                color: lime;
+                font-weight: bold;
+                animation: pulse-green 2s infinite;
+            }
+            @keyframes pulse-green {
+                0%, 100% {
+                    color: lime;
+                    text-shadow: 0 0 5px lime;
+                    transform: scale(1);
+                }
+                50% {
+                    color: #90EE90;
+                    text-shadow: 0 0 10px lime;
+                    transform: scale(1.05);
+                }
+            }
+        </style>
         <?php echo (isset($extraResource)) ? $extraResource . PHP_EOL : null; ?>
     </head>
     <body>
@@ -166,8 +185,8 @@ switch ($page) {
                     <a class="<?php echo ($page == 'log') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=log">📋 Logs</a>
                     <a class="<?php echo ($page == 'tty') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=tty">💻 Terminal</a>
                     <a class="<?php echo ($page == 'cfg') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=cfg">⚙️ Config</a>
-					<a class="<?php echo ($page == 'nod') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=nod">ℹ️ Node Info</a>
-					<a class="<?php echo ($page == 'ext') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">🌐 RNFA</a>
+                    <a class="<?php echo ($page == 'nod') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=nod">ℹ️ Node Info</a>
+                    <a class="<?php echo ($page == 'ext') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">🌐 RNFA</a>
                     <a class="list-group-item list-group-item-action list-group-item-light p-3" href="https://www.facebook.com/groups/1067389751809869" target="_blank">📘 Facebook</a>
                 </div>
             </div>
@@ -189,7 +208,7 @@ switch ($page) {
                                 <li class="nav-item"><a class="<?php echo ($page == 'log') ? 'active p-2' : ''; ?> nav-link" href="./?p=log">Logs</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">Terminal</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">Config</a></li>
-								<li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" style="color:#cdd6f4 !important;" href="./?p=nod">Node Info</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" style="color:#cdd6f4 !important;" href="./?p=nod">Node Info</a></li>
                                 <li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a></li>
                                 <li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a></li>
                           </ul>
@@ -203,18 +222,21 @@ switch ($page) {
             <div id="sysmsg"></div>
         </div>
         <footer class="page-footer fixed-bottom font-small bg-light">
-<div class="text-center small p-2">
-2024 Copyright <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">Razvan / YO6NAM</a> - Modification par FRS077 en 2025 pour le réseau RNFA
-<?php
-$versionFile = __DIR__ . '/version';
-if (is_readable($versionFile)) {
-    $version = trim(file_get_contents($versionFile));
-    echo " - Dashboard version $version";
-}
-?>
-</div>
-</div>
-		</footer>
+            <div class="text-center small p-2">
+                2024-2025 Copyright
+                <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">
+                    Razvan / YO6NAM
+                </a>
+                - Modifications FRS077 pour le réseau RNFA
+                <?php
+                $versionFile = __DIR__ . '/version';
+                if (is_readable($versionFile)) {
+                    $version = trim(file_get_contents($versionFile));
+                    echo ' <span class="version-blink">- v' . $version . '</span>';
+                }
+                ?>
+            </div>
+        </footer>
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
         <script src="js/iziModal.min.js"></script>
