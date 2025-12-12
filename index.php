@@ -52,7 +52,7 @@ if (in_array($page, $pages)) {
     include __DIR__ . '/includes/status.php';
 }
 
-$cfgFile = __DIR__ . '/config/svxlink.cfg'; // Définition explicite
+$cfgFile = __DIR__ . '/opt/rolink/conf/rolink.conf'; // Définition explicite
 $rolink = (is_file($cfgFile)) ? true : false;
 
 switch ($page) {
