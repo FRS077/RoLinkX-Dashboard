@@ -237,7 +237,7 @@ switch ($page) {
                 $versionFile = __DIR__ . '/version';
                 if (is_readable($versionFile)) {
                     $version = trim(file_get_contents($versionFile));
-                    echo ' <span class="version-blink">- ' . $version . '</span>';
+                    echo ' <span class="version-blink">- Version:  ' . $version . '</span>';
                 }
                 ?>
             </div>
