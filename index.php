@@ -150,27 +150,51 @@ switch ($page) {
         <link href="css/iziModal.min.css" rel="stylesheet" />
         <style>
             .version-blink {
-    font-weight: bold;
-    animation: pulse-red 2s infinite;
-}
+                font-weight: bold;
+                animation: pulse-red 2s infinite;
+            }
 
-@keyframes pulse-red {
-    0% {
-        color: #000000;          /* noir */
-        text-shadow: none;
-        transform: scale(1);
-    }
-    50% {
-        color: #ff0000;          /* rouge vif */
-        text-shadow: 0 0 10px #ff0000;
-        transform: scale(1.05);
-    }
-    100% {
-        color: #000000;          /* retour noir */
-        text-shadow: none;
-        transform: scale(1);
-    }
-}
+            @keyframes pulse-red {
+                0% {
+                    color: #000000;          /* noir */
+                    text-shadow: none;
+                    transform: scale(1);
+                }
+                50% {
+                    color: #ff0000;          /* rouge vif */
+                    text-shadow: 0 0 10px #ff0000;
+                    transform: scale(1.05);
+                }
+                100% {
+                    color: #000000;          /* retour noir */
+                    text-shadow: none;
+                    transform: scale(1);
+                }
+            }
+
+            /* 🎄 ANIMATION DE NEIGE 🎄 */
+            .snowflake {
+                position: fixed;
+                top: -10%;
+                z-index: 9999;
+                pointer-events: none;
+                user-select: none;
+                color: #ffffff;
+                font-size: 1em;
+                opacity: 0.8;
+                animation: snowfall linear infinite;
+            }
+
+            @keyframes snowfall {
+                0% {
+                    transform: translateY(0vh) rotate(0deg);
+                    opacity: 1;
+                }
+                100% {
+                    transform: translateY(100vh) rotate(360deg);
+                    opacity: 0;
+                }
+            }
         </style>
         <?php echo (isset($extraResource)) ? $extraResource . PHP_EOL : null; ?>
     </head>
@@ -242,6 +266,8 @@ switch ($page) {
                 ?>
             </div>
         </footer>
+
+        <!-- Scripts existants -->
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
         <script src="js/iziModal.min.js"></script>
@@ -249,5 +275,56 @@ switch ($page) {
         <script src="js/select2.min.js"></script>
         <script src="js/scripts.js?_=<?php echo cacheBuster('js/scripts.js'); ?>"></script>
         <?php echo (isset($ajax)) ? '<script>' . $ajax . '</script>' . PHP_EOL : null; ?>
+
+        <!-- 🎄 SCRIPT NEIGE 🎄 -->
+        <script>
+        // Configuration neige (décembre seulement)
+        <?php if (date('m') == 12): ?>
+        (function() {
+            const snowConfig = {
+                count: 50,           // nombre de flocons
+                minSize: 0.4,        // taille min (em)
+                maxSize: 1.2,        // taille max (em)
+                minDuration: 6,      // durée min chute (s)
+                maxDuration: 12,     // durée max chute (s)
+                symbols: ['❄', '❅', '❆', '✻', '✼', '✽', '✾', '✿', '❁', '❃', '❋', '⁂']
+            };
+
+            function createSnowflake() {
+                const snowflake = document.createElement('div');
+                snowflake.classList.add('snowflake');
+
+                // Taille aléatoire
+                const size = Math.random() * (snowConfig.maxSize - snowConfig.minSize) + snowConfig.minSize;
+                snowflake.style.fontSize = size + 'em';
+
+                // Position horizontale aléatoire avec léger mouvement latéral
+                const left = Math.random() * 100;
+                snowflake.style.left = left + '%';
+                snowflake.style.animationDelay = Math.random() * 2 + 's';
+
+                // Durée de chute aléatoire
+                const duration = Math.random() * (snowConfig.maxDuration - snowConfig.minDuration) + snowConfig.minDuration;
+                snowflake.style.animationDuration = duration + 's';
+
+                // Symbole aléatoire
+                const symbol = snowConfig.symbols[Math.floor(Math.random() * snowConfig.symbols.length)];
+                snowflake.innerHTML = symbol;
+
+                // Nettoyage automatique
+                setTimeout(() => {
+                    if (snowflake.parentNode) {
+                        snowflake.remove();
+                    }
+                }, duration * 1100);
+
+                document.body.appendChild(snowflake);
+            }
+
+            // Lancer la neige
+            setInterval(createSnowflake, 150);
+        })();
+        <?php endif; ?>
+        </script>
     </body>
 </html>
