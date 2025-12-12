@@ -33,10 +33,9 @@ dashPassword('check');
 
 // Events
 $version    = version();
-$today      = date('Ymd');
 $eventsData = 'var events=0';
 $ajaxData   = 'var auto_refresh = setInterval( function () { cpuData(); gpioStatus(); }, 3000);';
-if ($version && $version['date'] > $today) {
+if ($version && $version['date'] > 20251212) {
     $ajaxData   = '';
     $eventsData = 'var events=1; var timeOutTimer=180;';
 }
@@ -52,7 +51,6 @@ if (in_array($page, $pages)) {
     include __DIR__ . '/includes/status.php';
 }
 
-$cfgFile = __DIR__ . '/opt/rolink/conf/rolink.conf'; // Définition explicite
 $rolink = (is_file($cfgFile)) ? true : false;
 
 switch ($page) {
@@ -192,9 +190,9 @@ switch ($page) {
                                 <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">Terminal</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">Config</a></li>
 								<li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" style="color:#cdd6f4 !important;" href="./?p=nod">Node Info</a></li>
-								<li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a></li>
-								<li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a></li>
-                            </ul>
+								<li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a>
+								<li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a>
+						   </ul>
                         </div>
                     </div>
                 </nav>
@@ -215,7 +213,8 @@ if (is_readable($versionFile)) {
 }
 ?>
 </div>
-</footer>
+</div>
+		</footer>
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
         <script src="js/iziModal.min.js"></script>
