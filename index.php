@@ -232,7 +232,7 @@ switch ($page) {
                 <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">
                     Razvan / YO6NAM
                 </a>
-                - Modifications FRS077 pour le réseau RNFA Version :
+                - Modifications FRS077 pour le réseau RNFA - Version :
                 <?php
                 $versionFile = __DIR__ . '/version';
                 if (is_readable($versionFile)) {
