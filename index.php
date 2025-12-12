@@ -150,22 +150,27 @@ switch ($page) {
         <link href="css/iziModal.min.css" rel="stylesheet" />
         <style>
             .version-blink {
-                color: lime;
-                font-weight: bold;
-                animation: black 2s infinite;
-            }
-            @keyframes pulse-green {
-                0%, 100% {
-                    color: lime;
-                    text-shadow: 0 0 5px lime;
-                    transform: scale(1);
-                }
-                50% {
-                    color: #90EE90;
-                    text-shadow: 0 0 10px lime;
-                    transform: scale(1.05);
-                }
-            }
+    font-weight: bold;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        color: #000000;          /* noir */
+        text-shadow: none;
+        transform: scale(1);
+    }
+    50% {
+        color: #ff0000;          /* rouge vif */
+        text-shadow: 0 0 10px #ff0000;
+        transform: scale(1.05);
+    }
+    100% {
+        color: #000000;          /* retour noir */
+        text-shadow: none;
+        transform: scale(1);
+    }
+}
         </style>
         <?php echo (isset($extraResource)) ? $extraResource . PHP_EOL : null; ?>
     </head>
