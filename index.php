@@ -152,7 +152,7 @@ switch ($page) {
             .version-blink {
                 color: lime;
                 font-weight: bold;
-                animation: green 2s infinite;
+                animation: black 2s infinite;
             }
             @keyframes pulse-green {
                 0%, 100% {
