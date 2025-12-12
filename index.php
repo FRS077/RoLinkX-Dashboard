@@ -150,96 +150,27 @@ switch ($page) {
         <link href="css/iziModal.min.css" rel="stylesheet" />
         <style>
             .version-blink {
-                font-weight: bold;
-                animation: pulse-red 2s infinite;
-            }
+    font-weight: bold;
+    animation: pulse-red 2s infinite;
+}
 
-            @keyframes pulse-red {
-                0% {
-                    color: #000000;
-                    text-shadow: none;
-                    transform: scale(1);
-                }
-                50% {
-                    color: #ff0000;
-                    text-shadow: 0 0 10px #ff0000;
-                    transform: scale(1.05);
-                }
-                100% {
-                    color: #000000;
-                    text-shadow: none;
-                    transform: scale(1);
-                }
-            }
-
-            /* 🌟 NEIGE MODERNE 2025 🌟 */
-            #snow-container {
-                position: fixed;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                pointer-events: none;
-                z-index: 10000;
-                overflow: hidden;
-            }
-
-            .snowflake-modern {
-                position: absolute;
-                background: linear-gradient(135deg, #ffffff 0%, #e6f3ff 50%, #b3d9ff 100%);
-                border-radius: 50%;
-                box-shadow: 
-                    0 0 8px rgba(255,255,255,0.8),
-                    inset 0 0 4px rgba(255,255,255,0.6);
-                animation: snowfall-modern linear infinite;
-                will-change: transform, opacity;
-            }
-
-            .snowflake-modern::before {
-                content: '';
-                position: absolute;
-                top: 20%;
-                left: 20%;
-                width: 60%;
-                height: 60%;
-                background: radial-gradient(circle, rgba(255,255,255,0.9) 0%, transparent 70%);
-                border-radius: 50%;
-            }
-
-            .snowflake-modern::after {
-                content: '';
-                position: absolute;
-                top: 10%;
-                right: 10%;
-                width: 20%;
-                height: 20%;
-                background: linear-gradient(45deg, rgba(255,255,255,0.7), transparent);
-                border-radius: 50% 0;
-                transform: rotate(45deg);
-            }
-
-            @keyframes snowfall-modern {
-                0% {
-                    transform: translateY(-100vh) translateX(0) rotate(0deg) scale(0);
-                    opacity: 0;
-                }
-                10% {
-                    opacity: 1;
-                    scale: 1;
-                }
-                90% {
-                    opacity: 1;
-                }
-                100% {
-                    transform: translateY(100vh) translateX(20px) rotate(360deg) scale(1.2);
-                    opacity: 0;
-                }
-            }
-
-            /* Effet de brillance sur hover */
-            body:hover .snowflake-modern {
-                filter: drop-shadow(0 0 6px rgba(173, 216, 255, 0.8));
-            }
+@keyframes pulse-red {
+    0% {
+        color: #000000;          /* noir */
+        text-shadow: none;
+        transform: scale(1);
+    }
+    50% {
+        color: #ff0000;          /* rouge vif */
+        text-shadow: 0 0 10px #ff0000;
+        transform: scale(1.05);
+    }
+    100% {
+        color: #000000;          /* retour noir */
+        text-shadow: none;
+        transform: scale(1);
+    }
+}
         </style>
         <?php echo (isset($extraResource)) ? $extraResource . PHP_EOL : null; ?>
     </head>
@@ -311,8 +242,6 @@ switch ($page) {
                 ?>
             </div>
         </footer>
-
-        <!-- Scripts existants -->
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
         <script src="js/iziModal.min.js"></script>
@@ -320,70 +249,5 @@ switch ($page) {
         <script src="js/select2.min.js"></script>
         <script src="js/scripts.js?_=<?php echo cacheBuster('js/scripts.js'); ?>"></script>
         <?php echo (isset($ajax)) ? '<script>' . $ajax . '</script>' . PHP_EOL : null; ?>
-
-        <!-- 🌟 NEIGE MODERNE 2025 🌟 -->
-        <?php if (date('m') == 12): ?>
-        <div id="snow-container"></div>
-        <script>
-        (function() {
-            'use strict';
-            
-            const snowContainer = document.getElementById('snow-container');
-            const snowflakes = [];
-            let animationId;
-
-            class Snowflake {
-                constructor() {
-                    this.element = document.createElement('div');
-                    this.element.className = 'snowflake-modern';
-                    this.reset();
-                    snowContainer.appendChild(this.element);
-                }
-
-                reset() {
-                    const size = (Math.random() * 6 + 2) + 'px';
-                    this.element.style.width = size;
-                    this.element.style.height = size;
-                    this.element.style.left = Math.random() * 100 + '%';
-                    this.element.style.opacity = Math.random() * 0.5 + 0.3;
-                    this.element.style.animationDuration = (Math.random() * 8 + 6) + 's';
-                    
-                    // Mouvement latéral subtil
-                    const sway = (Math.random() * 40 - 20);
-                    this.element.style.setProperty('--sway', sway + 'px');
-                    
-                    this.duration = parseFloat(this.element.style.animationDuration);
-                }
-
-                update() {
-                    if (this.duration <= 0) {
-                        this.reset();
-                    } else {
-                        this.duration -= 1/60; // 60 FPS
-                    }
-                }
-            }
-
-            // Créer les flocons
-            for (let i = 0; i < 80; i++) {
-                snowflakes.push(new Snowflake());
-            }
-
-            // Boucle d'animation 60 FPS
-            function animate() {
-                snowflakes.forEach(snowflake => snowflake.update());
-                animationId = requestAnimationFrame(animate);
-            }
-
-            // Démarrer
-            animate();
-
-            // Nettoyage au déchargement
-            window.addEventListener('beforeunload', () => {
-                if (animationId) cancelAnimationFrame(animationId);
-            });
-        })();
-        </script>
-        <?php endif; ?>
     </body>
 </html>
