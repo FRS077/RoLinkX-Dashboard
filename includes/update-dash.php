@@ -1,5 +1,4 @@
 <?php
-// Lancement de la mise à jour
 exec('sudo /bin/mount -o remount,rw / && sudo /usr/local/bin/update-dash.sh && sudo /bin/mount -o remount,ro /', $output, $return_var);
 
 if ($return_var === 0) {
@@ -23,7 +22,7 @@ if ($return_var === 0) {
             border: 6px solid rgba(255,255,255,0.2);
             border-top-color: #ff0000;
             border-radius: 50%;
-            animation: spin 1s linear infinite;
+            animation: spin 1.2s linear infinite;
             margin-bottom: 20px;
         }
         .update-bar {
@@ -38,7 +37,7 @@ if ($return_var === 0) {
             width: 0;
             height: 100%;
             background: linear-gradient(90deg, #ff0000, #ff8800);
-            animation: progress-fill 3s forwards;
+            animation: progress-fill 7s forwards; /* plus lent */
         }
         .update-text-main {
             font-size: 1.4rem;
@@ -65,15 +64,15 @@ if ($return_var === 0) {
         <div class="update-bar">
             <div class="update-bar-inner"></div>
         </div>
-        <div class="update-text-sub" id="update-status-msg">Application des modifications…</div>
+        <div class="update-text-sub" id="update-status-msg">Préparation…</div>
     </div>
 
     <script>
-        // Texte dynamique pendant la progression
         const msg = document.getElementById('update-status-msg');
         const steps = [
             "Téléchargement des fichiers…",
             "Mise à jour des scripts…",
+            "Application de la configuration…",
             "Nettoyage et vérifications…",
             "Redémarrage de l’interface…"
         ];
@@ -85,12 +84,12 @@ if ($return_var === 0) {
             } else {
                 clearInterval(interval);
             }
-        }, 800);
+        }, 1300); // change de texte toutes les 1,3 s
 
-        // Redirection après la mise à jour
+        // Redirection plus tardive pour laisser profiter l’animation
         setTimeout(function() {
             window.location.href = '/index.php';
-        }, 3200);
+        }, 8000); // 8 secondes
     </script>
     <?php
 } else {
