@@ -229,67 +229,174 @@ switch ($page) {
             </div>
         </footer>
 
-        <!-- 🎄 MESSAGE DE FIN D'ANNÉE AVEC NEIGE - AJOUTÉ ICI 🎄 -->
-        <!-- Message de fin d'année avec neige -->
-        <div id="newyear-message" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:rgba(0,0,50,0.9);">
-            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:white; font-family:Arial; font-size:24px; font-weight:bold; text-shadow:2px 2px 4px rgba(0,0,0,0.8);">
-                🎄✨ Bonne fin d'année 2025 à tous ! ✨🎄<br>
-                <span style="font-size:18px;">Merci pour votre soutien au réseau RNFA !</span>
+        <!-- 🎄🎇 MESSAGE FESTIF COMPLET - SAPINS + NEIGE + FEUX D'ARTIFICE 🎇🎄 -->
+        <div id="newyear-message" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; z-index:9999; background:linear-gradient(135deg, #0a0a23 0%, #1a1a3a 50%, #0a0a23 100%); overflow:hidden;">
+            <!-- SAPINS ANIMÉS -->
+            <div style="position:absolute; bottom:0; left:10%; animation: sway 3s ease-in-out infinite alternate; font-size:80px; z-index:2;">🎄</div>
+            <div style="position:absolute; bottom:0; left:30%; animation: sway 3s ease-in-out infinite alternate 0.5s; font-size:60px; z-index:2;">🌲</div>
+            <div style="position:absolute; bottom:0; right:15%; animation: sway 3s ease-in-out infinite alternate 1s; font-size:70px; z-index:2;">🎅</div>
+            <div style="position:absolute; bottom:0; right:40%; animation: sway 3s ease-in-out infinite alternate 1.5s; font-size:90px; z-index:2;">🌟</div>
+            
+            <!-- MESSAGE CENTRAL -->
+            <div style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); text-align:center; color:#fff; font-family:'Arial Black',Arial; font-size:28px; font-weight:bold; text-shadow:0 0 20px #00ff88, 0 0 40px #ff00ff; z-index:3; animation: glow 2s ease-in-out infinite alternate;">
+                🎄✨ BONNE FIN D'ANNÉE 2025 À TOUS ! ✨🎄<br><br>
+                <span style="font-size:22px; color:#ffd700;">📡 Merci pour votre soutien au réseau RNFA ! 📡</span><br><br>
+                <span style="font-size:16px;">RNFA HotLink Dashboard - FRS077</span>
             </div>
-            <canvas id="snow-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%;"></canvas>
+            
+            <!-- CANVAS NEIGE + FEUX D'ARTIFICE -->
+            <canvas id="festive-canvas" style="position:absolute; top:0; left:0; width:100%; height:100%; z-index:1;"></canvas>
         </div>
 
+        <style>
+            @keyframes sway {
+                0% { transform: rotate(-2deg); }
+                100% { transform: rotate(2deg); }
+            }
+            @keyframes glow {
+                0% { text-shadow: 0 0 20px #00ff88, 0 0 40px #ff00ff; }
+                100% { text-shadow: 0 0 30px #ff0080, 0 0 60px #00ff88, 0 0 10px #ffffff; }
+            }
+            @keyframes fireworks {
+                0% { transform: scale(0) rotate(0deg); opacity: 1; }
+                100% { transform: scale(3) rotate(720deg); opacity: 0; }
+            }
+        </style>
+
         <script>
-        // Neige animée
-        function createSnow() {
-            const canvas = document.getElementById('snow-canvas');
+        // 🎄 ANIMATION FESTIVE COMPLÈTE 🎇
+        function createFestiveEffects() {
+            const canvas = document.getElementById('festive-canvas');
             const ctx = canvas.getContext('2d');
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
             
-            const flakes = [];
-            for(let i = 0; i < 150; i++) {
-                flakes.push({
+            // NEIGE
+            const snowflakes = [];
+            for(let i = 0; i < 200; i++) {
+                snowflakes.push({
                     x: Math.random() * canvas.width,
-                    y: Math.random() * canvas.height,
-                    r: Math.random() * 4 + 1,
-                    speed: Math.random() * 2 + 0.5,
-                    sway: Math.random() * 20 - 10
+                    y: Math.random() * canvas.height - canvas.height,
+                    r: Math.random() * 5 + 1,
+                    speed: Math.random() * 3 + 0.5,
+                    sway: Math.random() * 30 - 15,
+                    opacity: Math.random() * 0.5 + 0.3
                 });
             }
             
+            // FEUX D'ARTIFICE
+            const fireworks = [];
+            function createFirework() {
+                const fw = {
+                    x: Math.random() * canvas.width,
+                    y: canvas.height,
+                    vx: (Math.random() - 0.5) * 10,
+                    vy: -(Math.random() * 8 + 10),
+                    particles: [],
+                    exploded: false,
+                    colors: ['#ff0080', '#00ff88', '#ffaa00', '#00aaff', '#ff4444']
+                };
+                fireworks.push(fw);
+            }
+            
+            // Animation principale
             function animate() {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = 'rgba(255,255,255,0.8)';
                 
-                flakes.forEach(flake => {
+                // NEIGE
+                ctx.save();
+                snowflakes.forEach(snow => {
+                    ctx.globalAlpha = snow.opacity;
+                    ctx.fillStyle = '#ffffff';
                     ctx.beginPath();
-                    ctx.arc(flake.x + Math.sin(flake.y * 0.01) * flake.sway, flake.y, flake.r, 0, Math.PI * 2);
+                    ctx.arc(snow.x + Math.sin(snow.y * 0.01) * snow.sway, snow.y, snow.r, 0, Math.PI * 2);
                     ctx.fill();
                     
-                    flake.y += flake.speed;
-                    if(flake.y > canvas.height) flake.y = 0;
+                    snow.y += snow.speed;
+                    if(snow.y > canvas.height) snow.y = -snow.r;
+                });
+                ctx.restore();
+                
+                // FEUX D'ARTIFICE
+                fireworks.forEach((fw, index) => {
+                    if(!fw.exploded) {
+                        fw.x += fw.vx;
+                        fw.y += fw.vy;
+                        fw.vy += 0.1;
+                        
+                        if(fw.y < canvas.height * 0.3 || fw.vy > 0) {
+                            fw.exploded = true;
+                            for(let i = 0; i < 30; i++) {
+                                fw.particles.push({
+                                    x: fw.x,
+                                    y: fw.y,
+                                    vx: (Math.random() - 0.5) * 12,
+                                    vy: (Math.random() - 0.5) * 12,
+                                    life: 1,
+                                    color: fw.colors[Math.floor(Math.random() * fw.colors.length)]
+                                });
+                            }
+                        }
+                    } else if(fw.particles.length > 0) {
+                        fw.particles.forEach((p, pIndex) => {
+                            p.x += p.vx;
+                            p.y += p.vy;
+                            p.vy += 0.05;
+                            p.life -= 0.02;
+                            
+                            if(p.life > 0) {
+                                ctx.save();
+                                ctx.globalAlpha = p.life;
+                                ctx.fillStyle = p.color;
+                                ctx.beginPath();
+                                ctx.arc(p.x, p.y, 3, 0, Math.PI * 2);
+                                ctx.fill();
+                                ctx.restore();
+                            } else {
+                                fw.particles.splice(pIndex, 1);
+                            }
+                        });
+                        
+                        if(fw.particles.length === 0) {
+                            fireworks.splice(index, 1);
+                        }
+                    }
                 });
                 
                 requestAnimationFrame(animate);
             }
+            
+            // Lancer feux d'artifice toutes les 1.5s
+            setInterval(createFirework, 1500);
             animate();
         }
 
-        // Afficher le message pendant 10 secondes
+        // Lancer l'animation festive 10 secondes
         document.addEventListener('DOMContentLoaded', function() {
             const msg = document.getElementById('newyear-message');
             msg.style.display = 'block';
-            createSnow();
+            createFestiveEffects();
             
             setTimeout(() => {
                 msg.style.opacity = '0';
-                msg.style.transition = 'opacity 0.5s';
-                setTimeout(() => msg.style.display = 'none', 500);
+                msg.style.transition = 'opacity 1s ease-out';
+                setTimeout(() => {
+                    msg.style.display = 'none';
+                    msg.style.opacity = '1';
+                }, 1000);
             }, 10000);
         });
+
+        // Resize canvas
+        window.addEventListener('resize', function() {
+            const canvas = document.getElementById('festive-canvas');
+            if(canvas) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight;
+            }
+        });
         </script>
-        <!-- 🎄 FIN MESSAGE DE FIN D'ANNÉE 🎄 -->
+        <!-- 🎄🎇 FIN ANIMATION FESTIVE 🎇🎄 -->
 
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
