@@ -31,11 +31,11 @@ include __DIR__ . '/includes/functions.php';
 // Password protection
 dashPassword('check');
 
-// Events
+// Events ✅ CORRIGÉ POUR ON-AIR
 $version    = version();
 $eventsData = 'var events=0';
 $ajaxData   = 'var auto_refresh = setInterval( function () { cpuData(); gpioStatus(); }, 3000);';
-if ($version && $version['date'] > 20251212) {
+if ($version && $version['date'] > 20231120) {  // ✅ DATE CORRIGÉE (comme le 1er code)
     $ajaxData   = '';
     $eventsData = 'var events=1; var timeOutTimer=180;';
 }
