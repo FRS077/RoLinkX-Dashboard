@@ -49,7 +49,7 @@ $ctcssVars = [
 
 if (empty($grp) && empty($vol) && empty($flt)) {
     sleep(2);
-    echo 'Not enough data to write!<br/>Check your parameters';
+    echo 'Pas assez de données à écrire <br/>Vérif. paramètres.';
     exit(1);
 }
 
@@ -92,7 +92,7 @@ if (!empty($flt)) {
 function writeToSerial($command, $tty = 1, $delay = 1)
 {
     if (empty($command)) {
-        return 'Empty command. Exiting...';
+        return 'Commande vide. Sortie...';
     }
 
     shell_exec('/usr/bin/sudo /usr/bin/chmod guo+rw /dev/ttyS' . $tty);
@@ -105,7 +105,7 @@ function writeToSerial($command, $tty = 1, $delay = 1)
     $cstatus = trim($serial->readPort());
     if ($cstatus != "+DMOCONNECT:0") {
         $serial->deviceClose();
-        return 'Could not connect!';
+        return 'Échec connexion!';
     }
     /* Process command */
     $serial->sendMessage($command . "\r\n", $delay);
@@ -124,12 +124,12 @@ $last['ctcssTx']   = $tpl_tx;
 $last['squelch']   = $sql;
 $last['volume']    = $vol;
 $last['filter']    = $flt;
-if ($groupCmd != 'Could not connect!') {
+if ($groupCmd != 'Échec connexion!') {
     file_put_contents($historyFile, json_encode($last));
 }
 
 /* Send feedback to user */
-$moduleReply = '<b>Response from SA818</b></br>';
+$moduleReply = '<b>Réponse du SA818</b></br>';
 $moduleReply .= (isset($groupCmd)) ? 'Channel : ' . str_replace("+DMOSETGROUP:0", "Success!", $groupCmd) . '</br>' : '';
 $moduleReply .= (isset($volumeCmd)) ? 'Volume : ' . str_replace("+DMOSETVOLUME:0", "Success!", $volumeCmd) . '</br>' : '';
 $moduleReply .= (isset($filterCmd)) ? 'Filter : ' . str_replace("+DMOSETFILTER:0", "Success!", $filterCmd) . '</br>' : '';
