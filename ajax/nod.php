@@ -136,7 +136,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     color: #444;
     border: 1px solid #DDDDE0 !important;
     border-radius: 15px !important;
-    max-width: 1200px !important;
+    max-width: 1800px !important;
     margin: 20px auto !important;
     box-sizing: border-box;
 }
