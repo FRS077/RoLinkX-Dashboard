@@ -130,9 +130,9 @@ if ($groupCmd != 'Échec connexion!') {
 
 /* Send feedback to user */
 $moduleReply = '<b>Réponse du SA818</b></br>';
-$moduleReply .= (isset($groupCmd)) ? 'Channel : ' . str_replace("+DMOSETGROUP:0", "Success!", $groupCmd) . '</br>' : '';
+$moduleReply .= (isset($groupCmd)) ? 'Fréquence : ' . str_replace("+DMOSETGROUP:0", "Success!", $groupCmd) . '</br>' : '';
 $moduleReply .= (isset($volumeCmd)) ? 'Volume : ' . str_replace("+DMOSETVOLUME:0", "Success!", $volumeCmd) . '</br>' : '';
-$moduleReply .= (isset($filterCmd)) ? 'Filter : ' . str_replace("+DMOSETFILTER:0", "Success!", $filterCmd) . '</br>' : '';
+$moduleReply .= (isset($filterCmd)) ? 'Filtre : ' . str_replace("+DMOSETFILTER:0", "Success!", $filterCmd) . '</br>' : '';
 echo $moduleReply;
 
 /* All done, start SVXLink service */
