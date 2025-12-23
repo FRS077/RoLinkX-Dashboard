@@ -31,11 +31,11 @@ include __DIR__ . '/includes/functions.php';
 // Password protection
 dashPassword('check');
 
-// Events
+// Events ✅ CORRIGÉ POUR ON-AIR
 $version    = version();
 $eventsData = 'var events=0';
 $ajaxData   = 'var auto_refresh = setInterval( function () { cpuData(); gpioStatus(); }, 3000);';
-if ($version && $version['date'] > 20251212) {
+if ($version && $version['date'] > 20231120) {  // ✅ DATE CORRIGÉE (comme le 1er code)
     $ajaxData   = '';
     $eventsData = 'var events=1; var timeOutTimer=180;';
 }
@@ -150,27 +150,14 @@ switch ($page) {
         <link href="css/iziModal.min.css" rel="stylesheet" />
         <style>
             .version-blink {
-    font-weight: bold;
-    animation: pulse-red 2s infinite;
-}
-
-@keyframes pulse-red {
-    0% {
-        color: #000000;          /* noir */
-        text-shadow: none;
-        transform: scale(1);
-    }
-    50% {
-        color: #ff0000;          /* rouge vif */
-        text-shadow: 0 0 10px #ff0000;
-        transform: scale(1.05);
-    }
-    100% {
-        color: #000000;          /* retour noir */
-        text-shadow: none;
-        transform: scale(1);
-    }
-}
+                font-weight: bold;
+                animation: pulse-red 2s infinite;
+            }
+            @keyframes pulse-red {
+                0% { color: #000000; text-shadow: none; transform: scale(1); }
+                50% { color: #ff0000; text-shadow: 0 0 10px #ff0000; transform: scale(1.05); }
+                100% { color: #000000; text-shadow: none; transform: scale(1); }
+            }
         </style>
         <?php echo (isset($extraResource)) ? $extraResource . PHP_EOL : null; ?>
     </head>
@@ -182,7 +169,7 @@ switch ($page) {
                         <i class="icon-dashboard" style="font-size:26px;color:purple;vertical-align: middle;padding: 0 4px 4px 0;"></i>HotLink Dashboard
                     </a>
                 </div>
-                 <div class="list-group list-group-flush">
+                <div class="list-group list-group-flush">
                     <a class="<?php echo ($page == '') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./">📊 Statut</a>
                     <a class="<?php echo ($page == 'wifi') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=wifi">📶 WiFi</a>
                     <a class="<?php echo ($page == 'svx') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=svx">🗣️ SVXLink</a>
@@ -205,18 +192,17 @@ switch ($page) {
                         <i class="icon-dashboard" style="font-size:40px;color:purple"></i>
                         <div class="collapse navbar-collapse" id="navbarSupportedContent">
                             <ul class="navbar-nav ms-auto mt-2 mt-lg-0">
-                                <li class="nav-item"><a class="<?php echo ($page == '') ? 'active p-2' : ''; ?> nav-link" href="./">Statut</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'wifi') ? 'active p-2' : ''; ?> nav-link" href="./?p=wifi">WiFi</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'svx') ? 'active p-2' : ''; ?> nav-link" href="./?p=svx">SVXLink</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'sa') ? 'active p-2' : ''; ?> nav-link" href="./?p=sa">SA818</a></li>
-                                <!--<li class="nav-item"><a class="<?php echo ($page == 'aprs') ? 'active p-2' : ''; ?> nav-link" href="./?p=aprs">APRS</a></li>-->
-                                <li class="nav-item"><a class="<?php echo ($page == 'log') ? 'active p-2' : ''; ?> nav-link" href="./?p=log">Logs</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">Terminal</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">Config</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" style="color:#cdd6f4 !important;" href="./?p=nod">Node Info</a></li>
-                                <li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a></li>
-                                <li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a></li>
-                          </ul>
+                                <li class="nav-item"><a class="<?php echo ($page == '') ? 'active p-2' : ''; ?> nav-link" href="./">📊 Statut</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'wifi') ? 'active p-2' : ''; ?> nav-link" href="./?p=wifi">📶 WiFi</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'svx') ? 'active p-2' : ''; ?> nav-link" href="./?p=svx">🗣️ SVXLink</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'sa') ? 'active p-2' : ''; ?> nav-link" href="./?p=sa">📻 SA818</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'log') ? 'active p-2' : ''; ?> nav-link" href="./?p=log">📋 Logs</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">💻 Terminal</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">⚙️ Config</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" href="./?p=nod">ℹ️ Node Info</a></li>
+                                <li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">🌐 Dashboard du RNFA</a></li>
+                                <li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">📘 Notre groupe Facebook</a></li>
+                            </ul>
                         </div>
                     </div>
                 </nav>
