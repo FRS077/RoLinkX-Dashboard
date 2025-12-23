@@ -1,7 +1,7 @@
 <?php
 /*
- *   RoLinkX Dashboard v3.7
- *   Copyright (C) 2024 by Razvan Marin YO6NAM / www.xpander.ro
+ *   RoLinkX Dashboard v4.7
+ *   Copyright (C) 2025 - 2025  by Razvan Marin YO6NAM / FRS077 Romuald
  *
  *   This program is free software; you can redistribute it and/or modify
  *   it under the terms of the GNU General Public License as published by
@@ -22,7 +22,7 @@
  * Index page
  */
 
-$pages = array("wifi", "svx", "sa", "log", "aprs", "tty", "cfg");
+$pages = array("wifi", "svx", "sa", "log", "nod", "aprs", "tty", "cfg");
 $page  = (null !== filter_input(INPUT_GET, 'p', FILTER_SANITIZE_SPECIAL_CHARS)) ? $_GET['p'] : '';
 
 // Common functions
@@ -35,7 +35,7 @@ dashPassword('check');
 $version    = version();
 $eventsData = 'var events=0';
 $ajaxData   = 'var auto_refresh = setInterval( function () { cpuData(); gpioStatus(); }, 3000);';
-if ($version && $version['date'] > 20231120) {
+if ($version && $version['date'] > 20251212) {
     $ajaxData   = '';
     $eventsData = 'var events=1; var timeOutTimer=180;';
 }
@@ -51,7 +51,7 @@ if (in_array($page, $pages)) {
     include __DIR__ . '/includes/status.php';
 }
 
-$rolink = (is_file($cfgFile)) ? true : false;
+$rolink = (isset($cfgFile) && is_file($cfgFile)) ? true : false;
 
 switch ($page) {
     case "wifi":
@@ -73,6 +73,9 @@ switch ($page) {
         break;
     case "tty":
         $htmlOutput = ttyForm();
+        break;
+    case "nod":
+        $htmlOutput = nodForm();
         break;
     case "cfg":
         $htmlOutput = cfgForm();
@@ -138,13 +141,37 @@ switch ($page) {
         <link rel="icon" type="image/png" sizes="16x16" href="assets/fav/favicon-16x16.png">
         <link rel="manifest" href="manifest.json">
         <meta name="msapplication-TileColor" content="#ffffff">
-        <meta name="msapplication-TileImage" content="ms-icon-144x144.png">
+        <meta name="msapplication-TileImage" content="assets/fav/ms-icon-144x144.png">
         <meta name="theme-color" content="#ffffff">
         <link href="css/styles.css?_=<?php echo cacheBuster('css/styles.css'); ?>" rel="stylesheet" />
         <link href="css/select2.min.css" rel="stylesheet" />
         <link href="css/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
         <link href="css/jquery.toast.min.css" rel="stylesheet" />
         <link href="css/iziModal.min.css" rel="stylesheet" />
+        <style>
+            .version-blink {
+    font-weight: bold;
+    animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+    0% {
+        color: #000000;          /* noir */
+        text-shadow: none;
+        transform: scale(1);
+    }
+    50% {
+        color: #ff0000;          /* rouge vif */
+        text-shadow: 0 0 10px #ff0000;
+        transform: scale(1.05);
+    }
+    100% {
+        color: #000000;          /* retour noir */
+        text-shadow: none;
+        transform: scale(1);
+    }
+}
+        </style>
         <?php echo (isset($extraResource)) ? $extraResource . PHP_EOL : null; ?>
     </head>
     <body>
@@ -155,19 +182,18 @@ switch ($page) {
                         <i class="icon-dashboard" style="font-size:26px;color:purple;vertical-align: middle;padding: 0 4px 4px 0;"></i>HotLink Dashboard
                     </a>
                 </div>
-                <div class="list-group list-group-flush">
-					<a class="<?php echo ($page == '') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./">Statut</a>
-                    <a class="<?php echo ($page == 'wifi') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=wifi">WiFi</a>
-                    <a class="<?php echo ($page == 'svx') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=svx">SVXLink</a>
-                    <a class="<?php echo ($page == 'sa') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=sa">SA818</a>
-                    <!--<a class="<?php echo ($page == 'aprs') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=aprs">APRS</a>-->
-                    <a class="<?php echo ($page == 'log') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=log">Logs</a>
-                    <a class="<?php echo ($page == 'tty') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=tty">Terminal</a>
-                    <a class="<?php echo ($page == 'cfg') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=cfg">Config</a>
-					<a class="<?php echo ($page == 'node_info') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="node_info.php">Node Info</a>
-                    <a class="<?php echo ($page == 'ext') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a>
-					<a class="list-group-item list-group-item-action list-group-item-light p-3" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a>
-			   </div>
+                 <div class="list-group list-group-flush">
+                    <a class="<?php echo ($page == '') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./">📊 Statut</a>
+                    <a class="<?php echo ($page == 'wifi') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=wifi">📶 WiFi</a>
+                    <a class="<?php echo ($page == 'svx') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=svx">🗣️ SVXLink</a>
+                    <a class="<?php echo ($page == 'sa') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=sa">📻 SA818</a>
+                    <a class="<?php echo ($page == 'log') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=log">📋 Logs</a>
+                    <a class="<?php echo ($page == 'tty') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=tty">💻 Terminal</a>
+                    <a class="<?php echo ($page == 'cfg') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=cfg">⚙️ Config</a>
+                    <a class="<?php echo ($page == 'nod') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="./?p=nod">ℹ️ Node Info</a>
+                    <a class="<?php echo ($page == 'ext') ? 'active' : ''; ?> list-group-item list-group-item-action list-group-item-light p-3" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">🌐 RNFA</a>
+                    <a class="list-group-item list-group-item-action list-group-item-light p-3" href="https://www.facebook.com/groups/1067389751809869" target="_blank">📘 Facebook</a>
+                </div>
             </div>
             <div id="page-content-wrapper">
                 <nav <?php echo ($detect->isMobile() ? '' : 'style="display: none !important" '); ?>class="navbar navbar-expand-lg navbar-light bg-light border-bottom">
@@ -187,10 +213,10 @@ switch ($page) {
                                 <li class="nav-item"><a class="<?php echo ($page == 'log') ? 'active p-2' : ''; ?> nav-link" href="./?p=log">Logs</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">Terminal</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">Config</a></li>
-								<li class="nav-item"><a class="<?php echo ($page == 'node_info') ? 'active p-2' : ''; ?> nav-link" href="node_info.php">Node Info</a></li>						
-								<li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a>
-								<li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a>
-						   </ul>
+                                <li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" style="color:#cdd6f4 !important;" href="./?p=nod">Node Info</a></li>
+                                <li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">Dashboard du RNFA</a></li>
+                                <li class="nav-item"><a class="nav-link p-2" href="https://www.facebook.com/groups/1067389751809869" target="_blank">Notre groupe Facebook</a></li>
+                          </ul>
                         </div>
                     </div>
                 </nav>
@@ -201,18 +227,21 @@ switch ($page) {
             <div id="sysmsg"></div>
         </div>
         <footer class="page-footer fixed-bottom font-small bg-light">
-<div class="text-center small p-2">
-2024 Copyright <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">Razvan / YO6NAM</a> - Modification par FRS077 en 2025 pour le réseau RNFA
-<?php
-$versionFile = __DIR__ . '/version';
-if (is_readable($versionFile)) {
-    $version = trim(file_get_contents($versionFile));
-    echo " - Dashboard version $version";
-}
-?>
-</div>
-</div>
-		</footer>
+            <div class="text-center small p-2">
+                2024-2025 Copyright
+                <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">
+                    Razvan / YO6NAM
+                </a>
+                - Modifications FRS077 pour le réseau RNFA - Version :
+                <?php
+                $versionFile = __DIR__ . '/version';
+                if (is_readable($versionFile)) {
+                    $version = trim(file_get_contents($versionFile));
+                    echo ' <span class="version-blink"> ' . $version . '</span>';
+                }
+                ?>
+            </div>
+        </footer>
         <script><?php echo $eventsData; ?></script>
         <script src="js/jquery.js"></script>
         <script src="js/iziModal.min.js"></script>
