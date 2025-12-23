@@ -1148,7 +1148,7 @@ function nodForm()
             <div class="col-lg-12">
                 <iframe id="nodFrame" 
                         src="ajax/nod.php" 
-                        style="width:100%; height:75vh; border:none; overflow:auto; background:#f8f9fa;"
+                        style="width:100%; height:80vh; border:none; overflow:auto; background:#f8f9fa;"
                         frameborder="0"
                         onload="this.style.opacity=\'1\'"
                         onerror="this.contentDocument.body.innerHTML=\'<div class=\\"alert alert-danger p-4 text-center\\"><strong>Erreur ajax/nod.php</strong><br>Vérifiez les logs serveur</div>\'">
