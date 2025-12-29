@@ -165,7 +165,7 @@ function wifiForm()
     $apsList  = '<div class="accordion mb-3" id="wifiNetworks">
     <div class="accordion-item">
      <h3 class="accordion-header" id="heading">
-        <button class="bg-info text-white accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#availableNetworks" aria-expanded="false" aria-controls="availableNetworks"><span role="status" class="spinner-border spinner-border-sm mx-2"></span>Scanning  WiFi</button>
+        <button class="bg-info text-white accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#availableNetworks" aria-expanded="false" aria-controls="availableNetworks"><span role="status" class="spinner-border spinner-border-sm mx-2"></span>Analyse du WiFi</button>
      </h3>
      <div id="availableNetworks" class="accordion-collapse collapse" aria-labelledby="heading" data-bs-parent="#wifiNetworks">
         <div id="updateList" class="accordion-body"></div>
@@ -173,10 +173,10 @@ function wifiForm()
     </div>
     </div>';
     exec('/sbin/iwgetid --raw', $con);
-    $wifiForm = '<h4 class="mt-2 alert alert-info fw-bold">Wi-Fi configuration</h4>';
+    $wifiForm = '<h4 class="mt-2 alert alert-info fw-bold">configuration du Wi-Fi </h4>';
     $wifiForm .= '<div id="wifiScanner">' . $apsList . '</div>';
     $wifiForm .= '<div class="card">
-        <div class="card-header">Add / Edit networks</div>
+        <div class="card-header">Ajouter / Modifier les réseaux</div>
         <div class="card-body">' . PHP_EOL;
     for ($i = 0; $i < 4; $i++) {
         $connected   = (isset($con[0])) ? $con[0] : null;
@@ -187,7 +187,7 @@ function wifiForm()
         $background  = ($active) ? ' bg-success text-white' : null;
         $status      = ($active) ? ' (connected)' : null;
         $wifiForm .= '<h4 class="d-flex justify-content-center badge badge-light fs-6' . $background . '"><i class="icon-wifi">&nbsp;</i>Network ' . $count . $status . '</h4><div class="input-group input-group-sm mb-2">
-          <span class="input-group-text" style="width: 7rem;">Name (SSID)</span>
+          <span class="input-group-text" style="width: 7rem;">Nom du (SSID)</span>
           <input id="wlan_network_' . $count . '" type="text" class="form-control" placeholder="' . $networkName . '" aria-label="Network Name" aria-describedby="inputGroup-sizing-sm">
         </div>
         <div class="input-group input-group-sm mb-4">
@@ -196,11 +196,11 @@ function wifiForm()
         </div>' . PHP_EOL;
     }
     $wifiForm .= '<div class="row justify-content-center m-1">
-            <div class="col-auto alert alert-info m-2 p-1" role="alert">To delete a network use the - (dash) character as SSID</div>
-            <div class="col-auto alert alert-warning m-2 p-1" role="alert">Note : Open networks (no key) are not supported</div>
+            <div class="col-auto alert alert-info m-2 p-1" role="alert">Pour supprimer un réseau, entrez un tiret (-) comme nom du SSID.</div>
+            <div class="col-auto alert alert-warning m-2 p-1" role="alert">Les réseaux ouverts (sans clé) ne sont pas pris en charge</div>
         </div>
         <div class="d-flex justify-content-center mt-2">
-            <button id="savewifi" class="m-2 btn btn-danger btn-lg">Save</button>
+            <button id="savewifi" class="m-2 btn btn-danger btn-lg">Sauvegarder</button>
             <button id="rewifi" class="m-2 btn btn-info btn-lg">Restart Wi-Fi</button>
         </div>
         </div>
@@ -209,7 +209,7 @@ function wifiForm()
     var auto_refresh = setInterval( function () {
     	$("#heading button").html("<span role=\"status\" class=\"spinner-border spinner-border-sm mx-2\"></span>Scanning  WiFi").removeClass("bg-success").addClass("bg-info");
         $("#updateList").load("includes/forms.php?scan", function() {
-            $("#heading button").text("Scan complete (click to open/close)").removeClass("bg-info").addClass("bg-success");
+            $("#heading button").text("Scan terminé (cliquez pour ouvrir/fermer)").removeClass("bg-info").addClass("bg-success");
         });
     }, 6000);
     </script>' . PHP_EOL;
