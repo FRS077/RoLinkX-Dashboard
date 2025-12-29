@@ -173,7 +173,7 @@ function wifiForm()
     </div>
     </div>';
     exec('/sbin/iwgetid --raw', $con);
-    $wifiForm = '<h4 class="mt-2 alert alert-info fw-bold">configuration du Wi-Fi </h4>';
+    $wifiForm = '<h4 class="mt-2 alert alert-info fw-bold">Configuration du Wi-Fi </h4>';
     $wifiForm .= '<div id="wifiScanner">' . $apsList . '</div>';
     $wifiForm .= '<div class="card">
         <div class="card-header">Ajouter / Modifier les réseaux</div>
