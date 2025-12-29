@@ -203,7 +203,7 @@ function wifiForm()
     for ($i = 0; $i < 4; $i++) {
         $connected   = (isset($con[0])) ? $con[0] : null;
         $active      = (isset($ssidList[0][$i]) && $connected === $ssidList[0][$i]) ? true : false;
-        $networkName = (empty($ssidList[0][$i])) ? 'empty' : $ssidList[0][$i] . ' (saved)';
+        $networkName = (empty($ssidList[0][$i])) ? 'empty' : $ssidList[0][$i] . ' (sauvegardé)';
         $networkKey  = (empty($ssidList[1][$i])) ? 'empty' : '********';
         $count       = ($i + 1);
         $background  = ($active) ? ' bg-success text-white' : null;
