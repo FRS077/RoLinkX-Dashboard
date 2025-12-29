@@ -34,185 +34,237 @@ if (isset($_GET['gpsStatus'])) {
 }
 
 /* Wi-Fi form */
-function getSSIDs()
-{
-    $storedSSID = null;
-    $storedPwds = null;
-    $wpaBuffer  = file_get_contents('/etc/wpa_supplicant/wpa_supplicant.conf');
-    // Match both plain text passwords and hashed passphrases
-    preg_match_all('/ssid="(.*)"/', $wpaBuffer, $resultSSID);
-    preg_match_all('/psk=(".*?"|\S+)/', $wpaBuffer, $resultPWDS);
-    if (empty($resultSSID) || empty($resultPWDS)) {
-        return false;
-    }
-
-    foreach ($resultSSID[1] as $key => $ap) {
-        if ($key <= 3) {
-            $storedSSID[] = $ap;
+function getSSIDs() {
+    $storedSSID = array_fill(0, 4, '');
+    $storedPwds = array_fill(0, 4, '');
+    
+    $wpaBuffer = @file_get_contents('/etc/wpa_supplicant/wpa_supplicant.conf');
+    if (!$wpaBuffer) return array($storedSSID, $storedPwds);
+    
+    // Parsing robuste des blocs network={}
+    if (preg_match_all('/network=\{([^}]+)\}/s', $wpaBuffer, $networks)) {
+        foreach($networks[1] as $i => $block) {
+            if ($i >= 4) break; // Limite à 4 réseaux
+            preg_match('/ssid=["\']([^"\']+)["\']/', $block, $ssid);
+            preg_match('/psk=["\']([^"\']+)["\']/', $block, $psk);
+            $storedSSID[$i] = $ssid[1] ?? '';
+            $storedPwds[$i] = $psk[1] ?? '';
         }
     }
-    foreach ($resultPWDS[1] as $key => $pw) {
-        if ($key <= 3) {
-            $storedPwds[] = trim($pw, '"');
-        }
-    }
-    return [$storedSSID, $storedPwds];
+    return array($storedSSID, $storedPwds);
 }
 
-function scanWifi($ext = 0)
-{
-    $apList = null;
-    exec('/usr/bin/sudo wpa_cli -i wlan0 scan');
-    exec('/usr/bin/sudo wpa_cli -i wlan0 scan_results', $reply);
-    if (empty($reply)) {
-        return;
+function scanWifi($ext = 0) {
+    $apList = '';
+    
+    // Vérification interface wlan0
+    $status = shell_exec('sudo wpa_cli -i wlan0 status 2>/dev/null');
+    if (strpos($status, 'wpa_state=SCANNING') !== false || strpos($status, 'wpa_state=DISCONNECTED') !== false) {
+        // Lance scan seulement si nécessaire
+        exec('sudo wpa_cli -i wlan0 scan 2>/dev/null');
+        sleep(2);
     }
-
-    array_shift($reply);
-
+    
+    // Récupère résultats
+    exec('sudo wpa_cli -i wlan0 scan_results 2>/dev/null', $reply);
+    if (empty($reply) || count($reply) < 2) {
+        return '<div class="alert alert-warning">Aucun réseau WiFi détecté ou wlan0 indisponible</div>';
+    }
+    
+    array_shift($reply); // Enlève en-tête
+    $networks = array();
+    
     foreach ($reply as $network) {
-        $arrNetwork = preg_split("/[\t]+/", $network);
-        if (!isset($arrNetwork[4])) {
-            continue;
-        }
-
+        $arrNetwork = preg_split('/\s+/', trim($network));
+        if (!isset($arrNetwork[4])) continue;
+        
         $ssid = trim($arrNetwork[4]);
-        if (empty($ssid) || preg_match('[\x00-\x1f\x7f\'\`\´\"]', $ssid)) {
-            continue;
-        }
-        $networks[$ssid]['ssid'] = $ssid;
-        $networks[$ssid]         = array(
-            'rssi'     => $arrNetwork[2],
-            'protocol' => authType($arrNetwork[3]),
-            'channel'  => freqToChan($arrNetwork[1]),
-        );
+        if (empty($ssid) || preg_match('/^00-1f-7f/', $ssid)) continue;
+        
+        $networks[$ssid]['rssi'] = intval($arrNetwork[2]);
+        $networks[$ssid]['protocol'] = authType($arrNetwork[3]);
+        $networks[$ssid]['channel'] = freqToChan($arrNetwork[1]);
     }
-
-    if (!empty($networks)) {
-        $cnt = 1;
-        $apList = '<table class="table table-sm"><thead><tr>
+    
+    if (empty($networks)) {
+        return '<div class="alert alert-info">Aucun réseau WiFi accessible</div>';
+    }
+    
+    $cnt = 1;
+    $apList .= '<table class="table table-sm">
+        <thead><tr>
             <th scope="col">#</th>
             <th scope="col">SSID</th>
             <th scope="col">RSSI</th>
             <th scope="col">Auth</th>
             <th scope="col">Ch.</th>
-            </tr></thead>
-            <tbody>';
-
-        foreach ($networks as $name => $data) {
-            if ($data['rssi'] >= -80) {
-                $lvlQuality = 'class="alert-success"';
-            } elseif ($data['rssi'] >= -90) {
-                $lvlQuality = 'class="alert-warning"';
-            } else {
-                $lvlQuality = 'class="alert-light"';
-            }
-
-            $apList .= '<tr ' . $lvlQuality . '><th scope="row">' . $cnt . '</th>
-                        <td>' . $name . '</td>
-                        <td>' . $data['rssi'] . '</td>
-                        <td>' . $data['protocol'] . '</td>
-                        <td>' . $data['channel'] . '</td>
-                        </tr>';
-            ++$cnt;
-        }
-        $apList .= '</tbody></table>';
+        </tr></thead>
+        <tbody>';
+    
+    foreach ($networks as $name => $data) {
+        $lvlQuality = ($data['rssi'] > -80) ? 'alert-success' : 
+                     (($data['rssi'] > -90) ? 'alert-warning' : 'alert-light');
+        
+        $apList .= '<tr class="' . $lvlQuality . '">
+            <th scope="row">' . $cnt . '</th>
+            <td>' . htmlspecialchars($name) . '</td>
+            <td>' . $data['rssi'] . ' dBm</td>
+            <td>' . $data['protocol'] . '</td>
+            <td>' . $data['channel'] . '</td>
+        </tr>';
+        $cnt++;
     }
+    
+    $apList .= '</tbody></table>';
     return $apList;
 }
 
-function authType($type)
-{
+function authType($type) {
     $options = array();
-    preg_match_all('/\[([^\]]+)\]/s', $type, $matches);
-
+    preg_match_all('/\[([^\]]+)\]/', $type, $matches);
     foreach ($matches[1] as $match) {
-        if (preg_match('/^(WPA\d?)/', $match, $protocol_match)) {
-            $protocol  = $protocol_match[1];
-            $matchArr  = explode('-', $match);
-            $options[] = htmlspecialchars($protocol, ENT_QUOTES);
+        if (preg_match('/WPA/', $match, $protocol)) {
+            $options[] = htmlspecialchars($protocol[0], ENT_QUOTES);
         }
     }
-
-    if (count($options) === 0) {
-        return 'Open';
-    } else {
-        return implode(' / ', $options);
-    }
+    return (count($options) == 0) ? 'Open' : implode(', ', $options);
 }
 
-function freqToChan($freq)
-{
+function freqToChan($freq) {
     if ($freq >= 2412 && $freq <= 2484) {
-        $channel = ($freq - 2407) / 5;
+        return ($freq - 2407) / 5;
     } elseif ($freq >= 4915 && $freq <= 4980) {
-        $channel = ($freq - 4910) / 5 + 182;
+        return ($freq - 4910) / 5 + 182;
     } elseif ($freq >= 5035 && $freq <= 5865) {
-        $channel = ($freq - 5030) / 5 + 6;
-    } else {
-        $channel = -1;
+        return ($freq - 5030) / 5 + 6;
     }
-    if ($channel >= 1 && $channel <= 196) {
-        return $channel;
-    } else {
-        return 'Invalid Channel';
-    }
+    return 'Invalid';
 }
 
-function wifiForm()
-{
-    $ssidList = getSSIDs();
-    $apsList  = '<div class="accordion mb-3" id="wifiNetworks">
-    <div class="accordion-item">
-     <h3 class="accordion-header" id="heading">
-        <button class="bg-info text-white accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#availableNetworks" aria-expanded="false" aria-controls="availableNetworks"><span role="status" class="spinner-border spinner-border-sm mx-2"></span>Analyse du WiFi</button>
-     </h3>
-     <div id="availableNetworks" class="accordion-collapse collapse" aria-labelledby="heading" data-bs-parent="#wifiNetworks">
-        <div id="updateList" class="accordion-body"></div>
-    </div>
-    </div>
-    </div>';
-    exec('/sbin/iwgetid --raw', $con);
-    $wifiForm = '<h4 class="mt-2 alert alert-info fw-bold">configuration du Wi-Fi </h4>';
+function wifiForm() {
+    list($ssidList, $storedPwds) = getSSIDs();
+    $apsList = scanWifi();
+    
+    $con = array();
+    exec('iwgetid wlan0 essid 2>/dev/null', $con);
+    $connected = !empty($con) ? $con[0] : null;
+    
+    $wifiForm = '';
+    $wifiForm .= '<div class="accordion mb-3" id="wifiNetworks">';
+    $wifiForm .= '<div class="accordion-item">';
+    $wifiForm .= '<h3 class="accordion-header" id="heading">';
+    $wifiForm .= '<button class="bg-info text-white accordion-button collapsed" type="button" 
+                   data-bs-toggle="collapse" data-bs-target="#availableNetworks" 
+                   aria-expanded="false" aria-controls="availableNetworks">
+                   <span role="status" class="spinner-border spinner-border-sm mx-2" style="display:none;"></span>
+                   Analyse du WiFi
+                  </button>';
+    $wifiForm .= '</h3>';
+    $wifiForm .= '<div id="availableNetworks" class="accordion-collapse collapse" 
+                       aria-labelledby="heading" data-bs-parent="#wifiNetworks">';
+    $wifiForm .= '<div id="updateList" class="accordion-body"></div>';
+    $wifiForm .= '</div></div></div>';
+    
+    $wifiForm .= '<h4 class="mt-2 alert alert-info fw-bold">Configuration du Wi-Fi</h4>';
     $wifiForm .= '<div id="wifiScanner">' . $apsList . '</div>';
-    $wifiForm .= '<div class="card">
-        <div class="card-header">Ajouter / Modifier les réseaux</div>
-        <div class="card-body">' . PHP_EOL;
+    
+    $wifiForm .= '<div class="card">';
+    $wifiForm .= '<div class="card-header">Ajouter/Modifier les réseaux</div>';
+    $wifiForm .= '<div class="card-body">';
+    
     for ($i = 0; $i < 4; $i++) {
-        $connected   = (isset($con[0])) ? $con[0] : null;
-        $active      = (isset($ssidList[0][$i]) && $connected === $ssidList[0][$i]) ? true : false;
-        $networkName = (empty($ssidList[0][$i])) ? 'empty' : $ssidList[0][$i] . ' (saved)';
-        $networkKey  = (empty($ssidList[1][$i])) ? 'empty' : '********';
-        $count       = ($i + 1);
-        $background  = ($active) ? ' bg-success text-white' : null;
-        $status      = ($active) ? ' (connected)' : null;
-        $wifiForm .= '<h4 class="d-flex justify-content-center badge badge-light fs-6' . $background . '"><i class="icon-wifi">&nbsp;</i>Network ' . $count . $status . '</h4><div class="input-group input-group-sm mb-2">
-          <span class="input-group-text" style="width: 7rem;">Nom du (SSID)</span>
-          <input id="wlan_network_' . $count . '" type="text" class="form-control" placeholder="' . $networkName . '" aria-label="Network Name" aria-describedby="inputGroup-sizing-sm">
-        </div>
-        <div class="input-group input-group-sm mb-4">
-          <span class="input-group-text" style="width: 7rem;">Key (Password)</span>
-          <input id="wlan_authkey_' . $count . '" type="text" class="form-control" placeholder="' . $networkKey . '" aria-label="Network key" aria-describedby="inputGroup-sizing-sm">
-        </div>' . PHP_EOL;
+        $active = isset($ssidList[0][$i]) && $ssidList[0][$i] == $connected;
+        $networkName = empty($ssidList[0][$i]) ? '' : $ssidList[0][$i];
+        $networkKey = empty($storedPwds[$i]) ? '' : $storedPwds[$i];
+        $background = $active ? 'bg-success text-white' : null;
+        $status = $active ? ' (connecté)' : null;
+        
+        $wifiForm .= '<h4 class="d-flex justify-content-center badge badge-light fs-6 ' . $background . '">';
+        $wifiForm .= '<i class="icon-wifi nbsp"></i>Réseau #' . ($i+1) . $status;
+        $wifiForm .= '</h4>';
+        
+        $wifiForm .= '<div class="input-group input-group-sm mb-2">';
+        $wifiForm .= '<span class="input-group-text" style="width: 7rem;">Nom du SSID</span>';
+        $wifiForm .= '<input id="wlannetwork' . $i . '" type="text" class="form-control" 
+                          placeholder="MonWiFi" value="' . htmlspecialchars($networkName) . '" 
+                          aria-label="Network Name" aria-describedby="inputGroup-sizing-sm">';
+        $wifiForm .= '</div>';
+        
+        $wifiForm .= '<div class="input-group input-group-sm mb-4">';
+        $wifiForm .= '<span class="input-group-text" style="width: 7rem;">Key/Password</span>';
+        $wifiForm .= '<input id="wlanauthkey' . $i . '" type="text" class="form-control" 
+                          placeholder="********" value="' . htmlspecialchars($networkKey) . '" 
+                          aria-label="Network key" aria-describedby="inputGroup-sizing-sm">';
+        $wifiForm .= '</div>';
     }
-    $wifiForm .= '<div class="row justify-content-center m-1">
-            <div class="col-auto alert alert-info m-2 p-1" role="alert">Pour supprimer un réseau, entrez un tiret (-) comme nom du SSID.</div>
-            <div class="col-auto alert alert-warning m-2 p-1" role="alert">Les réseaux ouverts (sans clé) ne sont pas pris en charge</div>
-        </div>
-        <div class="d-flex justify-content-center mt-2">
-            <button id="savewifi" class="m-2 btn btn-danger btn-lg">Sauvegarder</button>
-            <button id="rewifi" class="m-2 btn btn-info btn-lg">Restart Wi-Fi</button>
-        </div>
-        </div>
-    </div>' . PHP_EOL;
+    
+    $wifiForm .= '</div></div>'; // card-body + card
+    
+    $wifiForm .= '<div class="row justify-content-center m-1">';
+    $wifiForm .= '<div class="col-auto alert alert-info m-2 p-1" role="alert">
+                   Pour supprimer un réseau, entrez un tiret (-) comme nom du SSID.
+                  </div>';
+    $wifiForm .= '<div class="col-auto alert alert-warning m-2 p-1" role="alert">
+                   Les réseaux ouverts (sans clé) ne sont pas pris en charge.
+                  </div>';
+    $wifiForm .= '</div>';
+    
+    $wifiForm .= '<div class="d-flex justify-content-center mt-2">';
+    $wifiForm .= '<button id="savewifi" class="m-2 btn btn-danger btn-lg">Sauvegarder</button>';
+    $wifiForm .= '<button id="rewifi" class="m-2 btn btn-info btn-lg">Restart Wi-Fi</button>';
+    $wifiForm .= '</div>';
+    
+    // JavaScript corrigé - Scan MANUEL uniquement
     $wifiForm .= '<script>
-    var auto_refresh = setInterval( function () {
-    	$("#heading button").html("<span role=\"status\" class=\"spinner-border spinner-border-sm mx-2\"></span>Scanning  WiFi").removeClass("bg-success").addClass("bg-info");
-        $("#updateList").load("includes/forms.php?scan", function() {
-            $("#heading button").text("Scan terminé (cliquez pour ouvrir/fermer)").removeClass("bg-info").addClass("bg-success");
+    $(document).ready(function() {
+        // Scan manuel sur clic bouton
+        $("#heading button").click(function() {
+            var btn = $(this);
+            var spinner = btn.find("span[role=status]");
+            var updateList = $("#updateList");
+            
+            spinner.show();
+            btn.removeClass("bg-success").addClass("bg-info");
+            btn.html("Scanning WiFi... <span role=\\"status\\" class=\\"spinner-border spinner-border-sm mx-2\\"></span>");
+            
+            updateList.load("includes/forms.php?scan=1", function() {
+                spinner.hide();
+                btn.text("Scan terminé - cliquez pour ouvrir/fermer")
+                   .removeClass("bg-info").addClass("bg-success");
+            });
         });
-    }, 6000);
-    </script>' . PHP_EOL;
+        
+        // Sauvegarde WiFi
+        $("#savewifi").click(function() {
+            var networks = [];
+            for(var i=0; i<4; i++) {
+                var ssid = $("#wlannetwork"+i).val().trim();
+                var key = $("#wlanauthkey"+i).val().trim();
+                if(ssid && ssid !== "-") {
+                    networks.push({ssid: ssid, key: key});
+                }
+            }
+            
+            $.post("ajax/savewifi.php", {networks: networks}, function(data) {
+                alert("Configuration WiFi sauvegardée! Redémarrez Wi-Fi.");
+                location.reload();
+            }).fail(function() {
+                alert("Erreur sauvegarde. Vérifiez les logs.");
+            });
+        });
+        
+        // Restart WiFi
+        $("#rewifi").click(function() {
+            if(confirm("Redémarrer le service WiFi?")) {
+                $.get("ajax/rewifi.php", function() {
+                    alert("WiFi redémarré!");
+                    setTimeout(function(){ location.reload(); }, 3000);
+                });
+            }
+        });
+    });
+    </script>';
+    
     return $wifiForm;
 }
 
