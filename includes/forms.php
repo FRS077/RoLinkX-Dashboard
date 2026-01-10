@@ -461,7 +461,7 @@ function svxForm()
     $svxForm .='<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Type</span>
           <select id="svx_tip" class="form-select">
-            <option value="">Select a Type</option>
+            <option value="">Sélectionner un type</option>
             <option value="EL"';
             if (preg_match('/CALSIGN=EL/',$cfgFileData)) $svxForm .=' selected';
     $svxForm .='>EL (Link)</option>
