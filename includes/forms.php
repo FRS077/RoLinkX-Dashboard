@@ -792,7 +792,7 @@ $sa818Form .= '</optgroup>
         </div>
         <div class="form-floating mb-1">
             <select id="sa_tpl_rx" class="form-select" aria-label="RX CTCSS (Hz)">
-                <option selected disabled>Select a value</option>';
+                <option selected disabled>Sélectionnez une valeur</option>';
 				
     /* Build RX CTCSS selects */
     foreach ($ctcssVars as $key => $val) {
