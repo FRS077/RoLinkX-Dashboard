@@ -174,7 +174,6 @@ function sa818()
             <div class="input-group mb-1">
                 <span class="input-group-text" style="width: 6rem;">Port série</span>
                 <span class="input-group-text" style="width: 8rem;">' . $saDetect['port'] . '</span>
-				<span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
             </div>
             <div class="input-group mb-1">
                 <span class="input-group-text" style="width: 6rem;">Firmware</span>
