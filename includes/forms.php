@@ -456,19 +456,12 @@ function svxForm()
         $sel = ($lid == $varLongIdent[2]) ? ' selected' : null;
         $svxForm .= '<option value="' . $lid . '"' . $sel . '>' . $lid . ' minutes</option>' . PHP_EOL;
     }
-    $svxForm .= '</select>
-        </div>';
-    $svxForm .='<div class="input-group input-group-sm mb-1">
+       $svxForm .= '</select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Type</span>
-          <select id="svx_tip" class="form-select">
-            <option value="">Sélectionner un type</option>
-            <option value="EL"';
-            if (preg_match('/CALSIGN=EL/',$cfgFileData)) $svxForm .=' selected';
-    $svxForm .='>EL (Link)</option>
-            <option value="ER"';
-            if (preg_match('/CALSIGN=ER/',$cfgFileData)) $svxForm .=' selected';
-    $svxForm .='>ER (Relais)</option>
-          </select>
+          <input id="svx_tip" type="text" class="form-control" placeholder="nod portabil" aria-label="Description" aria-describedby="inputGroup-sizing-sm" value="' . $cfgRefData['tip'] . '">
+          </div>
         <div class="input-group input-group-sm mb-3">
           <span class="input-group-text" style="width: 8rem;">Modules</span>
           <select id="svx_mod" class="form-select">
