@@ -388,7 +388,7 @@ function getReflector($ext = 0)
     if (is_file($cfgFile)) {
         preg_match('/HOST=(\S+)/', file_get_contents($cfgFile), $reply);
     }
-    $refHost = (!empty($reply)) ? $reply[1] : 'Not available
+    $refHost = (!empty($reply)) ? $reply[1] : 'RNFA';
     preg_match_all('/(Could not open GPIO|Disconnected|established)/', file_get_contents('/tmp/svxlink.log'), $logData);
     if (!empty($logData) && getSVXLinkStatus(1)) {
         $statusData = (isset($logData[0][array_key_last($logData[0]) - 1])) ? $logData[0][array_key_last($logData[0]) - 1] : null;
