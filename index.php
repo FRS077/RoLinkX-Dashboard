@@ -214,7 +214,7 @@ switch ($page) {
         </div>
         <footer class="page-footer fixed-bottom font-small bg-light">
             <div class="text-center small p-2">
-                2024-2025 Copyright
+                2024-2026 Copyright
                 <a class="text-primary" target="_blank" href="https://github.com/yo6nam/RoLinkX-Dashboard">
                     Razvan / YO6NAM
                 </a>
