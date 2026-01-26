@@ -790,7 +790,7 @@ $sa818Form .= '</optgroup>
             </select>
             <label for="sa_dev">Deviation (kHz)</label>
         </div>
-	$sa818Form .= '<div class="alert alert-info mt-2 p-2">Pour la tonalité CTCSS, privilégiez une fréquence entre 67,0 et 85,4 Hz (meilleure qualité audio).</div>';	
+Pour la tonalité CTCSS TX, il est préférable de choisir une fréquence entre 67 et 85,4 (meilleure qualité audio).	
         <div class="form-floating mb-1">
             <select id="sa_tpl_rx" class="form-select" aria-label="RX CTCSS (Hz)">
                 <option selected disabled>Sélectionnez une valeur</option>';
