@@ -779,27 +779,21 @@ $sa818Form .= '</optgroup>
         . '</option>' . PHP_EOL;
     }
 
-   $sa818Form .= '</select>
-<div class="alert alert-info small py-1 mb-2">
-    <strong>Wide (25 kHz)</strong> : Meilleure sensibilité RX pour répéteurs<br>
-    <strong>Narrow (12.5 kHz)</strong> : Plus sélectif (zones urbaines)
-</div>
-<label for="sa_grp">Fréquence (MHz)</label>
-</div>
-<div class="form-floating mb-1">
-    <select id="sa_dev" class="form-select" aria-label="Mode FM (kHz)">
-        <option selected disabled>Sélectionnez une valeur</option>
-        <option ' . ((isset($lastPgmData['deviation']) && $lastPgmData['deviation'] == 0) ? 'selected' : null) . ' value="0">Narrow (12.5kHz)</option>
-        <option ' . (($lastPgmData['deviation'] == 1) ? 'selected' : null) . ' value="1">Wide (25kHz)</option>
-    </select>
-    <label for="sa_dev">Mode FM</label>
-</div>
-<div class="alert alert-info small py-1 mb-2">
-    <strong>Pour CTCSS RX</strong> : Préférez 67-85.4 Hz (meilleure qualité audio)
-</div>	
-<div class="form-floating mb-1">
-    <select id="sa_tpl_rx" class="form-select" aria-label="RX CTCSS (Hz)">
-        <option selected disabled>Sélectionnez une valeur</option>';
+    $sa818Form .= '</select>
+            <label for="sa_grp">Fréquence (MHz)</label>
+        </div>
+        <div class="form-floating mb-1">
+            <select id="sa_dev" class="form-select" aria-label="Deviation (kHz)">
+                <option selected disabled>Sélectionnez une valeur</option>
+                <option ' . ((isset($lastPgmData['deviation']) && $lastPgmData['deviation'] == 0) ? 'selected' : null) . ' value="0">12.5</option>
+                <option ' . (($lastPgmData['deviation'] == 1) ? 'selected' : null) . ' value="1">6.25</option>
+            </select>
+            <label for="sa_dev">Deviation (kHz)</label>
+        </div>
+Pour la tonalité CTCSS RX, il est préférable de choisir une fréquence entre 67 et 85,4 (meilleure qualité audio).	
+        <div class="form-floating mb-1">
+            <select id="sa_tpl_rx" class="form-select" aria-label="RX CTCSS (Hz)">
+                <option selected disabled>Sélectionnez une valeur</option>';
 				
     /* Build RX CTCSS selects */
     foreach ($ctcssVars as $key => $val) {
@@ -824,7 +818,7 @@ $sa818Form .= '</optgroup>
             <select id="sa_sql" class="form-select" aria-label="Squelch">
                 <option selected disabled>Sélectionnez une valeur</option>';
     /* Generate squelch values */
-    for ($sq = 0; $sq <= 8; $sq += 1) {
+    for ($sq = 1; $sq <= 8; $sq += 1) {
         $selected = ($lastPgmData['squelch'] == $sq) ? ' selected' : '';
         $sa818Form .= '<option value="' . $sq . '"' . $selected . '>' . $sq . '</option>' . PHP_EOL;
     }
@@ -875,7 +869,7 @@ $sa818Form .= '</optgroup>
 function aprsForm($ajax = false)
 {
     $cfgFiles = array(
-        '/opt/rolink/conf/rolink.conf' => 'HotLink',
+        '/opt/rolink/conf/rolink.conf' => 'RoLink',
         '/etc/direwolf.conf'           => 'DireWolf',
     );
     foreach ($cfgFiles as $path => $name) {
