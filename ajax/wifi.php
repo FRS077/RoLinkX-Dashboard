@@ -1,177 +1,133 @@
 <?php
 /*
- *   RoLinkX Dashboard v3.7 - Wi-Fi management module (FIX iOS XR819 + CRASH)
- *   Fix iOS : ieee80211w=0 + CCMP network only.
- *   Fix crash : quotes ssid/psk + restart service propre
+ *   RoLinkX Dashboard v3.7
+ *   Copyright (C) 2024 by Razvan Marin YO6NAM / www.xpander.ro
+ *
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+/*
+ * Wi-Fi management module
  */
 
 include __DIR__ . '/../includes/functions.php';
-
-$wpaFile     = '/etc/wpa_supplicant/wpa_supplicant.conf';
-$wpaTemp     = '/tmp/wpa_supplicant.tmp';
+$wpaFile    = '/etc/wpa_supplicant/wpa_supplicant.conf';
+$wpaTemp    = '/tmp/wpa_supplicant.tmp';
 $maxNetworks = 5;
-$weHaveData  = false;
+$weHaveData = false;
 
 /* Get POST vars */
 for ($i = 1; $i <= $maxNetworks; $i++) {
-    ${"wn$i"} = isset($_POST["wn$i"]) ? filter_input(INPUT_POST, "wn$i", FILTER_SANITIZE_STRING) : '';
-    ${"wk$i"} = isset($_POST["wk$i"]) ? $_POST["wk$i"] : '';  // pas de sanitize sur la clé
+    ${"wn$i"} = isset($_POST["wn$i"]) ? filter_input(INPUT_POST, "wn$i", FILTER_SANITIZE_ADD_SLASHES) : '';
+    ${"wk$i"} = isset($_POST["wk$i"]) ? filter_input(INPUT_POST, "wk$i", FILTER_SANITIZE_ADD_SLASHES) : '';
 }
 
-/* wpa_passphrase maison */
-function wpa_passphrase($ssid, $passphrase) {
+function wpa_passphrase($ssid, $passphrase)
+{
     $bin = hash_pbkdf2('sha1', $passphrase, $ssid, 4096, 32, true);
     return bin2hex($bin);
 }
 
-/* Lecture des SSID/PSK existants */
-function getSSIDs($wpaFile, $maxNetworks) {
+function getSSIDs($wpaFile, $maxNetworks)
+{
     $storedSSID = [];
     $storedPwds = [];
+    $wpaBuffer = file_get_contents($wpaFile);
 
-    $wpaBuffer = @file_get_contents($wpaFile);
-    if (!$wpaBuffer) {
+    // Match both plain text passwords and hashed passphrases
+    preg_match_all('/ssid="(.*)"/', $wpaBuffer, $resultSSID);
+    preg_match_all('/psk=(".*?"|\S+)/', $wpaBuffer, $resultPWDS);
+
+    if (empty($resultSSID[1]) || empty($resultPWDS[1])) {
         return false;
     }
 
-    // ssid="xxxx"
-    preg_match_all('/ssid[\s]*=[\s]*["\']([^"\']+)["\']/', $wpaBuffer, $resultSSID);
-
-    // psk=hex64  OU  psk="motdepasse"
-    preg_match_all('/psk[\s]*=[\s]*("?)([0-9a-fA-F]{64}|[^"\s]+)\1/', $wpaBuffer, $resultPWDS);
-
-    for ($i = 0; $i < min($maxNetworks, count($resultSSID[1])); $i++) {
-        $storedSSID[] = $resultSSID[1][$i];
-    }
-    for ($i = 0; $i < min($maxNetworks, count($resultPWDS[2])); $i++) {
-        $storedPwds[] = $resultPWDS[2][$i];
+    // Store SSIDs and passwords
+    for ($i = 0; $i < $maxNetworks; $i++) {
+        if (isset($resultSSID[1][$i])) {
+            $storedSSID[] = $resultSSID[1][$i];
+        }
+        if (isset($resultPWDS[1][$i])) {
+            $storedPwds[] = trim($resultPWDS[1][$i], '"');
+        }
     }
 
-    return [
-        array_pad($storedSSID, $maxNetworks, ''),
-        array_pad($storedPwds, $maxNetworks, '')
-    ];
+    return [$storedSSID, $storedPwds];
 }
 
-/* Y a‑t‑il des données POST ? */
+/* Check for user input data */
 for ($i = 1; $i <= $maxNetworks; $i++) {
-    if (!empty(${"wn$i"}) || !empty(${"wk$i"})) {
+    if (${"wn$i"} || ${"wk$i"}) {
         $weHaveData = true;
         break;
     }
 }
 
-$ssidList      = getSSIDs($wpaFile, $maxNetworks);
-$storedNetwork = $ssidList ? $ssidList[0] : array_fill(0, $maxNetworks, '');
-$storedAuthKey = $ssidList ? $ssidList[1] : array_fill(0, $maxNetworks, '');
+$ssidList = getSSIDs($wpaFile, $maxNetworks);
 
-/* Mise à jour des réseaux */
+$storedNetwork = [];
+$storedAuthKey = [];
+
 for ($i = 0; $i < $maxNetworks; $i++) {
-    $network = $storedNetwork[$i];
-    $authKey = $storedAuthKey[$i];
-
-    $newSSID = ${"wn" . ($i + 1)};
-    $newKey  = ${"wk" . ($i + 1)};
-
-    if ($newSSID === '-') {
-        // suppression réseau
-        $network = '';
-        $authKey = '';
-    } elseif ($newSSID) {
-        // validation clé (WPA2‑PSK : 8–63 chars ou 64 hex)
-        if ($newKey && (strlen($newKey) < 8 || strlen($newKey) > 64)) {
-            die('Erreur: Clé pour "' . htmlspecialchars($newSSID) . '" invalide (8-63 chars ou 64 hex).');
-        }
-        $network = $newSSID;
-    }
-
-    if ($newKey && $newKey !== $authKey) {
-        $authKey = $newKey;
-    }
-
-    ${"network" . ($i + 1)} = $network;
-    ${"authKey" . ($i + 1)} = $authKey;
+    $storedNetwork[$i] = $ssidList ? ($ssidList[0][$i] ?? '') : '';
+    $storedAuthKey[$i] = $ssidList ? ($ssidList[1][$i] ?? '') : '';
 }
 
-/* Construction du wpa_supplicant.conf */
-$wpaData =
-    "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n" .
-    "update_config=1\n" .
-    "ap_scan=1\n" .
-    "fast_reauth=1\n" .
-    "country=FR\n" .
-    "# Fix iPhone XR819\n" .
-    "ieee80211w=0\n";
+/* Networks and Validation */
+for ($i = 1; $i <= $maxNetworks; $i++) {
+    ${"network$i"} = $storedNetwork[$i - 1];
+    ${"authKey$i"} = $storedAuthKey[$i - 1];
 
+    if (${"wn$i"} == '-') {
+         ${"network$i"} = '';
+    } elseif (${"wn$i"} && strlen(${"wk$i"}) < 8) {
+		echo 'Network <b>'. ${"wn$i"} .'</b> : Clé de sécurité réseau non valide !';
+		exit(1);
+    } elseif (${"wn$i"} && ${"wn$i"} != $storedNetwork[$i - 1]) {
+        ${"network$i"} = ${"wn$i"};
+    }
+
+    if (${"wk$i"} && ${"wk$i"} != $storedAuthKey[$i - 1]) {
+        ${"authKey$i"} = ${"wk$i"};
+    }
+}
+
+/* Update the wpa_supplicant.conf file with new data */
+$wpaData = 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
+update_config=1
+ap_scan=1
+fast_reauth=1
+country=FR' . PHP_EOL;
 for ($i = 1; $i <= $maxNetworks; $i++) {
     if (!empty(${"network$i"})) {
-        $ssid = addslashes(${"network$i"});
-        $pass = ${"authKey$i"};
-
-        if ($pass === '') {
-            // pas de clé -> on saute
-            continue;
-        }
-
-        // Si 64 hex → on garde, sinon on dérive comme wpa_passphrase
-        if (strlen($pass) == 64 && ctype_xdigit($pass)) {
-            $psk = $pass;
-        } else {
-            $psk = wpa_passphrase(${"network$i"}, $pass);
-        }
-
-        $wpaData .=
-            "network={\n" .
-            "    ssid=\"{$ssid}\"\n" .
-            "    psk={$psk}\n" .
-            "    key_mgmt=WPA-PSK\n" .
-            "    scan_ssid=1\n" .
-            "    priority=1\n" .
-            "    pairwise=CCMP\n" .
-            "    group=CCMP\n" .
-            "    proto=RSN\n" .
-            "}\n";
+        $psk = (strlen(${"authKey$i"}) < 32) ? wpa_passphrase(${"network$i"}, ${"authKey$i"}) : ${"authKey$i"};
+        $wpaData .= 'network={
+	ssid=' . json_encode(${"network$i"}) . '
+	psk=' . $psk . '
+	key_mgmt=WPA-PSK
+	scan_ssid=1
+}' . PHP_EOL;
     }
 }
 
 if ($weHaveData) {
-
-    // toggleFS optionnel si rootfs en RO/RW
-    if (!function_exists('toggleFS')) {
-        function toggleFS($enable) {
-            // adapter si besoin, sinon commenter
-            // exec("sudo mount -o remount," . ($enable ? "rw" : "ro") . " /");
-        }
-    }
-
     toggleFS(true);
     file_put_contents($wpaTemp, $wpaData);
-
-    // Vérif rapide de la syntaxe avant copie définitive
-    // (décommente si binaire présent)
-    // exec("wpa_supplicant -t -c {$wpaTemp}", $outTest, $retTest);
-    // if ($retTest !== 0) {
-    //     toggleFS(false);
-    //     echo "ERREUR de syntaxe dans wpa_supplicant.conf :<br>";
-    //     echo nl2br(htmlspecialchars(implode("\n", $outTest)));
-    //     exit;
-    // }
-
-    exec("sudo cp {$wpaTemp} {$wpaFile}");
-
-    // Restart propre
-    exec("sudo ip link set wlan0 down");
-    exec("sudo ip link set wlan0 up");
-    exec(
-        "sudo systemctl restart wpa_supplicant@wlan0 " .
-        "|| (sudo killall wpa_supplicant; " .
-        "    sudo wpa_supplicant -B -i wlan0 -c {$wpaFile})"
-    );
-
+    exec("/usr/bin/sudo /usr/bin/cp $wpaTemp $wpaFile");
     toggleFS(false);
-    echo "Config sauvée et Wi‑Fi redémarré !";
-
+    echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
 } else {
-    echo "Aucun changement.";
+    echo 'No new data, so nothing changed';
 }
-?>
