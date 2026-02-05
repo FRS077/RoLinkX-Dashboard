@@ -1,9 +1,9 @@
 <?php
 /*
- *   RoLinkX Dashboard v3.7 - Wi-Fi management module (FIX iOS XR819)
+ *   RoLinkX Dashboard v3.7 - Wi-Fi management module (FIX iOS XR819 + CRASH)
  *   Copyright (C) 2024 by Razvan Marin YO6NAM / [www.xpander.ro](https://www.xpander.ro)
  *
- *   Fix iOS : ieee80211w=0 global + CCMP dans network (pas global qui crash)
+ *   Fix iOS : ieee80211w=0 + CCMP network only. Fix crash: quotes ssid/psk + restart service
  */
 
 include __DIR__ . '/../includes/functions.php';
@@ -14,111 +14,106 @@ $weHaveData = false;
 
 /* Get POST vars */
 for ($i = 1; $i <= $maxNetworks; $i++) {
-    ${"wn$i"} = isset($_POST["wn$i"]) ? filter_input(INPUT_POST, "wn$i", FILTER_SANITIZE_ADD_SLASHES) : '';
-    ${"wk$i"} = isset($_POST["wk$i"]) ? filter_input(INPUT_POST, "wk$i", FILTER_SANITIZE_ADD_SLASHES) : '';
+    ${"wn$i"} = isset($_POST["wn$i"]) ? filter_input(INPUT_POST, "wn$i", FILTER_SANITIZE_STRING) : '';
+    ${"wk$i"} = isset($_POST["wk$i"]) ? $_POST["wk$i"] : '';  // No sanitize for psk hex/pass
 }
 
-function wpa_passphrase($ssid, $passphrase)
-{
+function wpa_passphrase($ssid, $passphrase) {
     $bin = hash_pbkdf2('sha1', $passphrase, $ssid, 4096, 32, true);
     return bin2hex($bin);
 }
 
-function getSSIDs($wpaFile, $maxNetworks)
-{
+function getSSIDs($wpaFile, $maxNetworks) {
     $storedSSID = [];
     $storedPwds = [];
-    $wpaBuffer = file_get_contents($wpaFile);
+    $wpaBuffer = @file_get_contents($wpaFile);
+    if (!$wpaBuffer) return false;
 
-    preg_match_all('/ssid="(.*)"/', $wpaBuffer, $resultSSID);
-    preg_match_all('/psk=(".*?"|\\S+)/', $wpaBuffer, $resultPWDS);
+    preg_match_all('/ssid[\\s]*=[\\s]*["\']([^"\']+)["\']/', $wpaBuffer, $resultSSID);
+    preg_match_all('/psk[\\s]*=[\\s]*([0-9a-fA-F]{64}|[^\\s]+)/', $wpaBuffer, $resultPWDS);
 
-    if (empty($resultSSID[1]) || empty($resultPWDS[1])) {
-        return false;
+    for ($i = 0; $i < min($maxNetworks, count($resultSSID[1])); $i++) {
+        $storedSSID[] = $resultSSID[1][$i];
     }
-
-    for ($i = 0; $i < $maxNetworks; $i++) {
-        if (isset($resultSSID[1][$i])) {
-            $storedSSID[] = $resultSSID[1][$i];
-        }
-        if (isset($resultPWDS[1][$i])) {
-            $storedPwds[] = trim($resultPWDS[1][$i], '"');
-        }
+    for ($i = 0; $i < min($maxNetworks, count($resultPWDS[1])); $i++) {
+        $storedPwds[] = $resultPWDS[1][$i];
     }
-
-    return [$storedSSID, $storedPwds];
+    return [array_pad($storedSSID, $maxNetworks, ''), array_pad($storedPwds, $maxNetworks, '')];
 }
 
-/* Check for user input data */
+/* Check input */
 for ($i = 1; $i <= $maxNetworks; $i++) {
-    if (${"wn$i"} || ${"wk$i"}) {
+    if (!empty(${"wn$i"}) || !empty(${"wk$i"})) {
         $weHaveData = true;
         break;
     }
 }
 
 $ssidList = getSSIDs($wpaFile, $maxNetworks);
+$storedNetwork = $ssidList ? $ssidList[0] : array_fill(0, $maxNetworks, '');
+$storedAuthKey = $ssidList ? $ssidList[1] : array_fill(0, $maxNetworks, '');
 
-$storedNetwork = [];
-$storedAuthKey = [];
-
+/* Update networks */
 for ($i = 0; $i < $maxNetworks; $i++) {
-    $storedNetwork[$i] = $ssidList ? ($ssidList[0][$i] ?? '') : '';
-    $storedAuthKey[$i] = $ssidList ? ($ssidList[1][$i] ?? '') : '';
+    $network = $storedNetwork[$i];
+    $authKey = $storedAuthKey[$i];
+    $newSSID = ${"wn".($i+1)};
+    $newKey = ${"wk".($i+1)};
+
+    if ($newSSID === '-') {
+        $network = '';
+    } elseif ($newSSID && (strlen($newKey) < 8 || strlen($newKey) > 64)) {
+        die('Erreur: Clé pour "' . htmlspecialchars($newSSID) . '" invalide (8-63 chars ou 64 hex).');
+    } elseif ($newSSID) {
+        $network = $newSSID;
+    }
+    if ($newKey && $newKey !== $authKey) {
+        $authKey = $newKey;
+    }
+    ${"network".($i+1)} = $network;
+    ${"authKey".($i+1)} = $authKey;
 }
 
-/* Networks and Validation */
-for ($i = 1; $i <= $maxNetworks; $i++) {
-    ${"network$i"} = $storedNetwork[$i - 1];
-    ${"authKey$i"} = $storedAuthKey[$i - 1];
-
-    if (${"wn$i"} == '-') {
-         ${"network$i"} = '';
-    } elseif (${"wn$i"} && strlen(${"wk$i"}) < 8) {
-		echo 'Network <b>'. ${"wn$i"} .'</b> : Clé de sécurité réseau non valide !';
-		exit(1);
-    } elseif (${"wn$i"} && ${"wn$i"} != $storedNetwork[$i - 1]) {
-        ${"network$i"} = ${"wn$i"};
-    }
-
-    if (${"wk$i"} && ${"wk$i"} != $storedAuthKey[$i - 1]) {
-        ${"authKey$i"} = ${"wk$i"};
-    }
-}
-
-/* wpa_supplicant.conf CORRIGÉ pour iOS + XR819 (pas de crash) */
-$wpaData = 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
-update_config=1
-ap_scan=1
-fast_reauth=1
-country=FR
-# Fix iPhone XR819 (global seulement)
-ieee80211w=0' . PHP_EOL;
+/* Build config */
+$wpaData = "ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev\n".
+          "update_config=1\n".
+          "ap_scan=1\n".
+          "fast_reauth=1\n".
+          "country=FR\n".
+          "# Fix iPhone XR819\n".
+          "ieee80211w=0\n";
 
 for ($i = 1; $i <= $maxNetworks; $i++) {
     if (!empty(${"network$i"})) {
-        $psk = (strlen(${"authKey$i"}) < 32 || ctype_xdigit(${"authKey$i"})) ? wpa_passphrase(${"network$i"}, ${"authKey$i"}) : ${"authKey$i"};
-        $wpaData .= 'network={
-	ssid=' . json_encode(${"network$i"}) . '
-	psk=' . $psk . '
-	key_mgmt=WPA-PSK
-	scan_ssid=1
-	priority=1
-	# CCMP dans network (sûr)
-	pairwise=CCMP
-	group=CCMP
-	proto=RSN
-}' . PHP_EOL;
+        $ssid = addslashes(${"network$i"});
+        $pass = ${"authKey$i"};
+        $psk = (strlen($pass) == 64 && ctype_xdigit($pass)) ? $pass : wpa_passphrase(${"network$i"}, $pass);
+        $wpaData .= "network={\n".
+                    "    ssid=\"{$ssid}\"\n".
+                    "    psk={$psk}\n".
+                    "    key_mgmt=WPA-PSK\n".
+                    "    scan_ssid=1\n".
+                    "    priority=1\n".
+                    "    pairwise=CCMP\n".
+                    "    group=CCMP\n".
+                    "    proto=RSN\n".
+                    "}\n";
     }
 }
 
 if ($weHaveData) {
+    if (!function_exists('toggleFS')) {
+        function toggleFS($enable) {
+            exec("sudo mount -o remount," . ($enable ? "rw" : "ro") . " /");
+        }
+    }
     toggleFS(true);
     file_put_contents($wpaTemp, $wpaData);
-    exec("/usr/bin/sudo /usr/bin/cp $wpaTemp $wpaFile");
+    exec("sudo cp {$wpaTemp} {$wpaFile}");
+    exec("sudo systemctl restart wpa_supplicant@wlan0 || sudo killall wpa_supplicant && sudo wpa_supplicant -B -i wlan0 -c {$wpaFile}");
     toggleFS(false);
-    echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
+    echo "Config sauvée et Wi-Fi redémarré !";
 } else {
-    echo 'Aucune nouvelle donnée, rien changé.';
+    echo "Aucun changement.";
 }
 ?>
