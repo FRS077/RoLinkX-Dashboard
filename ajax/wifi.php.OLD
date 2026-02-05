@@ -1,9 +1,25 @@
 <?php
 /*
- *   RoLinkX Dashboard v3.7 - Wi-Fi management module (FIX iOS XR819)
- *   Copyright (C) 2024 by Razvan Marin YO6NAM / [www.xpander.ro](https://www.xpander.ro)
+ *   RoLinkX Dashboard v3.7
+ *   Copyright (C) 2024 by Razvan Marin YO6NAM / www.xpander.ro
  *
- *   Fix iOS : ieee80211w=0 global + CCMP dans network (pas global qui crash)
+ *   This program is free software; you can redistribute it and/or modify
+ *   it under the terms of the GNU General Public License as published by
+ *   the Free Software Foundation; either version 2 of the License, or
+ *   (at your option) any later version.
+ *
+ *   This program is distributed in the hope that it will be useful,
+ *   but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *   MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *   GNU General Public License for more details.
+ *
+ *   You should have received a copy of the GNU General Public License
+ *   along with this program; if not, write to the Free Software
+ *   Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
+ */
+
+/*
+ * Wi-Fi management module
  */
 
 include __DIR__ . '/../includes/functions.php';
@@ -30,13 +46,15 @@ function getSSIDs($wpaFile, $maxNetworks)
     $storedPwds = [];
     $wpaBuffer = file_get_contents($wpaFile);
 
+    // Match both plain text passwords and hashed passphrases
     preg_match_all('/ssid="(.*)"/', $wpaBuffer, $resultSSID);
-    preg_match_all('/psk=(".*?"|\\S+)/', $wpaBuffer, $resultPWDS);
+    preg_match_all('/psk=(".*?"|\S+)/', $wpaBuffer, $resultPWDS);
 
     if (empty($resultSSID[1]) || empty($resultPWDS[1])) {
         return false;
     }
 
+    // Store SSIDs and passwords
     for ($i = 0; $i < $maxNetworks; $i++) {
         if (isset($resultSSID[1][$i])) {
             $storedSSID[] = $resultSSID[1][$i];
@@ -86,28 +104,20 @@ for ($i = 1; $i <= $maxNetworks; $i++) {
     }
 }
 
-/* wpa_supplicant.conf CORRIGÉ pour iOS + XR819 (pas de crash) */
+/* Update the wpa_supplicant.conf file with new data */
 $wpaData = 'ctrl_interface=DIR=/var/run/wpa_supplicant GROUP=netdev
 update_config=1
 ap_scan=1
 fast_reauth=1
-country=FR
-# Fix iPhone XR819 (global seulement)
-ieee80211w=0' . PHP_EOL;
-
+country=FR' . PHP_EOL;
 for ($i = 1; $i <= $maxNetworks; $i++) {
     if (!empty(${"network$i"})) {
-        $psk = (strlen(${"authKey$i"}) < 32 || ctype_xdigit(${"authKey$i"})) ? wpa_passphrase(${"network$i"}, ${"authKey$i"}) : ${"authKey$i"};
+        $psk = (strlen(${"authKey$i"}) < 32) ? wpa_passphrase(${"network$i"}, ${"authKey$i"}) : ${"authKey$i"};
         $wpaData .= 'network={
 	ssid=' . json_encode(${"network$i"}) . '
 	psk=' . $psk . '
 	key_mgmt=WPA-PSK
 	scan_ssid=1
-	priority=1
-	# CCMP dans network (sûr)
-	pairwise=CCMP
-	group=CCMP
-	proto=RSN
 }' . PHP_EOL;
     }
 }
@@ -119,6 +129,5 @@ if ($weHaveData) {
     toggleFS(false);
     echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
 } else {
-    echo 'Aucune nouvelle donnée, rien changé.';
+    echo 'No new data, so nothing changed';
 }
-?>
