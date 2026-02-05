@@ -240,8 +240,7 @@ if ($weHaveData) {
     file_put_contents($wpaTemp, $wpaData);
     exec("/usr/bin/sudo /usr/bin/cp $wpaTemp $wpaFile");
     toggleFS(false);
-    echo 'Nouvelles données enregistrées avec options iOS ! Redémarrez Wi-Fi : sudo wpa_cli -i wlan0 reconfigure<br/>Ou sudo reboot.';
+    echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
 } else {
     echo 'Aucune nouvelle donnée, rien changé.';
 }
-?>
