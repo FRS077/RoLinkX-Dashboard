@@ -117,8 +117,8 @@ if ($weHaveData) {
     file_put_contents($wpaTemp, $wpaData);
     exec("/usr/bin/sudo /usr/bin/cp $wpaTemp $wpaFile");
     toggleFS(false);
-    echo '✅ Config Wi-Fi iOS sauvée ! Redémarre : sudo wpa_cli -i wlan0 reconfigure';
+    echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
 } else {
-    echo 'Aucune modification.';
+    echo 'Aucune nouvelle donnée, rien changé.';
 }
 ?>
