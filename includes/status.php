@@ -27,7 +27,7 @@ if (isset($_GET['svxStatus'])) {
 }
 
 if (isset($_GET['svxReflector'])) {
-    echo getReflector(1);  // ← Correction: getReflector (pas getReflecstor)
+    echo getReflector(1);
 }
 
 if (isset($_GET['cpuData'])) {
@@ -38,14 +38,9 @@ if (isset($_GET['gpio'])) {
     echo gpioStatus(1);
 }
 
-if (isset($_GET['serverStatus'])) {  // ← AJOUTEZ CETTE LIGNE
-    echo getServerStatus(1);
-}
-
 if (isset($_GET['room'])) {
     echo roomForm();
 }
-
 
 /* GPS dongle */
 function getGPSDongle()
@@ -382,29 +377,6 @@ function getSVXLinkStatus($ext = 0)
         <input id="svxStatus" type="text" class="form-control" placeholder="' . $result . '" readonly>'
         . $dtmfTrigger .
         '</div>';
-}
-
-/* Get Server f62dmr.fr:5300 status */
-function getServerStatus($ext = 0)
-{
-    $host = 'f62dmr.fr';
-    $port = 5300;
-    $connected = @fsockopen($host, $port, $errno, $errstr, 2); // Timeout 2s
-    if ($connected) {
-        fclose($connected);
-        $result = 'ONLINE';
-        $status = 'width:6.5rem;background:lightgreen;';
-    } else {
-        $result = 'OFFLINE';
-        $status = 'width:6.5rem;background:tomato;';
-    }
-    if ($ext == 1) {
-        return $result;
-    }
-    return '<div class="input-group mb-2">
-        <span class="input-group-text" style="' . $status . '">Serveur</span>
-        <input type="text" class="form-control" placeholder="' . $result . '" readonly>
-    </div>';
 }
 
 /* Get Reflector address */
