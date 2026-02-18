@@ -379,38 +379,51 @@ function getSVXLinkStatus($ext = 0)
         '</div>';
 }
 
-/* Get Reflector address */
+/* Get Reflector address - Version corrigée */
 function getReflector($ext = 0)
 {
     $config    = include __DIR__ . '/../config.php';
     $cfgFile   = '/opt/rolink/conf/rolink.conf';
     $conStatus = $stateColor = $prevStatus = '';
+    
+    // Extraction HOST depuis config (priorité)
     if (is_file($cfgFile)) {
         preg_match('/HOST=(\S+)/', file_get_contents($cfgFile), $reply);
     }
-    $refHost = (!empty($reply)) ? $reply[1] : 'Not available';
-    preg_match_all('/(Could not open GPIO|Disconnected|established)/', file_get_contents('/tmp/svxlink.log'), $logData);
+    $refHost = (!empty($reply)) ? $reply[1] : 'RNFA';
+    
+    // Analyse logs avec regex corrigée pour votre ligne exacte
+    preg_match_all('/(Could not open GPIO|Disconnected|Connection established)/', file_get_contents('/tmp/svxlink.log'), $logData);
+    
     if (!empty($logData) && getSVXLinkStatus(1)) {
         $statusData = (isset($logData[0][array_key_last($logData[0]) - 1])) ? $logData[0][array_key_last($logData[0]) - 1] : null;
-        $prevStatus = (count($logData) > 1) ? $statusData : null;
+        $prevStatus = (count($logData[0]) > 1) ? $statusData : null;  // Corrigé: count($logData[0])
         $conStatus  = ($prevStatus == 'Could not open GPIO') ? 'GPIO' : $logData[0][array_key_last($logData[0])];
+        
         switch ($conStatus) {
-            case "established":
+            case "Connection established":
+            case "established":  // Pour compatibilité
                 $stateColor = 'background:lightgreen;';
+                // Optionnel: extraire IP du log si pas dans config
+                if (preg_match('/to (\S+):5300/', file_get_contents('/tmp/svxlink.log'), $ipMatch)) {
+                    $refHost = $ipMatch[1];  // 141.94.251.32
+                }
                 break;
             case "Disconnected":
                 $stateColor = 'background:tomato;';
                 break;
-            case "GPIO":
+            case "Could not open GPIO":
                 $stateColor = 'background:red;';
                 $refHost    = 'Check your GPIO!';
                 break;
         }
     }
-    $showNodes = ($config['cfgRefNodes'] == 'true' && $conStatus == 'established') ? ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
+    
+    $showNodes = ($config['cfgRefNodes'] == 'true' && strpos($conStatus, 'established') !== false) ? ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
+    
     return '<div class="input-group mb-2">
-        <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflector</span>
-        <input type="text" class="form-control" placeholder="' . $refHost . '" readonly>
+        <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
+        <input type="text" class="form-control" placeholder="' . htmlspecialchars($refHost) . '" readonly>
     </div>';
 }
 
