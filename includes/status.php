@@ -388,7 +388,7 @@ function getReflector($ext = 0)
     if (is_file($cfgFile)) {
         preg_match('/HOST=(\S+)/', file_get_contents($cfgFile), $reply);
     }
-    $refHost = (!empty($reply)) ? $reply[1] : 'RNFA';
+    $refHost = (!empty($reply)) ? $reply[1] : 'Not available';
     preg_match_all('/(Could not open GPIO|Disconnected|established)/', file_get_contents('/tmp/svxlink.log'), $logData);
     if (!empty($logData) && getSVXLinkStatus(1)) {
         $statusData = (isset($logData[0][array_key_last($logData[0]) - 1])) ? $logData[0][array_key_last($logData[0]) - 1] : null;
@@ -409,7 +409,7 @@ function getReflector($ext = 0)
     }
     $showNodes = ($config['cfgRefNodes'] == 'true' && $conStatus == 'established') ? ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
     return '<div class="input-group mb-2">
-        <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
+        <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflector</span>
         <input type="text" class="form-control" placeholder="' . $refHost . '" readonly>
     </div>';
 }
