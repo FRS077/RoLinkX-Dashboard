@@ -386,13 +386,13 @@ function getReflector($ext = 0)
     $cfgFile   = '/opt/rolink/conf/rolink.conf';
     $conStatus = $stateColor = $prevStatus = '';
     
-    // Extraction HOST depuis config (priorité)
+    // CORRIGÉ: enlever les \\ inutiles
     if (is_file($cfgFile)) {
-        preg_match('/HOST=(\\S+)/', file_get_contents($cfgFile), $reply);
+        preg_match('/HOST=(\S+)/', file_get_contents($cfgFile), $reply);
     }
     $refHost = (!empty($reply)) ? $reply[1] : 'Non disponible';
     
-    // Analyse logs avec regex corrigée pour votre ligne exacte
+    // Analyse logs avec regex corrigée
     preg_match_all('/(Could not open GPIO|Disconnected|Connection established)/', file_get_contents('/tmp/svxlink.log'), $logData);
     
     if (!empty($logData) && getSVXLinkStatus(1)) {
@@ -402,18 +402,15 @@ function getReflector($ext = 0)
         
         switch ($conStatus) {
             case "Connexion établie":
-            case "Connection established":  // Logs anglais + FR
+            case "Connection established":
             case "established":
                 $stateColor = 'background:lightgreen;';
-                // Extraire IP du log si pas dans config
-                if (preg_match('/to (\\S+):5300/', file_get_contents('/tmp/svxlink.log'), $ipMatch)) {
-                    $refHost = $ipMatch[1];  // 141.94.251.32
-                }
+                $refHost    = 'Connecté';  // ✅ Affichage "Connecté" au lieu IP
                 break;
             case "Déconnecté":
             case "Disconnected":
                 $stateColor = 'background:tomato;';
-                $refHost = 'Déconnecté';
+                $refHost    = 'Déconnecté';  // ✅ Rouge
                 break;
             case "Could not open GPIO":
                 $stateColor = 'background:red;';
@@ -430,7 +427,6 @@ function getReflector($ext = 0)
         <input type="text" class="form-control" placeholder="' . htmlspecialchars($refHost) . '" readonly>
     </div>';
 }
-
 
 /* Get Reflector connected nodes */
 function getRefNodes()
