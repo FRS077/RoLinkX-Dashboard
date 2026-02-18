@@ -379,7 +379,7 @@ function getSVXLinkStatus($ext = 0)
         '</div>';
 }
 
-/* Get Reflector address - Version corrigée */
+/* Obtenir l'adresse du Reflecteur */
 function getReflector($ext = 0)
 {
     $config    = include __DIR__ . '/../config.php';
@@ -388,44 +388,49 @@ function getReflector($ext = 0)
     
     // Extraction HOST depuis config (priorité)
     if (is_file($cfgFile)) {
-        preg_match('/HOST=(\S+)/', file_get_contents($cfgFile), $reply);
+        preg_match('/HOST=(\\S+)/', file_get_contents($cfgFile), $reply);
     }
-    $refHost = (!empty($reply)) ? $reply[1] : 'RNFA';
+    $refHost = (!empty($reply)) ? $reply[1] : 'Non disponible';
     
     // Analyse logs avec regex corrigée pour votre ligne exacte
-    preg_match_all('/(Could not open GPIO|Disconnected|Connection established)/', file_get_contents('/tmp/svxlink.log'), $logData);
+    preg_match_all('/(Could not open GPIO|Déconnecté|Connexion établie)/', file_get_contents('/tmp/svxlink.log'), $logData);
     
     if (!empty($logData) && getSVXLinkStatus(1)) {
         $statusData = (isset($logData[0][array_key_last($logData[0]) - 1])) ? $logData[0][array_key_last($logData[0]) - 1] : null;
-        $prevStatus = (count($logData[0]) > 1) ? $statusData : null;  // Corrigé: count($logData[0])
+        $prevStatus = (count($logData[0]) > 1) ? $statusData : null;
         $conStatus  = ($prevStatus == 'Could not open GPIO') ? 'GPIO' : $logData[0][array_key_last($logData[0])];
         
         switch ($conStatus) {
-            case "Connection established":
-            case "established":  // Pour compatibilité
+            case "Connexion établie":
+            case "Connection established":  // Logs anglais + FR
+            case "established":
                 $stateColor = 'background:lightgreen;';
-                // Optionnel: extraire IP du log si pas dans config
-                if (preg_match('/to (\S+):5300/', file_get_contents('/tmp/svxlink.log'), $ipMatch)) {
+                // Extraire IP du log si pas dans config
+                if (preg_match('/to (\\S+):5300/', file_get_contents('/tmp/svxlink.log'), $ipMatch)) {
                     $refHost = $ipMatch[1];  // 141.94.251.32
                 }
                 break;
+            case "Déconnecté":
             case "Disconnected":
                 $stateColor = 'background:tomato;';
+                $refHost = 'Déconnecté';
                 break;
             case "Could not open GPIO":
                 $stateColor = 'background:red;';
-                $refHost    = 'Check your GPIO!';
+                $refHost    = 'Vérifiez GPIO !';
                 break;
         }
     }
     
-    $showNodes = ($config['cfgRefNodes'] == 'true' && strpos($conStatus, 'established') !== false) ? ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
+    $showNodes = ($config['cfgRefNodes'] == 'true' && strpos($conStatus, 'established') !== false) ? 
+        ' collapsed dropdown-toggle" role="button" data-bs-toggle="collapse" data-bs-target="#refStations" aria-expanded="false" aria-controls="refStations"' : '"';
     
     return '<div class="input-group mb-2">
         <span class="input-group-text' . $showNodes . ' style="width: 6.5rem;' . $stateColor . '">Reflecteur</span>
         <input type="text" class="form-control" placeholder="' . htmlspecialchars($refHost) . '" readonly>
     </div>';
 }
+
 
 /* Get Reflector connected nodes */
 function getRefNodes()
