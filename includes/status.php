@@ -393,7 +393,7 @@ function getReflector($ext = 0)
     $refHost = (!empty($reply)) ? $reply[1] : 'Non disponible';
     
     // Analyse logs avec regex corrigée pour votre ligne exacte
-    preg_match_all('/(Could not open GPIO|Déconnecté|Connexion établie)/', file_get_contents('/tmp/svxlink.log'), $logData);
+    preg_match_all('/(Could not open GPIO|Disconnected|Connection established)/', file_get_contents('/tmp/svxlink.log'), $logData);
     
     if (!empty($logData) && getSVXLinkStatus(1)) {
         $statusData = (isset($logData[0][array_key_last($logData[0]) - 1])) ? $logData[0][array_key_last($logData[0]) - 1] : null;
