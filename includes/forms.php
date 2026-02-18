@@ -460,7 +460,7 @@ function svxForm()
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Type</span>
-          <input id="svx_tip" type="text" class="form-control" placeholder="nod portabil" aria-label="Description" aria-describedby="inputGroup-sizing-sm" value="' . $cfgRefData['tip'] . '">
+          <input id="svx_tip" type="text" class="form-control" placeholder="nodEEE portabil" aria-label="Description" aria-describedby="inputGroup-sizing-sm" value="' . $cfgRefData['tip'] . '">
         </div>
         <div class="input-group input-group-sm mb-3">
           <span class="input-group-text" style="width: 8rem;">Modules</span>
