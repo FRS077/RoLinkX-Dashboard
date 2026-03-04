@@ -163,7 +163,7 @@
 <ol>
     <li>Accédez à la section <strong>Config</strong>.</li>
     <li>Descendez en bas de page.</li>
-    <li>Cliquez sur le bouton de mise à jour manuelle.</li>
+    <li>Cliquez sur le bouton Mettre à jour le Dashboard.</li>
 </ol>
 
 <h3>📞 Support technique</h3>
