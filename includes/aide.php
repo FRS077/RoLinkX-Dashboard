@@ -70,20 +70,21 @@
             margin-bottom: 8px;
             font-weight: 500;
         }
-        .user-alert {
-            background: #dc3545;
-            color: #fff;
-            font-weight: bold;
-            padding: 4px 8px;
-            border-radius: 4px;
-            border: 2px solid #ff0000;
-            display: inline-block;
-            font-size: 1.1em;
-            animation: blink 1s infinite;
+        .mdp-alert {
+            background: #dc3545 !important;
+            color: #fff !important;
+            font-weight: bold !important;
+            font-size: 1.1em !important;
+            padding: 8px 12px !important;
+            border-radius: 5px !important;
+            border: 2px solid #ff0000 !important;
+            display: inline-block !important;
+            animation: blink 1s infinite !important;
+            margin: 5px 0 !important;
         }
         @keyframes blink {
             0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.4; }
+            51%, 100% { opacity: 0.3; }
         }
         .info-reseau .avertissement {
             background: rgba(255,255,255,0.2);
@@ -111,12 +112,13 @@
 
 <h1>🛠️ Guide d'utilisation — Dashboard HotLink</h1>
 
+<!-- SECTION RNFA avec USER CLIGNOTANT ROUGE -->
 <div class="info-reseau">
     <h3>🌐 Informations Réseau RNFA (f62dmr.fr)</h3>
     <ul>
         <li><strong>Serveur :</strong> <code>f62dmr.fr</code></li>
         <li><strong>Port :</strong> <code>5300</code></li>
-        <li><strong>Mot de passe :</strong> <span class="user-alert">USER</span></li>
+        <li><strong>Mot de passe :</strong> <span class="mdp-alert">USER</span> <strong>(EN MAJUSCULES !)</strong></li>
     </ul>
     <div class="avertissement">
         ⚠️ <strong>Ces informations concernent UNIQUEMENT le réseau RNFA.</strong><br>
