@@ -25,7 +25,7 @@
 <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
 
 <p>
-    <a class="download" href="docs/guide_hotlink_f62dmr.pdf" target="_blank">
+    <a class="download" href="doc/guide_hotlink_f62dmr.pdf" target="_blank">
         Télécharger le guide en PDF
     </a>
 </p>
