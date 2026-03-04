@@ -118,8 +118,19 @@
     <li>État de connexion (en ligne / hors ligne)</li>
     <li>Réseau actif</li>
     <li>Informations de liaison</li>
+    <li>
+        En cliquant sur <strong>Reflecteur</strong>, vous pouvez vérifier si le hotspot est connecté ou non.
+        Un simple clic permet également de visualiser les nodes connectés au Reflector RNFA.<br><br>
+        Vous pouvez également y retrouver les commandes suivantes :
+        <ul>
+            <li>Restart du HotLink</li>
+            <li>Stop du HotLink</li>
+            <li>Reboot</li>
+            <li>Mise hors tension</li>
+        </ul>
+        Il est d’ailleurs recommandé d’éteindre correctement le HotLink avec la mise hors tension.
+    </li>
 </ul>
-<p><strong>Aucune action n'est requise dans cette section</strong>, elle est purement informative.</p>
 
 <h2>📶 Section : Configuration du Wi-Fi</h2>
 <h3>Procédure de configuration</h3>
