@@ -198,7 +198,8 @@ switch ($page) {
                                 <li class="nav-item"><a class="<?php echo ($page == 'wifi') ? 'active p-2' : ''; ?> nav-link" href="./?p=wifi">📶 WiFi</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'svx') ? 'active p-2' : ''; ?> nav-link" href="./?p=svx">🗣️ SVXLink</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'sa') ? 'active p-2' : ''; ?> nav-link" href="./?p=sa">📻 SA818</a></li>
-                                <li class="nav-item"><a class="<?php echo ($page == 'aprs') ? 'active p-2' : ''; ?> nav-link" href="./?p=aprs">📡 APRS</a></li>                                <li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">💻 Terminal</a></li>
+                                <li class="nav-item"><a class="<?php echo ($page == 'aprs') ? 'active p-2' : ''; ?> nav-link" href="./?p=aprs">📡 APRS</a></li> 
+								<li class="nav-item"><a class="<?php echo ($page == 'tty') ? 'active p-2' : ''; ?> nav-link" href="./?p=tty">💻 Terminal</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'cfg') ? 'active p-2' : ''; ?> nav-link" href="./?p=cfg">⚙️ Config</a></li>
                                 <li class="nav-item"><a class="<?php echo ($page == 'nod') ? 'active p-2' : ''; ?> nav-link" href="./?p=nod">ℹ️ Node Info</a></li>
                                 <li class="nav-item"><a class="nav-link p-2" href="http://www.f62dmr.fr/svxrdb/index.php" target="_blank">🌐 Dashboard du RNFA</a></li>
