@@ -90,6 +90,13 @@
     ⚠️ RNFA f62dmr.fr:5300 Mot de passe <strong>USER</strong> EN MAJUSCULES !
 </div>
 
+<p style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; font-weight:bold; margin-top:10px;">
+    ⚠️ Ces informations concernent exclusivement le réseau RNFA et son HotLink.<br><br>
+    Pour toute utilisation avec un autre reflector, il est impératif de prendre contact avec le responsable du réseau concerné pour la configuration adaptée à son installation.<br><br>
+    Ce dashboard a été créé pour une utilisation propre à notre installation RNFA. 
+    Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
+</p>
+
 <p><strong>Réalisé pour le réseau f62dmr.fr</strong></p>
 <p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
 
