@@ -50,49 +50,6 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
-        .info-reseau {
-            background: linear-gradient(135deg, #0077cc, #005fa0);
-            color: white;
-            padding: 15px;
-            border-radius: 8px;
-            margin: 20px 0;
-            box-shadow: 0 4px 8px rgba(0,119,204,0.3);
-        }
-        .info-reseau h3 {
-            margin: 0 0 10px 0;
-            font-size: 1.2em;
-        }
-        .info-reseau ul {
-            margin: 0;
-            padding-left: 20px;
-        }
-        .info-reseau li {
-            margin-bottom: 8px;
-            font-weight: 500;
-        }
-        .mdp-alert {
-            background: #dc3545 !important;
-            color: #fff !important;
-            font-weight: bold !important;
-            font-size: 1.1em !important;
-            padding: 8px 12px !important;
-            border-radius: 5px !important;
-            border: 2px solid #ff0000 !important;
-            display: inline-block !important;
-            animation: blink 1s infinite !important;
-            margin: 5px 0 !important;
-        }
-        @keyframes blink {
-            0%, 50% { opacity: 1; }
-            51%, 100% { opacity: 0.3; }
-        }
-        .info-reseau .avertissement {
-            background: rgba(255,255,255,0.2);
-            padding: 10px;
-            border-radius: 5px;
-            margin-top: 10px;
-            font-size: 0.95em;
-        }
         table { 
             border-collapse: collapse; 
             width: 100%; 
@@ -111,21 +68,6 @@
 <body>
 
 <h1>🛠️ Guide d'utilisation — Dashboard HotLink</h1>
-
-<!-- SECTION RNFA avec USER CLIGNOTANT ROUGE -->
-<div class="info-reseau">
-    <h3>🌐 Informations Réseau RNFA (f62dmr.fr)</h3>
-    <ul>
-        <li><strong>Serveur :</strong> <code>f62dmr.fr</code></li>
-        <li><strong>Port :</strong> <code>5300</code></li>
-        <li><strong>Mot de passe :</strong> <span class="mdp-alert">USER</span> <strong>(EN MAJUSCULES !)</strong></li>
-    </ul>
-    <div class="avertissement">
-        ⚠️ <strong>Ces informations concernent UNIQUEMENT le réseau RNFA.</strong><br>
-        Pour les autres reflectors, contactez les responsables respectifs.
-    </div>
-</div>
-
 <p><strong>Réalisé pour le réseau f62dmr.fr</strong></p>
 <p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
 
@@ -137,6 +79,7 @@
 
 <hr>
 
+<!-- Le reste du contenu reste identique -->
 <h2>📊 Introduction</h2>
 <p>Ce guide vous accompagne dans l'utilisation du dashboard HotLink. Chaque section est décrite avec les actions à réaliser et les précautions à prendre.</p>
 
@@ -282,10 +225,13 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('downloadBtn');
     
     downloadBtn.addEventListener('click', function(e) {
-        e.preventDefault();
+        e.preventDefault(); // Empêche le changement de page
+        
+        // Ajoute l'effet visuel "téléchargement en cours"
         downloadBtn.classList.add('downloading');
         downloadBtn.textContent = '⏳ Téléchargement en cours...';
         
+        // Crée et clique le lien de téléchargement en arrière-plan
         const link = document.createElement('a');
         link.href = 'http://hotlink/doc/Guide Dashboard HotLink.pdf';
         link.download = 'Guide-Dashboard-HotLink.pdf';
@@ -293,6 +239,7 @@ document.addEventListener('DOMContentLoaded', function() {
         link.click();
         document.body.removeChild(link);
         
+        // Retourne à l'état normal après 2 secondes
         setTimeout(() => {
             downloadBtn.classList.remove('downloading');
             downloadBtn.textContent = '📥 Télécharger le guide complet en PDF';
