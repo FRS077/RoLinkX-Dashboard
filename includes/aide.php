@@ -29,11 +29,26 @@
             border-radius: 6px;
             font-weight: bold;
             box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.3s ease;
         }
         .download:hover { 
             background: #005fa0; 
             transform: translateY(-1px);
             box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        .download.downloading {
+            background: #28a745;
+            position: relative;
+        }
+        .download.downloading::after {
+            content: " ⏳ Téléchargement...";
+            animation: pulse 1.5s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
         }
         table { 
             border-collapse: collapse; 
@@ -57,13 +72,14 @@
 <p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
 
 <div style="text-align: center; margin: 30px 0;">
-    <a class="download" href="http://hotlink/doc/Guide Dashboard HotLink.pdf" download>
+    <a class="download" id="downloadBtn" href="http://hotlink/doc/Guide Dashboard HotLink.pdf" download>
         📥 Télécharger le guide complet en PDF
     </a>
 </div>
 
 <hr>
 
+<!-- Le reste du contenu reste identique -->
 <h2>📊 Introduction</h2>
 <p>Ce guide vous accompagne dans l'utilisation du dashboard HotLink. Chaque section est décrite avec les actions à réaliser et les précautions à prendre.</p>
 
@@ -203,6 +219,34 @@
 <p class="signature">
     Document réalisé par FRS077 pour f62dmr.fr — Mars 2026
 </p>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const downloadBtn = document.getElementById('downloadBtn');
+    
+    downloadBtn.addEventListener('click', function(e) {
+        e.preventDefault(); // Empêche le changement de page
+        
+        // Ajoute l'effet visuel "téléchargement en cours"
+        downloadBtn.classList.add('downloading');
+        downloadBtn.textContent = '⏳ Téléchargement en cours...';
+        
+        // Crée et clique le lien de téléchargement en arrière-plan
+        const link = document.createElement('a');
+        link.href = 'http://hotlink/doc/Guide Dashboard HotLink.pdf';
+        link.download = 'Guide-Dashboard-HotLink.pdf';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        
+        // Retourne à l'état normal après 2 secondes
+        setTimeout(() => {
+            downloadBtn.classList.remove('downloading');
+            downloadBtn.textContent = '📥 Télécharger le guide complet en PDF';
+        }, 2000);
+    });
+});
+</script>
 
 </body>
 </html>
