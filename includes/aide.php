@@ -200,12 +200,6 @@
     </tr>
 </table>
 
-<div style="text-align: center; margin: 30px 0;">
-    <a class="download" href="/includes/download_guide.php">
-        📥 Télécharger le guide complet en PDF
-    </a>
-</div>
-
 <p class="signature">
     Document réalisé par FRS077 pour f62dmr.fr — Mars 2026
 </p>
