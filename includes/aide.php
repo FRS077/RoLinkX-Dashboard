@@ -50,6 +50,22 @@
             0%, 100% { opacity: 1; }
             50% { opacity: 0.5; }
         }
+        .info-reseau {
+            background: #dc3545;
+            color: white;
+            padding: 15px;
+            border-radius: 6px;
+            margin: 20px 0;
+            text-align: center;
+            font-weight: bold;
+            font-size: 1.1em;
+            animation: blink 1.5s infinite;
+            border: 3px solid #ff0000;
+        }
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0.6; }
+        }
         table { 
             border-collapse: collapse; 
             width: 100%; 
@@ -68,6 +84,12 @@
 <body>
 
 <h1>🛠️ Guide d'utilisation — Dashboard HotLink</h1>
+
+<!-- AJOUT UNIQUEMENT ICI -->
+<div class="info-reseau">
+    ⚠️ RNFA f62dmr.fr:5300 Mot de passe <strong>USER</strong> EN MAJUSCULES !
+</div>
+
 <p><strong>Réalisé pour le réseau f62dmr.fr</strong></p>
 <p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
 
