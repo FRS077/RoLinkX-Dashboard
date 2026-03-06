@@ -1018,7 +1018,7 @@ function aprsForm($ajax = false)
         return $dynamicData;
     }
 
-    /* Read config*/
+/* Read config*/
     $aprsConfig = file('/etc/direwolf.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($aprsConfig as $line) {
         if (preg_match('/IGSERVER (\S+)/', $line, $matches)) {
