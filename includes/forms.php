@@ -1018,23 +1018,27 @@ function aprsForm($ajax = false)
         return $dynamicData;
     }
 
-    /* Read config*/
-    $aprsConfig = file('/etc/direwolf.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($aprsConfig as $line) {
-        if (preg_match('/IGSERVER (\S+)/', $line, $matches)) {
-            $server = $matches[1];
-        } elseif (preg_match('/TBEACON.*symbol="([^"]+)".*comment="([^"]+)"(?:.*commentcmd="([^"]*)")?/', $line, $matches)) {
-            $symbol  = $matches[1];
-            $comment = $matches[2];
-            $temp    = (isset($matches[3])) ? (preg_match('/tempc/', $matches[3]) ? 2 : 1) : 0;
-        } elseif (preg_match('/KISSCOPY (\S+)/', $line, $matches)) {
-            $report = $matches[1];
-        }
+   /* Read config*/
+$aprsConfig = file('/etc/direwolf.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+foreach ($aprsConfig as $line) {
+    if (preg_match('/IGSERVER (\\S+)/', $line, $matches)) {
+        $server = $matches[1];
+    } elseif (preg_match('/TBEACON.*symbol="([^"]+)".*comment="([^"]+)"(?:.*commentcmd="([^"]*)")?/', $line, $matches)) {
+        $symbol  = $matches[1];
+        $comment = $matches[2];
+        $temp    = (isset($matches[3])) ? (preg_match('/tempc/', $matches[3]) ? 2 : 1) : 0;
+    } elseif (preg_match('/KISSCOPY (\\S+)/', $line, $matches)) {
+        $report = $matches[1];
     }
-    $aprsForm .= $dynamicData;
-    $aprsForm .= '</div>
-      </div>
-   </div>
+}
+$aprsForm .= $dynamicData;
+$aprsForm .= '<div class="alert alert-warning mt-2" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>Important :</strong> Pour utiliser le système APRS après configuration, il faut <strong>absolument un dongle GPS connecté</strong>.
+</div>';
+$aprsForm .= '</div>
+  </div>
+ </div>
 </div>
 <div class="card mb-2">
     <h4 class="card-header fs-5">Configuration</h4>
@@ -1065,61 +1069,62 @@ function aprsForm($ajax = false)
         <div class="input-group input-group-sm mb-1">
             <span class="input-group-text" style="width: 8rem;">Symbole</span>
             <select id="aprs_symbol" class="form-select">';
-        $symbols = array(
-        'RNFA' => 'House',
-        '/['     => 'Person',
-        '\b'     => 'Bike',
-        '/<'     => 'Motorcycle',
-        '/>'     => 'Car',
-        '/k'     => 'Truck',
-        '\k'     => 'SUV',
-        '\j'     => 'Jeep',
-        '/-'     => 'House',
-    );
-    foreach ($symbols as $sym => $name) {
-        $selected = ($symbol == $sym) ? 'selected' : '';
-        $aprsForm .= "<option value=\"$sym\" $selected>$name</option>" . PHP_EOL;
-    }
-    $aprsForm .= '</select>
-        </div>
-        <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 8rem;">Serveur</span>
-            <select id="aprs_server" class="form-select">';
-    $servers = array(
-        'FranceAprs'       => 'franceaprs.zapto.org:10151',
-		'CbAprs'       => 'cbaaprs.at:27235',
-		'Worldwide'       => 'rotate.aprs2.net',
-        'Europe / Africa' => 'euro.aprs2.net',
-        'North America'   => 'noam.aprs2.net',
-        'South America'   => 'soam.aprs2.net',
-        'Asia'            => 'asia.aprs2.net',
-        'Oceania'         => 'aunz.aprs2.net',
-    );
-    foreach ($servers as $label => $value) {
-        $selected = ($server == $value) ? 'selected' : '';
-        $aprsForm .= "<option value=\"$value\" $selected>$label</option>" . PHP_EOL;
-    }
-    $aprsForm .= '</select>
-        </div>
-        <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 9rem;">Rapport de position</span>
-            <select id="aprs_report" class="form-select">
-                <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
-                <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
-            </select>
-        </div>
-        <div class="d-flex justify-content-center mx-2">
-            <button id="saveaprscfg" type="submit" class="btn btn-danger btn-lg m-2">Sauvegarder</button>
-        </div>
-    </div>
-</div>';
-    $aprsForm .= '<script>
-    var auto_refresh = setInterval( function () {
-        $("#dynamicData").load("includes/forms.php?gpsStatus");
-    }, 30000);
-    </script>' . PHP_EOL;
-    return $aprsForm;
+    $symbols = array(
+    'RNFA' => 'House',
+    '/['     => 'Person',
+    '\\b'     => 'Bike',
+    '/<'     => 'Motorcycle',
+    '/>'     => 'Car',
+    '/k'     => 'Truck',
+    '\\k'     => 'SUV',
+    '\\j'     => 'Jeep',
+    '/-'     => 'House',
+);
+foreach ($symbols as $sym => $name) {
+    $selected = ($symbol == $sym) ? 'selected' : '';
+    $aprsForm .= "<option value=\\"$sym\\" $selected>$name</option>" . PHP_EOL;
 }
+$aprsForm .= '</select>
+    </div>
+    <div class="input-group input-group-sm mb-1">
+        <span class="input-group-text" style="width: 8rem;">Serveur</span>
+        <select id="aprs_server" class="form-select">';
+$servers = array(
+    'FranceAprs'       => 'franceaprs.zapto.org:10151',
+    'CbAprs'       => 'cbaaprs.at:27235',
+    'Worldwide'       => 'rotate.aprs2.net',
+    'Europe / Africa' => 'euro.aprs2.net',
+    'North America'   => 'noam.aprs2.net',
+    'South America'   => 'soam.aprs2.net',
+    'Asia'            => 'asia.aprs2.net',
+    'Oceania'         => 'aunz.aprs2.net',
+);
+foreach ($servers as $label => $value) {
+    $selected = ($server == $value) ? 'selected' : '';
+    $aprsForm .= "<option value=\\"$value\\" $selected>$label</option>" . PHP_EOL;
+}
+$aprsForm .= '</select>
+    </div>
+    <div class="input-group input-group-sm mb-1">
+        <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 9rem;">Rapport de position</span>
+        <select id="aprs_report" class="form-select">
+            <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
+            <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
+        </select>
+    </div>
+    <div class="d-flex justify-content-center mx-2">
+        <button id="saveaprscfg" type="submit" class="btn btn-danger btn-lg m-2">Sauvegarder</button>
+    </div>
+</div>
+</div>';
+$aprsForm .= '<script>
+var auto_refresh = setInterval( function () {
+    $("#dynamicData").load("includes/forms.php?gpsStatus");
+}, 30000);
+</script>' . PHP_EOL;
+return $aprsForm;
+}
+
 
 /* Logs */
 function logsForm()
