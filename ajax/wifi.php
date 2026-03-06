@@ -129,5 +129,5 @@ if ($weHaveData) {
     toggleFS(false);
     echo 'Nouvelles données enregistrées..<br/>Redémarrez le Wi-Fi maintenant ou redémarrez le système !';
 } else {
-    echo 'No new data, so nothing changed';
+    echo 'Aucune nouvelle donnée, pas de changement!.';
 }
