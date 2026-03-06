@@ -1034,42 +1034,38 @@ function aprsForm($ajax = false)
     $aprsForm .= $dynamicData;
     $aprsForm .= '</div>
       </div>
- </div>
- </div>
-<div class="alert alert-warning" role="alert">
-    <i class="bi bi-exclamation-triangle-fill me-2"></i>
-    <strong>Important :</strong> Pour utiliser le système APRS, il faut <strong>absolument un dongle GPS connecté</strong>.
+   </div>
 </div>
 <div class="card mb-2">
     <h4 class="card-header fs-5">Configuration</h4>
     <div class="card-body">
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Gére le service Direwolf, qui s’occupe de l’envoi des données GPS vers APRS-IS." class="input-group-text" style="width: 8rem;">Direwolf</span>
+            <span data-bs-toggle="tooltip" title="Manage the Direwolf service which handles sending GPS data to APRS-IS" class="input-group-text" style="width: 8rem;">Direwolf</span>
             <select id="aprs_service" class="form-select">
-                <option value="0"' . (($svcDirewolf == 'inactive') ? ' selected' : null) . '>Désactivé</option>
-                <option value="1"' . (($svcDirewolf == 'active') ? ' selected' : null) . '>Activé</option>
+                <option value="0"' . (($svcDirewolf == 'inactive') ? ' selected' : null) . '>Disabled</option>
+                <option value="1"' . (($svcDirewolf == 'active') ? ' selected' : null) . '>Enabled</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Utilisez un indicatif valide avec un suffixe approprié. Le mot de passe sera généré automatiquement." class="input-group-text" style="width: 8rem;">Indicatif</span>
-            <input id="aprs_callsign" type="text" class="form-control" placeholder="FRXXX-15" aria-label="Callsign" aria-describedby="inputGroup-sizing-sm" value="' . $callsign . '">
+            <span data-bs-toggle="tooltip" title="Use a valid callsign with a proper suffix. The password will be generated automatically" class="input-group-text" style="width: 8rem;">Indicatif</span>
+            <input id="aprs_callsign" type="text" class="form-control" placeholder="YO1XYZ-15" aria-label="Callsign" aria-describedby="inputGroup-sizing-sm" value="' . $callsign . '">
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Commentaire ou son statut." class="input-group-text" style="width: 8rem;">Comment</span>
+            <span data-bs-toggle="tooltip" title="A short comment about the device or status" class="input-group-text" style="width: 8rem;">Comment</span>
             <input id="aprs_comment" type="text" class="form-control" placeholder="Node RNFA" aria-label="Comment" aria-describedby="inputGroup-sizing-sm" value="' . $comment . '">
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Choisissez si vous voulez inclure la lecture de la température du CPU à la fin de votre commentaire. Sélectionnez. <b>Yes (compensated)</b> ajoutera +38°C au résultat, ce qui est requis pour le SoC H2+ de Orange Pi Zero." class="input-group-text" style="width: 8rem;">Temp CPU</span>
+            <span data-bs-toggle="tooltip" title="Choose whether to include the CPU temperature reading at the end of your comment. Selecting <b>Yes (compensated)</b> will add +38°C to the result, which is required for H2+ SoC-based Orange Pi Zero." class="input-group-text" style="width: 8rem;">CPU Temp</span>
             <select id="aprs_temp" class="form-select">
                 <option value="0"' . (($temp == 0) ? ' selected' : null) . '>Non</option>
-                <option value="1"' . (($temp == 1) ? ' selected' : null) . '>Oui</option>
-                <option value="2"' . (($temp == 2) ? ' selected' : null) . '>Oui (compensated)</option>
+                <option value="1"' . (($temp == 1) ? ' selected' : null) . '>Yes</option>
+                <option value="2"' . (($temp == 2) ? ' selected' : null) . '>Yes (compensated)</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 8rem;">Symbole</span>
+            <span class="input-group-text" style="width: 8rem;">Symbol</span>
             <select id="aprs_symbol" class="form-select">';
-        $symbols = array(
+    $symbols = array(
         'RNFA' => 'House',
         '/['     => 'Person',
         '\b'     => 'Bike',
@@ -1087,11 +1083,10 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 8rem;">Serveur</span>
+            <span class="input-group-text" style="width: 8rem;">Server</span>
             <select id="aprs_server" class="form-select">';
     $servers = array(
-        'FranceAprs'       => 'franceaprs.zapto.org:10151',
-		'CbAprs'       => 'cbaaprs.at:27235',
+        'CbAprs'       => 'cbaprs.de',
 		'Worldwide'       => 'rotate.aprs2.net',
         'Europe / Africa' => 'euro.aprs2.net',
         'North America'   => 'noam.aprs2.net',
@@ -1106,7 +1101,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 9rem;">Rapport de position</span>
+            <span data-bs-toggle="tooltip" title="Specify if you want to notify the server (reflector) about your usage of GPS service." class="input-group-text" style="width: 8rem;">Report position</span>
             <select id="aprs_report" class="form-select">
                 <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
                 <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
