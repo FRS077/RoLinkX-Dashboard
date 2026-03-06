@@ -158,7 +158,6 @@
         <div style="margin-top: 15px; font-style: italic; color: #666;">
             💡 N'oubliez pas de sauvegarder après avoir saisi les informations, sinon elles ne seront pas appliquées.</li>
 </ol>
-<p><strong>Important :</strong> N'oubliez pas de sauvegarder après avoir saisi les informations, sinon elles ne seront pas appliquées.</p>
 
 <h2>🔧 Section : SVXLink Configuration</h2>
 <h3>Paramètres modifiables</h3>
