@@ -132,17 +132,31 @@
     </li>
 </ul>
 
-<h2>📶 Section : Configuration du Wi-Fi</h2>
-<h3>Procédure de configuration</h3>
-<ol>
-    <li>Le <strong>scan automatique</strong> se lance dès l'ouverture de la section et recherche les réseaux Wi-Fi disponibles.</li>
-    <li>Une fois le réseau souhaité trouvé, renseignez les informations suivantes :
-        <ul>
-            <li><strong>Nom (SSID)</strong> : nom du réseau Wi-Fi de votre box Internet ou partage de connexion</li>
-            <li><strong>Clé (Password)</strong> : mot de passe de votre réseau Wi-Fi</li>
-        </ul>
-    </li>
-    <li>Cliquez sur <strong>Sauvegarder</strong> pour valider la configuration.</li>
+    <h2>📶 Section : Configuration du Wi-Fi</h2>
+    
+    <h3>Procédure de configuration</h3>
+    <ol>
+        <li>Le <strong>scan automatique</strong> se lance dès l'ouverture de la section et recherche les réseaux Wi-Fi disponibles.</li>
+        <li>Une fois le réseau souhaité trouvé, renseignez les informations suivantes :
+            <ul>
+                <li><strong>Nom (SSID)</strong> : nom du réseau Wi-Fi de votre box Internet ou partage de connexion</li>
+                <li><strong>Clé (Password)</strong> : mot de passe de votre réseau Wi-Fi</li>
+            </ul>
+        </li>
+        <li>Cliquez sur <strong><button>Sauvegarder</button></strong> pour valider la configuration.</li>
+    </ol>
+
+    <div class="important-box">
+        <div>
+            <span class="warning-icon">⚠️</span>
+            <div class="warning-text">ATTENTION : Compatibilité Wi-Fi 2.4 GHz uniquement</div>
+            <div>La connexion Wi-Fi ne fonctionne qu'en bande <strong>2.4 GHz</strong> (et non 5 GHz), que ce soit sur votre box Internet ou en partage de connexion depuis votre téléphone.</div>
+            <div style="margin-top: 10px; font-size: 14px; color: #856404;">
+                Vérifiez les paramètres de votre box/partage et désactivez temporairement le 5 GHz si activé.
+            </div>
+        </div>
+        <div style="margin-top: 15px; font-style: italic; color: #666;">
+            💡 N'oubliez pas de sauvegarder après avoir saisi les informations, sinon elles ne seront pas appliquées.</li>
 </ol>
 <p><strong>Important :</strong> N'oubliez pas de sauvegarder après avoir saisi les informations, sinon elles ne seront pas appliquées.</p>
 
