@@ -1087,6 +1087,7 @@ function aprsForm($ajax = false)
             <select id="aprs_server" class="form-select">';
     $servers = array(
         'FranceAprs'       => 'franceaprs.zapto.org:10151',
+		'CbAprs'       => 'cbaaprs.at:27235',
 		'Worldwide'       => 'rotate.aprs2.net',
         'Europe / Africa' => 'euro.aprs2.net',
         'North America'   => 'noam.aprs2.net',
