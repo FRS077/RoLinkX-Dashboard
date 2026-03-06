@@ -1035,6 +1035,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</div>
       </div>
    </div>
+   DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
 </div>
 <div class="card mb-2">
     <h4 class="card-header fs-5">Configuration</h4>
