@@ -1034,8 +1034,11 @@ function aprsForm($ajax = false)
     $aprsForm .= $dynamicData;
     $aprsForm .= '</div>
       </div>
-   </div>
-   DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD
+ </div>
+ </div>
+<div class="alert alert-warning" role="alert">
+    <i class="bi bi-exclamation-triangle-fill me-2"></i>
+    <strong>Important :</strong> Pour utiliser le système APRS après configuration, il faut <strong>absolument un dongle GPS connecté</strong>.
 </div>
 <div class="card mb-2">
     <h4 class="card-header fs-5">Configuration</h4>
