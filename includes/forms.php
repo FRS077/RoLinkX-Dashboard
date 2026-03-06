@@ -1066,16 +1066,15 @@ function aprsForm($ajax = false)
             <span class="input-group-text" style="width: 8rem;">Symbole</span>
             <select id="aprs_symbol" class="form-select">';
     $symbols = array(
-    'RNFA' => 'Maison',
-    '/['   => 'Personne',
-    '\\b'  => 'Vélo',
-    '/<'   => 'Moto',
-    '/>'   => 'Voiture',
-    '/k'   => 'Camion',
-    '\\k'  => 'SUV',
-    '\\j'  => 'Jeep',
-    '/-'   => 'Maison',
-);
+        'RNFA' => 'House',
+        '/['     => 'Person',
+        '\b'     => 'Bike',
+        '/<'     => 'Motorcycle',
+        '/>'     => 'Car',
+        '/k'     => 'Truck',
+        '\k'     => 'SUV',
+        '\j'     => 'Jeep',
+        '/-'     => 'House',
     );
     foreach ($symbols as $sym => $name) {
         $selected = ($symbol == $sym) ? 'selected' : '';
