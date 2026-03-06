@@ -1019,69 +1019,78 @@ function aprsForm($ajax = false)
     }
 
     /* Read config*/
-    $aprsConfig = file('/etc/direwolf.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
-    foreach ($aprsConfig as $line) {
-        if (preg_match('/IGSERVER (\S+)/', $line, $matches)) {
-            $server = $matches[1];
-        } elseif (preg_match('/TBEACON.*symbol="([^"]+)".*comment="([^"]+)"(?:.*commentcmd="([^"]*)")?/', $line, $matches)) {
-            $symbol  = $matches[1];
-            $comment = $matches[2];
-            $temp    = (isset($matches[3])) ? (preg_match('/tempc/', $matches[3]) ? 2 : 1) : 0;
-        } elseif (preg_match('/KISSCOPY (\S+)/', $line, $matches)) {
-            $report = $matches[1];
-        }
+$aprsConfig = file('/etc/direwolf.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+foreach ($aprsConfig as $line) {
+    if (preg_match('/IGSERVER (\\S+)/', $line, $matches)) {
+        $server = $matches[1];
+    } elseif (preg_match('/TBEACON.*symbol="([^"]+)".*comment="([^"]+)"(?:.*commentcmd="([^"]*)")?/', $line, $matches)) {
+        $symbol  = $matches[1];
+        $comment = $matches[2];
+        $temp    = (isset($matches[3])) ? (preg_match('/tempc/', $matches[3]) ? 2 : 1) : 0;
+    } elseif (preg_match('/KISSCOPY (\\S+)/', $line, $matches)) {
+        $report = $matches[1];
     }
-    $aprsForm .= $dynamicData;
-    $aprsForm .= '</div>
-      </div>
-   </div>
+}
+$aprsForm .= $dynamicData;
+$aprsForm .= '</div>
+  </div>
+ </div>
 </div>
 <div class="card mb-2">
     <h4 class="card-header fs-5">Configuration</h4>
     <div class="card-body">
+        <!-- Active/Désactive le service Direwolf -->
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Gére le service Direwolf, qui s’occupe de l’envoi des données GPS vers APRS-IS." class="input-group-text" style="width: 8rem;">Direwolf</span>
+            <span data-bs-toggle="tooltip" title="Gère le service Direwolf, qui s'occupe de l'envoi des données GPS vers APRS-IS." class="input-group-text" style="width: 8rem;">Direwolf</span>
             <select id="aprs_service" class="form-select">
                 <option value="0"' . (($svcDirewolf == 'inactive') ? ' selected' : null) . '>Disabled</option>
                 <option value="1"' . (($svcDirewolf == 'active') ? ' selected' : null) . '>Enabled</option>
             </select>
         </div>
+        <!-- Indiquez votre indicatif radio valide avec suffixe -->
         <div class="input-group input-group-sm mb-1">
             <span data-bs-toggle="tooltip" title="Utilisez un indicatif valide avec un suffixe approprié. Le mot de passe sera généré automatiquement." class="input-group-text" style="width: 8rem;">Indicatif</span>
             <input id="aprs_callsign" type="text" class="form-control" placeholder="FRXXX-15" aria-label="Callsign" aria-describedby="inputGroup-sizing-sm" value="' . $callsign . '">
         </div>
+        <!-- Message affiché avec votre position GPS -->
         <div class="input-group input-group-sm mb-1">
             <span data-bs-toggle="tooltip" title="Commentaire ou son statut." class="input-group-text" style="width: 8rem;">Comment</span>
             <input id="aprs_comment" type="text" class="form-control" placeholder="Node RNFA" aria-label="Comment" aria-describedby="inputGroup-sizing-sm" value="' . $comment . '">
+            <div class="form-text small">
+                ⚠️ POUR APRS : <strong>DONGLE GPS USB OBLIGATOIRE</strong> sur Orange Pi Zero
+            </div>
         </div>
+        <!-- Ajoute la température CPU dans le commentaire -->
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Choisissez si vous voulez inclure la lecture de la température du CPU à la fin de votre commentaire. Sélectionnez. <b>Yes (compensated)</b> ajoutera +38°C au résultat, ce qui est requis pour le SoC H2+ de Orange Pi Zero." class="input-group-text" style="width: 8rem;">Temp CPU</span>
+            <span data-bs-toggle="tooltip" title="Choisissez si vous voulez inclure la lecture de la température du CPU à la fin de votre commentaire. Sélectionnez. will add +38°C to the result, which is required for H2+ SoC-based Orange Pi Zero." class="input-group-text" style="width: 8rem;">Temp CPU</span>
             <select id="aprs_temp" class="form-select">
                 <option value="0"' . (($temp == 0) ? ' selected' : null) . '>Non</option>
                 <option value="1"' . (($temp == 1) ? ' selected' : null) . '>Oui</option>
                 <option value="2"' . (($temp == 2) ? ' selected' : null) . '>Oui (compensated)</option>
             </select>
         </div>
+        <!-- Icône affichée sur les cartes APRS -->
         <div class="input-group input-group-sm mb-1">
             <span class="input-group-text" style="width: 8rem;">Symbole</span>
             <select id="aprs_symbol" class="form-select">';
         $symbols = array(
         'RNFA' => 'House',
         '/['     => 'Person',
-        '\b'     => 'Bike',
+        '\\b'     => 'Bike',
         '/<'     => 'Motorcycle',
         '/>'     => 'Car',
         '/k'     => 'Truck',
-        '\k'     => 'SUV',
-        '\j'     => 'Jeep',
+        '\\k'     => 'SUV',
+        '\\j'     => 'Jeep',
         '/-'     => 'House',
     );
     foreach ($symbols as $sym => $name) {
         $selected = ($symbol == $sym) ? 'selected' : '';
-        $aprsForm .= "<option value=\"$sym\" $selected>$name</option>" . PHP_EOL;
+        $aprsForm .= "<option value=\\"$sym\\" $selected>$name</option>" . PHP_EOL;
     }
     $aprsForm .= '</select>
         </div>
+        <!-- Serveur APRS-IS de réception -->
         <div class="input-group input-group-sm mb-1">
             <span class="input-group-text" style="width: 8rem;">Serveur</span>
             <select id="aprs_server" class="form-select">';
@@ -1097,10 +1106,11 @@ function aprsForm($ajax = false)
     );
     foreach ($servers as $label => $value) {
         $selected = ($server == $value) ? 'selected' : '';
-        $aprsForm .= "<option value=\"$value\" $selected>$label</option>" . PHP_EOL;
+        $aprsForm .= "<option value=\\"$value\\" $selected>$label</option>" . PHP_EOL;
     }
     $aprsForm .= '</select>
         </div>
+        <!-- Envoi automatique de la position GPS -->
         <div class="input-group input-group-sm mb-1">
             <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 8rem;">Rapport de position</span>
             <select id="aprs_report" class="form-select">
@@ -1113,13 +1123,14 @@ function aprsForm($ajax = false)
         </div>
     </div>
 </div>';
-    $aprsForm .= '<script>
-    var auto_refresh = setInterval( function () {
-        $("#dynamicData").load("includes/forms.php?gpsStatus");
-    }, 30000);
-    </script>' . PHP_EOL;
-    return $aprsForm;
+$aprsForm .= '<script>
+var auto_refresh = setInterval( function () {
+    $("#dynamicData").load("includes/forms.php?gpsStatus");
+}, 30000);
+</script>' . PHP_EOL;
+return $aprsForm;
 }
+
 
 /* Logs */
 function logsForm()
