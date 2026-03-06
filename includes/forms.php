@@ -1058,23 +1058,24 @@ function aprsForm($ajax = false)
             <span data-bs-toggle="tooltip" title="Choisissez si vous voulez inclure la lecture de la température du CPU à la fin de votre commentaire. Sélectionnez. <b>Yes (compensated)</b> ajoutera +38°C au résultat, ce qui est requis pour le SoC H2+ de Orange Pi Zero." class="input-group-text" style="width: 8rem;">Temp CPU</span>
             <select id="aprs_temp" class="form-select">
                 <option value="0"' . (($temp == 0) ? ' selected' : null) . '>Non</option>
-                <option value="1"' . (($temp == 1) ? ' selected' : null) . '>Yes</option>
-                <option value="2"' . (($temp == 2) ? ' selected' : null) . '>Yes (compensated)</option>
+                <option value="1"' . (($temp == 1) ? ' selected' : null) . '>Oui</option>
+                <option value="2"' . (($temp == 2) ? ' selected' : null) . '>Oui (compensated)</option>
             </select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 8rem;">Symbol</span>
+            <span class="input-group-text" style="width: 8rem;">Symbole</span>
             <select id="aprs_symbol" class="form-select">';
     $symbols = array(
-        'RNFA' => 'House',
-        '/['     => 'Person',
-        '\b'     => 'Bike',
-        '/<'     => 'Motorcycle',
-        '/>'     => 'Car',
-        '/k'     => 'Truck',
-        '\k'     => 'SUV',
-        '\j'     => 'Jeep',
-        '/-'     => 'House',
+    'RNFA' => 'Maison',
+    '/['   => 'Personne',
+    '\\b'  => 'Vélo',
+    '/<'   => 'Moto',
+    '/>'   => 'Voiture',
+    '/k'   => 'Camion',
+    '\\k'  => 'SUV',
+    '\\j'  => 'Jeep',
+    '/-'   => 'Maison',
+);
     );
     foreach ($symbols as $sym => $name) {
         $selected = ($symbol == $sym) ? 'selected' : '';
@@ -1083,7 +1084,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 8rem;">Server</span>
+            <span class="input-group-text" style="width: 8rem;">Serveur</span>
             <select id="aprs_server" class="form-select">';
     $servers = array(
         'FranceAprs'       => 'franceaprs.zapto.org:10151',
@@ -1102,7 +1103,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Specify if you want to notify the server (reflector) about your usage of GPS service." class="input-group-text" style="width: 8rem;">Report position</span>
+            <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 8rem;">Rapport de position</span>
             <select id="aprs_report" class="form-select">
                 <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
                 <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
