@@ -1076,7 +1076,6 @@ function aprsForm($ajax = false)
         '\j'     => 'Jeep',
         '/-'     => 'House',
     );
-    );
     foreach ($symbols as $sym => $name) {
         $selected = ($symbol == $sym) ? 'selected' : '';
         $aprsForm .= "<option value=\"$sym\" $selected>$name</option>" . PHP_EOL;
