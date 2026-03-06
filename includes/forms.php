@@ -873,7 +873,7 @@ function aprsForm($ajax = false)
     );
     foreach ($cfgFiles as $path => $name) {
         if (!is_file($path)) {
-            return '<div class="alert alert-danger text-center" role="alert">' . $name . ' non installé !</div>';
+            return '<div class="alert alert-danger text-center" role="alert">' . $name . ' not installed!</div>';
         }
 
     }
@@ -885,7 +885,7 @@ function aprsForm($ajax = false)
     $report   = 0;
     if (preg_match('/IGLOGIN (\S+)/', file_get_contents('/etc/direwolf.conf'), $matches)) {
         $callsign   = $matches[1];
-        $aprsfiLink = (empty($callsign) && $callsign == 'N0CALL-15') ? null : '<span data-bs-toggle="tooltip" title="Voir ' . $callsign . ' sur aprs.fi" class="input-group-text">
+        $aprsfiLink = (empty($callsign) && $callsign == 'N0CALL-15') ? null : '<span data-bs-toggle="tooltip" title="View ' . $callsign . ' on aprs.fi" class="input-group-text">
             <a class="mx-2" href="https://aprs.fi/#!call=' . $callsign . '" target="_blank"><i class="icon-exit_to_app"></i></a>
         </span>';
     }
@@ -895,6 +895,7 @@ function aprsForm($ajax = false)
         $aprsForm .= '<div class="alert alert-danger text-center" role="alert">' . $data['message'] . '</div>';
         return $aprsForm;
     }
+    ;
 
     $svcDirewolf = trim(shell_exec("systemctl is-active direwolf"));
     $svcGPSD     = trim(shell_exec("systemctl is-active gpsd"));
@@ -918,10 +919,10 @@ function aprsForm($ajax = false)
     </div>';
 
     if ($svcGPSD == 'active' && isset($data['tpv'][0])) {
-        $fixDescriptions = [0 => "inconnu", 1 => "pas de fix", 2 => "2D", 3 => "3D"];
+        $fixDescriptions = [0 => "unknown", 1 => "no fix", 2 => "2D", 3 => "3D"];
         $gpsData         = $data['tpv'][0];
         if ($gpsData['mode'] === 0) {
-            return '<meta http-equiv="refresh" content="3"><div class="alert alert-warning text-center" role="alert">Statut inconnu. Rechargement...</div>';
+            return '<meta http-equiv="refresh" content="3"><div class="alert alert-warning text-center" role="alert">Status unknown. Reloading...</div>';
         }
 
         $fixMode     = $fixDescriptions[$gpsData['mode']];
@@ -929,12 +930,14 @@ function aprsForm($ajax = false)
         $altitude    = (($gpsData['mode'] == 3) ? round($gpsData['alt']) . ' m' : 'N/A');
         $speed       = (($gpsData['mode'] == 3) ? round($gpsData['speed'] * 3.6) . ' km/h' : 'N/A');
 
+        // Convert reported time to selected timezone (Config page)
         $utcTime     = new DateTime($gpsData['time'], new DateTimeZone("UTC"));
         $timezone    = trim(file_get_contents('/etc/timezone'));
         $eetTimeZone = new DateTimeZone($timezone);
         $utcTime->setTimezone($eetTimeZone);
         $time = $utcTime->format("H:i:s d/m/Y");
 
+        // Maidenhead Locator
         $longitude  = $gpsData['lon'] + 180;
         $latitude   = $gpsData['lat'] + 90;
         $letterA    = ord('A');
@@ -947,41 +950,75 @@ function aprsForm($ajax = false)
         $locator .= chr($letterA + intval(($latitude - intval($latitude / 1) * 1) / (1 / 24)));
 
         $dynamicData .= '<div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 6.5rem;">Mode GPS</span>
+            <span class="input-group-text" style="width: 6.5rem;">Fix mode</span>
             <input type="text" class="form-control" value="' . $fixMode . '" readonly>
         </div>';
-
         $dynamicData .= ($gpsData['mode'] < 2) ? null : '<div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 6.5rem;">Lat / Lon</span>
+            <div class="input-group-prepend input-group-sm">
+                <span class="input-group-text" style="width: 6.5rem;">Lat / Lon</span>
+            </div>
             <input type="text" class="form-control" value="' . $coordinates . '" readonly>
         </div>
-
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 6.5rem;">Locator</span>
+            <div class="input-group-prepend input-group-sm">
+                <span class="input-group-text" style="width: 6.5rem;">Grid Square</span>
+            </div>
             <input type="text" class="form-control" value="' . $locator . '" readonly>
         </div>
-
         <div class="input-group input-group-sm mb-1">
             <span class="input-group-text" style="width: 6.5rem;">Altitude</span>
             <input type="text" class="form-control" value="' . $altitude . '" readonly>
         </div>
-
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 6.5rem;">Vitesse</span>
+            <span class="input-group-text" style="width: 6.5rem;">Speed</span>
             <input type="text" class="form-control" value="' . $speed . '" readonly>
         </div>';
-
         $dynamicData .= '<div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 6.5rem;">Heure</span>
+            <span class="input-group-text" style="width: 6.5rem;">Time</span>
             <input type="text" class="form-control" value="' . $time . '" readonly>
         </div>';
+        $dynamicData .= ($gpsData['mode'] < 2) ? null : '<div class="col-auto fill">
+            <div class="map" id="map"></div>
+        </div>
+        <script>
+            var LonLat = ol.proj.fromLonLat([' . $gpsData['lon'] . ',' . $gpsData['lat'] . '])
+            var stroke = new ol.style.Stroke({color: "red", width: 2});
+            var feature = new ol.Feature(new ol.geom.Point(LonLat))
+            var x = new ol.style.Style({
+                image: new ol.style.Icon({
+                anchor: [0.5, 1],
+                crossOrigin: "anonymous",
+                src: "assets/img/pin.png",
+                })
+            })
+            feature.setStyle(x)
+            var source = new ol.source.Vector({
+                features: [feature]
+            });
+            var vectorLayer = new ol.layer.Vector({
+              source: source
+            });
+            var map = new ol.Map({
+              target: "map",
+              layers: [
+                new ol.layer.Tile({
+                  source: new ol.source.OSM()
+                }),
+                vectorLayer
+              ],
+              view: new ol.View({
+                center: LonLat,
+                zoom: 10
+              })
+            });
+        </script>' . PHP_EOL;
     }
-
+    /* Return updates only */
     if ($ajax) {
         return $dynamicData;
     }
 
-    /* Lecture config */
+    /* Read config*/
     $aprsConfig = file('/etc/direwolf.conf', FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
     foreach ($aprsConfig as $line) {
         if (preg_match('/IGSERVER (\S+)/', $line, $matches)) {
@@ -994,58 +1031,93 @@ function aprsForm($ajax = false)
             $report = $matches[1];
         }
     }
-
     $aprsForm .= $dynamicData;
-
     $aprsForm .= '</div>
       </div>
    </div>
 </div>
-
 <div class="card mb-2">
-<h4 class="card-header fs-5">Configuration</h4>
-<div class="card-body">
-
-<div class="input-group input-group-sm mb-1">
-<span class="input-group-text" style="width:8rem;">Direwolf</span>
-<select id="aprs_service" class="form-select">
-<option value="0"' . (($svcDirewolf == 'inactive') ? ' selected' : null) . '>Désactivé</option>
-<option value="1"' . (($svcDirewolf == 'active') ? ' selected' : null) . '>Activé</option>
-</select>
-</div>
-
-<div class="input-group input-group-sm mb-1">
-<span class="input-group-text" style="width:8rem;">Indicatif</span>
-<input id="aprs_callsign" type="text" class="form-control" placeholder="F1ABC-15" value="' . $callsign . '">
-</div>
-
-<div class="input-group input-group-sm mb-1">
-<span class="input-group-text" style="width:8rem;">Commentaire</span>
-<input id="aprs_comment" type="text" class="form-control" value="' . $comment . '">
-</div>
-
-<div class="input-group input-group-sm mb-1">
-<span class="input-group-text" style="width:8rem;">Temp CPU</span>
-<select id="aprs_temp" class="form-select">
-<option value="0">Non</option>
-<option value="1">Oui</option>
-<option value="2">Oui (compensé)</option>
-</select>
-</div>
-
-<div class="d-flex justify-content-center mx-2">
-<button id="saveaprscfg" type="submit" class="btn btn-danger btn-lg m-2">Sauvegarder</button>
-</div>
-
-</div>
+    <h4 class="card-header fs-5">Configuration</h4>
+    <div class="card-body">
+        <div class="input-group input-group-sm mb-1">
+            <span data-bs-toggle="tooltip" title="Gére le service Direwolf, qui s’occupe de l’envoi des données GPS vers APRS-IS." class="input-group-text" style="width: 8rem;">Direwolf</span>
+            <select id="aprs_service" class="form-select">
+                <option value="0"' . (($svcDirewolf == 'inactive') ? ' selected' : null) . '>Disabled</option>
+                <option value="1"' . (($svcDirewolf == 'active') ? ' selected' : null) . '>Enabled</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <span data-bs-toggle="tooltip" title="Utilisez un indicatif valide avec un suffixe approprié. Le mot de passe sera généré automatiquement." class="input-group-text" style="width: 8rem;">Indicatif</span>
+            <input id="aprs_callsign" type="text" class="form-control" placeholder="FRXXX-15" aria-label="Callsign" aria-describedby="inputGroup-sizing-sm" value="' . $callsign . '">
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <span data-bs-toggle="tooltip" title="Commentaire ou son statut." class="input-group-text" style="width: 8rem;">Comment</span>
+            <input id="aprs_comment" type="text" class="form-control" placeholder="Node RNFA" aria-label="Comment" aria-describedby="inputGroup-sizing-sm" value="' . $comment . '">
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <span data-bs-toggle="tooltip" title="Choisissez si vous voulez inclure la lecture de la température du CPU à la fin de votre commentaire. Sélectionnez. <b>Yes (compensated)</b> ajoutera +38°C au résultat, ce qui est requis pour le SoC H2+ de Orange Pi Zero." class="input-group-text" style="width: 8rem;">Temp CPU</span>
+            <select id="aprs_temp" class="form-select">
+                <option value="0"' . (($temp == 0) ? ' selected' : null) . '>Non</option>
+                <option value="1"' . (($temp == 1) ? ' selected' : null) . '>Yes</option>
+                <option value="2"' . (($temp == 2) ? ' selected' : null) . '>Yes (compensated)</option>
+            </select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text" style="width: 8rem;">Symbol</span>
+            <select id="aprs_symbol" class="form-select">';
+    $symbols = array(
+        'RNFA' => 'House',
+        '/['     => 'Person',
+        '\b'     => 'Bike',
+        '/<'     => 'Motorcycle',
+        '/>'     => 'Car',
+        '/k'     => 'Truck',
+        '\k'     => 'SUV',
+        '\j'     => 'Jeep',
+        '/-'     => 'House',
+    );
+    foreach ($symbols as $sym => $name) {
+        $selected = ($symbol == $sym) ? 'selected' : '';
+        $aprsForm .= "<option value=\"$sym\" $selected>$name</option>" . PHP_EOL;
+    }
+    $aprsForm .= '</select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <span class="input-group-text" style="width: 8rem;">Server</span>
+            <select id="aprs_server" class="form-select">';
+    $servers = array(
+        'FranceAprs'       => 'franceaprs.zapto.org:10151',
+		'CbAprs'       => 'cbaaprs.at:27235',
+		'Worldwide'       => 'rotate.aprs2.net',
+        'Europe / Africa' => 'euro.aprs2.net',
+        'North America'   => 'noam.aprs2.net',
+        'South America'   => 'soam.aprs2.net',
+        'Asia'            => 'asia.aprs2.net',
+        'Oceania'         => 'aunz.aprs2.net',
+    );
+    foreach ($servers as $label => $value) {
+        $selected = ($server == $value) ? 'selected' : '';
+        $aprsForm .= "<option value=\"$value\" $selected>$label</option>" . PHP_EOL;
+    }
+    $aprsForm .= '</select>
+        </div>
+        <div class="input-group input-group-sm mb-1">
+            <span data-bs-toggle="tooltip" title="Specify if you want to notify the server (reflector) about your usage of GPS service." class="input-group-text" style="width: 8rem;">Report position</span>
+            <select id="aprs_report" class="form-select">
+                <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
+                <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
+            </select>
+        </div>
+        <div class="d-flex justify-content-center mx-2">
+            <button id="saveaprscfg" type="submit" class="btn btn-danger btn-lg m-2">Sauvegarder</button>
+        </div>
+    </div>
 </div>';
-
     $aprsForm .= '<script>
-    var auto_refresh = setInterval(function () {
+    var auto_refresh = setInterval( function () {
         $("#dynamicData").load("includes/forms.php?gpsStatus");
     }, 30000);
-    </script>';
-
+    </script>' . PHP_EOL;
     return $aprsForm;
 }
 
