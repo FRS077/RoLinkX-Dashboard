@@ -1102,7 +1102,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 8rem;">Rapport de position</span>
+            <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 10rem;">Rapport de position</span>
             <select id="aprs_report" class="form-select">
                 <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
                 <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
