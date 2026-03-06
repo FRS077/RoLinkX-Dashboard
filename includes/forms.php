@@ -1065,7 +1065,7 @@ function aprsForm($ajax = false)
         <div class="input-group input-group-sm mb-1">
             <span class="input-group-text" style="width: 8rem;">Symbole</span>
             <select id="aprs_symbol" class="form-select">';
-    $symbols = array(
+        $symbols = array(
         'RNFA' => 'House',
         '/['     => 'Person',
         '\b'     => 'Bike',
@@ -1076,6 +1076,7 @@ function aprsForm($ajax = false)
         '\j'     => 'Jeep',
         '/-'     => 'House',
     );
+    );
     foreach ($symbols as $sym => $name) {
         $selected = ($symbol == $sym) ? 'selected' : '';
         $aprsForm .= "<option value=\"$sym\" $selected>$name</option>" . PHP_EOL;
@@ -1083,7 +1084,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span class="input-group-text" style="width: 8rem;">Server</span>
+            <span class="input-group-text" style="width: 8rem;">Serveur</span>
             <select id="aprs_server" class="form-select">';
     $servers = array(
         'FranceAprs'       => 'franceaprs.zapto.org:10151',
@@ -1102,7 +1103,7 @@ function aprsForm($ajax = false)
     $aprsForm .= '</select>
         </div>
         <div class="input-group input-group-sm mb-1">
-            <span data-bs-toggle="tooltip" title="Specify if you want to notify the server (reflector) about your usage of GPS service." class="input-group-text" style="width: 8rem;">Report position</span>
+            <span data-bs-toggle="tooltip" title="Indiquez si vous souhaitez notifier le serveur (réflecteur) de votre utilisation du service GPS." class="input-group-text" style="width: 8rem;">Rapport de position</span>
             <select id="aprs_report" class="form-select">
                 <option value="0"' . ((!$report) ? ' selected' : null) . '>Non</option>
                 <option value="1"' . (($report) ? ' selected' : null) . '>Oui</option>
