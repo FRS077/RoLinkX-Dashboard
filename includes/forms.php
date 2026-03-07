@@ -519,11 +519,11 @@ function svxForm()
           <input id="svx_tgt" type="text" class="form-control" placeholder="30" aria-label="TG Timeout" aria-describedby="inputGroup-sizing-sm" ' . $tgSelTimeOutValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
-          <span class="input-group-text" style="width: 8rem;">Reconnexion après</span>
+          <span class="input-group-text" style="width: 9rem;">Reconnexion après</span>
           <input id="svx_res" type="text" class="form-control" placeholder="0" aria-label="Reconnect After" aria-describedby="inputGroup-sizing-sm" ' . $reconnectSecondsValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
-          <span class="input-group-text" style="width: 8rem;">État de la connexion</span>
+          <span class="input-group-text" style="width: 9rem;">État de la connexion</span>
           <input id="svx_acs" type="text" class="form-control" placeholder="0" aria-label="Connection Status" aria-describedby="inputGroup-sizing-sm" ' . $announceConnectionStatusValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
@@ -558,7 +558,7 @@ function svxForm()
           <span class="input-group-text" style="width: 8rem;">Compresseur audio</span>
           <select id="svx_lim" class="form-select">
             <option value="-6"' . (($limiterValue != 0) ? ' selected' : '') . '>Normal</option>
-            <option value="0"' . (($limiterValue == 0) ? ' selected' : '') . '>Enhanced (Défaut)</option>
+            <option value="0"' . (($limiterValue == 0) ? ' selected' : '') . '>Enhanced (Defaut)</option>
           </select>
         </div>
         <div class="input-group input-group-sm mb-1">
