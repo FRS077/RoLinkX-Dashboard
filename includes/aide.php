@@ -168,8 +168,9 @@
     <li>Après modification d'un ou plusieurs paramètres, <strong>il est important de sauvegarder</strong> la modification.</li>
     <li>Si vous êtes sur le <strong>RNFA</strong>, automatiquement votre changement sera sauvegardé sur le réseau.</li>
     <li>Dans <strong>Reflector (IP/DNS)</strong>, mettez l'adresse du serveur : <strong>f62dmr.fr</strong>.</li>
-    <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>.</li>
+    <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
 </ol>
+<p><strong>💡 Note :</strong> Toutes les configurations sont prises en compte <strong>immédiatement</strong>, sans redémarrage du système.</p>
 
 <h3>🔄 Restauration d'usine</h3>
 <p>En cas de <strong>restore total</strong>, seuls les paramètres de <strong>SVXLink</strong> reviennent en mode par défaut avec l'indicatif <strong>USER</strong>.</p>
@@ -177,9 +178,10 @@
 <ol>
     <li>Changer l'indicatif selon vos besoins.</li>
     <li>Mettre dans <strong>Reflector (IP/DNS)</strong> : <strong>f62dmr.fr</strong>.</li>
-    <li><strong>Créer un nouveau profil</strong> : <strong>RNFA</strong>.</li>
+    <li><strong>Créer un nouveau profil</strong> : <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
 </ol>
 <p><strong>Exception :</strong> Les paramètres du <strong>SA818/SA868</strong> ne seront pas réinitialisés lors d'une restauration d'usine.</p>
+
 
 <h2>📻 Section : Programmation du SA818 / SA868</h2>
 <p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink :</p>
