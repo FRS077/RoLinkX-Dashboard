@@ -508,23 +508,23 @@ function svxForm()
     }
     $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">TG par défaut</span>
-          <input id="svx_dtg" type="text" class="form-control" placeholder="226" aria-label="Default TG" aria-describedby="inputGroup-sizing-sm" ' . $defaultTgValue . '>
+          <input id="svx_dtg" type="text" class="form-control" placeholder="59" aria-label="Default TG" aria-describedby="inputGroup-sizing-sm" ' . $defaultTgValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Surveiller les TG</span>
-          <input id="svx_mtg" type="text" class="form-control" placeholder="226++" aria-label="Monitor TGs" aria-describedby="inputGroup-sizing-sm" ' . $monitorTgsValue . '>
+          <input id="svx_mtg" type="text" class="form-control" placeholder="59" aria-label="Monitor TGs" aria-describedby="inputGroup-sizing-sm" ' . $monitorTgsValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
-          <span class="input-group-text" style="width: 8rem;">TG Select Timeout</span>
+          <span class="input-group-text" style="width: 8rem;">Timeout du TG (s)</span>
           <input id="svx_tgt" type="text" class="form-control" placeholder="30" aria-label="TG Timeout" aria-describedby="inputGroup-sizing-sm" ' . $tgSelTimeOutValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
-          <span class="input-group-text" style="width: 9rem;">Reconnexion après</span>
-          <input id="svx_res" type="text" class="form-control" placeholder="0" aria-label="Reconnect After" aria-describedby="inputGroup-sizing-sm" ' . $reconnectSecondsValue . '>
+          <span class="input-group-text" style="width: 9rem;">Reconnexion après (s)</span>
+          <input id="svx_res" type="text" class="form-control" placeholder="5" aria-label="Reconnect After" aria-describedby="inputGroup-sizing-sm" ' . $reconnectSecondsValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 9rem;">État de la connexion</span>
-          <input id="svx_acs" type="text" class="form-control" placeholder="0" aria-label="Connection Status" aria-describedby="inputGroup-sizing-sm" ' . $announceConnectionStatusValue . '>
+          <input id="svx_acs" type="text" class="form-control" placeholder="1" aria-label="Connection Status" aria-describedby="inputGroup-sizing-sm" ' . $announceConnectionStatusValue . '>
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">TX Timeout</span>
