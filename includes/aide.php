@@ -166,7 +166,7 @@
 <h3>Procédure après modification</h3>
 <ol>
     <li>Après modification d'un ou plusieurs paramètres, <strong>il est important de sauvegarder</strong> la modification.</li>
-    <li>Si vous êtes sur le <strong>RNFA</strong>, automatiquement votre changement sera sauvegardé sur le réseau.</li>
+    <li>Si vous êtes sur le <strong>RNFA</strong>, après les modifications il faut <strong>absolument faire une sauvegarde</strong>.</li>
     <li>Dans <strong>Reflector (IP/DNS)</strong>, mettez l'adresse du serveur : <strong>f62dmr.fr</strong>.</li>
     <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
 </ol>
