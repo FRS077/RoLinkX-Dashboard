@@ -460,7 +460,7 @@ function svxForm()
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Type</span>
-          <input id="svx_tip" type="text" class="form-control" placeholder="nod portabil" aria-label="Description" aria-describedby="inputGroup-sizing-sm" value="' . $cfgRefData['tip'] . '">
+          <input id="svx_tip" type="text" class="form-control" placeholder="Node SVXLink" aria-label="Description" aria-describedby="inputGroup-sizing-sm" value="' . $cfgRefData['tip'] . '">
         </div>
         <div class="input-group input-group-sm mb-3">
           <span class="input-group-text" style="width: 8rem;">Modules</span>
@@ -498,7 +498,7 @@ function svxForm()
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Délai du Squelch</span>
-          <input id="svx_sqd" type="text" class="form-control" placeholder="500" aria-label="Squelch Delay" aria-describedby="inputGroup-sizing-sm" ' . $sqlDelayValue . '>
+          <input id="svx_sqd" type="text" class="form-control" placeholder="100" aria-label="Squelch Delay" aria-describedby="inputGroup-sizing-sm" ' . $sqlDelayValue . '>
         </div>';
     if (!is_array($saDetect)) {
         $svxForm .= '<div class="input-group input-group-sm mb-1">
@@ -558,7 +558,7 @@ function svxForm()
           <span class="input-group-text" style="width: 8rem;">Compresseur audio</span>
           <select id="svx_lim" class="form-select">
             <option value="-6"' . (($limiterValue != 0) ? ' selected' : '') . '>Normal</option>
-            <option value="0"' . (($limiterValue == 0) ? ' selected' : '') . '>Enhanced (Defaut)</option>
+            <option value="0"' . (($limiterValue == 0) ? ' selected' : '') . '>Enhanced (defaut)</option>
           </select>
         </div>
         <div class="input-group input-group-sm mb-1">
