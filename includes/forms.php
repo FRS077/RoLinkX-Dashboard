@@ -388,7 +388,7 @@ function svxForm()
     $svxForm = '<h4 class="mt-2 alert alert-warning fw-bold">SVXLink configuration</h4>';
     $svxForm .= $profileOption;
     $svxForm .= '<div class="input-group input-group-sm mb-1">
-          <span class="input-group-text bg-info text-white" style="width: 8rem;">Créer un nouveau profil</span>
+          <span class="input-group-text bg-info text-white" style="width: 10rem;">Créer un nouveau profil</span>
           <input id="svx_prn" type="text" class="form-control" placeholder="Donnez un nom à votre profil" aria-label="Profile name" aria-describedby="inputGroup-sizing-sm">
         </div>';
     $svxForm .= '<div class="input-group input-group-sm mb-1">
