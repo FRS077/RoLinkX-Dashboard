@@ -165,14 +165,20 @@
 
 <h3>Procédure après modification</h3>
 <ol>
-    <li>Après chaque modification, <strong>créez un nouveau profil</strong>.</li>
-    <li>Renseignez obligatoirement <strong>RNFA</strong> pour notre réseau.</li>
-    <li>Configurez correctement le <strong>Reflector (IP/DNS)</strong>.</li>
-    <li>Les autres paramètres sont librement modifiables selon vos besoins.</li>
+    <li>Après modification d'un ou plusieurs paramètres, <strong>il est important de sauvegarder</strong> la modification.</li>
+    <li>Si vous êtes sur le <strong>RNFA</strong>, automatiquement votre changement sera sauvegardé sur le réseau.</li>
+    <li>Dans <strong>Reflector (IP/DNS)</strong>, mettez l'adresse du serveur : <strong>f62dmr.fr</strong>.</li>
+    <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>.</li>
 </ol>
 
 <h3>🔄 Restauration d'usine</h3>
-<p>Il est possible de <strong>revenir aux paramètres d'usine</strong> depuis cette section.</p>
+<p>En cas de <strong>restore total</strong>, seuls les paramètres de <strong>SVXLink</strong> reviennent en mode par défaut avec l'indicatif <strong>USER</strong>.</p>
+<p>Il vous restera alors à :</p>
+<ol>
+    <li>Changer l'indicatif selon vos besoins.</li>
+    <li>Mettre dans <strong>Reflector (IP/DNS)</strong> : <strong>f62dmr.fr</strong>.</li>
+    <li><strong>Créer un nouveau profil</strong> : <strong>RNFA</strong>.</li>
+</ol>
 <p><strong>Exception :</strong> Les paramètres du <strong>SA818/SA868</strong> ne seront pas réinitialisés lors d'une restauration d'usine.</p>
 
 <h2>📻 Section : Programmation du SA818 / SA868</h2>
