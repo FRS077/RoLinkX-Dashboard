@@ -143,6 +143,83 @@
     ⚠️ RNFA f62dmr.fr:5300 Mot de passe <strong>USER</strong> EN MAJUSCULES !
 </div>
 
+<p style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; font-weight:bold; margin-top:10px;">
+    ⚠️ Ces informations concernent exclusivement le réseau RNFA et son HotLink.<br><br>
+    Pour toute utilisation avec un autre reflector, il est impératif de prendre contact avec le responsable du réseau concerné pour la configuration adaptée à son installation.<br><br>
+    Ce dashboard a été créé pour une utilisation propre à notre installation RNFA. 
+    Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
+</p>
+
+<!-- Le reste du contenu reste identique -->
+<h2>📊 Introduction</h2>
+<p>Ce guide vous accompagne dans l'utilisation du dashboard HotLink. Chaque section est décrite avec les actions à réaliser et les précautions à prendre.</p>
+
+<h2>📡 Section : Statut</h2>
+<p>Cette section permet de visualiser uniquement l'état de <strong>connectivité</strong> du HotLink :</p>
+<ul>
+    <li>État de connexion (en ligne / hors ligne)</li>
+    <li>Réseau actif</li>
+    <li>Informations de liaison</li>
+    <li>
+        En cliquant sur <strong>Reflecteur</strong>, vous pouvez vérifier si le hotspot est connecté ou non.
+        Un simple clic permet également de visualiser les nodes connectés au Reflector RNFA.<br><br>
+        Vous pouvez également y retrouver les commandes suivantes :
+        <ul>
+            <li>Restart du HotLink</li>
+            <li>Stop du HotLink</li>
+            <li>Reboot</li>
+            <li>Mise hors tension</li>
+        </ul>
+        Il est d'ailleurs recommandé d'éteindre correctement le HotLink avec la mise hors tension.
+    </li>
+</ul>
+
+    <h2>📶 Section : Configuration du Wi-Fi</h2>
+    
+    <h3>Procédure de configuration</h3>
+    <ol>
+        <li>Le <strong>scan automatique</strong> se lance dès l'ouverture de la section et recherche les réseaux Wi-Fi disponibles.</li>
+        <li>Une fois le réseau souhaité trouvé, renseignez les informations suivantes :
+            <ul>
+                <li><strong>Nom (SSID)</strong> : nom du réseau Wi-Fi de votre box Internet ou partage de connexion</li>
+                <li><strong>Clé (Password)</strong> : mot de passe de votre réseau Wi-Fi</li>
+            </ul>
+        </li>
+        <li>Cliquez sur <strong><button>Sauvegarder</button></strong> pour valider la configuration.</li>
+    </ol>
+
+    <div style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; margin:20px 0; font-weight:bold;">
+        ⚠️ ATTENTION : Compatibilité Wi-Fi 2.4 GHz uniquement
+    </div>
+
+<h2>🔧 Section : SVXLink Configuration</h2>
+<h3>Paramètres modifiables</h3>
+<p>Tous les paramètres de cette section sont <strong>modifiables sans risque</strong> pour le système.</p>
+
+<h3>Procédure après modification</h3>
+<ol>
+    <li>Après modification d'un ou plusieurs paramètres, <strong>il est important de sauvegarder</strong> la modification.</li>
+    <li>Si vous êtes sur le <strong>RNFA</strong>, après les modifications il faut <strong>absolument faire une sauvegarde</strong>.</li>
+    <li>Dans <strong>Reflector (IP/DNS)</strong>, mettez l'adresse du serveur : <strong>f62dmr.fr</strong>.</li>
+    <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
+</ol>
+
+<h2>📻 Section : Programmation du SA818 / SA868</h2>
+<p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink. Configuration <strong>sans risque</strong>.</p>
+
+<h2>💻 Section : Terminal</h2>
+<table>
+    <tr><th>Login</th><td><code>root</code></td></tr>
+    <tr><th>Mot de passe</th><td><code>1234</code></td></tr>
+</table>
+<p><strong>Réservé aux utilisateurs avertis Linux.</strong></p>
+
+<h2>✅ Récapitulatif des bonnes pratiques</h2>
+<table>
+    <tr><th>Section</th><th>Point clé</th></tr>
+    <tr><td>Wi-Fi</td><td>Toujours sauvegarder</td></tr>
+    <tr><td>SVXLink</td><td>Profil RNFA + f62dmr.fr</td></tr>
+</table>
 <!-- AVERTISSEMENT AJOUTÉ EN HAUT -->
 <fieldset class="alert-important">
     <div style="font-size: 12pt; color: #d32f2f; margin-bottom: 10px;">
@@ -232,85 +309,6 @@
         </div>
     </div>
 </fieldset>
-
-<p style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; font-weight:bold; margin-top:10px;">
-    ⚠️ Ces informations concernent exclusivement le réseau RNFA et son HotLink.<br><br>
-    Pour toute utilisation avec un autre reflector, il est impératif de prendre contact avec le responsable du réseau concerné pour la configuration adaptée à son installation.<br><br>
-    Ce dashboard a été créé pour une utilisation propre à notre installation RNFA. 
-    Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
-</p>
-
-<!-- Le reste du contenu reste identique -->
-<h2>📊 Introduction</h2>
-<p>Ce guide vous accompagne dans l'utilisation du dashboard HotLink. Chaque section est décrite avec les actions à réaliser et les précautions à prendre.</p>
-
-<h2>📡 Section : Statut</h2>
-<p>Cette section permet de visualiser uniquement l'état de <strong>connectivité</strong> du HotLink :</p>
-<ul>
-    <li>État de connexion (en ligne / hors ligne)</li>
-    <li>Réseau actif</li>
-    <li>Informations de liaison</li>
-    <li>
-        En cliquant sur <strong>Reflecteur</strong>, vous pouvez vérifier si le hotspot est connecté ou non.
-        Un simple clic permet également de visualiser les nodes connectés au Reflector RNFA.<br><br>
-        Vous pouvez également y retrouver les commandes suivantes :
-        <ul>
-            <li>Restart du HotLink</li>
-            <li>Stop du HotLink</li>
-            <li>Reboot</li>
-            <li>Mise hors tension</li>
-        </ul>
-        Il est d'ailleurs recommandé d'éteindre correctement le HotLink avec la mise hors tension.
-    </li>
-</ul>
-
-    <h2>📶 Section : Configuration du Wi-Fi</h2>
-    
-    <h3>Procédure de configuration</h3>
-    <ol>
-        <li>Le <strong>scan automatique</strong> se lance dès l'ouverture de la section et recherche les réseaux Wi-Fi disponibles.</li>
-        <li>Une fois le réseau souhaité trouvé, renseignez les informations suivantes :
-            <ul>
-                <li><strong>Nom (SSID)</strong> : nom du réseau Wi-Fi de votre box Internet ou partage de connexion</li>
-                <li><strong>Clé (Password)</strong> : mot de passe de votre réseau Wi-Fi</li>
-            </ul>
-        </li>
-        <li>Cliquez sur <strong><button>Sauvegarder</button></strong> pour valider la configuration.</li>
-    </ol>
-
-    <div style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; margin:20px 0; font-weight:bold;">
-        ⚠️ ATTENTION : Compatibilité Wi-Fi 2.4 GHz uniquement
-    </div>
-
-<h2>🔧 Section : SVXLink Configuration</h2>
-<h3>Paramètres modifiables</h3>
-<p>Tous les paramètres de cette section sont <strong>modifiables sans risque</strong> pour le système.</p>
-
-<h3>Procédure après modification</h3>
-<ol>
-    <li>Après modification d'un ou plusieurs paramètres, <strong>il est important de sauvegarder</strong> la modification.</li>
-    <li>Si vous êtes sur le <strong>RNFA</strong>, après les modifications il faut <strong>absolument faire une sauvegarde</strong>.</li>
-    <li>Dans <strong>Reflector (IP/DNS)</strong>, mettez l'adresse du serveur : <strong>f62dmr.fr</strong>.</li>
-    <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
-</ol>
-
-<h2>📻 Section : Programmation du SA818 / SA868</h2>
-<p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink. Configuration <strong>sans risque</strong>.</p>
-
-<h2>💻 Section : Terminal</h2>
-<table>
-    <tr><th>Login</th><td><code>root</code></td></tr>
-    <tr><th>Mot de passe</th><td><code>1234</code></td></tr>
-</table>
-<p><strong>Réservé aux utilisateurs avertis Linux.</strong></p>
-
-<h2>✅ Récapitulatif des bonnes pratiques</h2>
-<table>
-    <tr><th>Section</th><th>Point clé</th></tr>
-    <tr><td>Wi-Fi</td><td>Toujours sauvegarder</td></tr>
-    <tr><td>SVXLink</td><td>Profil RNFA + f62dmr.fr</td></tr>
-</table>
-
 <p class="signature">
     Document réalisé par FRS077 pour f62dmr.fr — Mars 2026
 </p>
