@@ -240,14 +240,6 @@
     Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
 </p>
 
-<div style="text-align: center; margin: 30px 0;">
-    <a class="download" id="downloadBtn" href="http://hotlink/doc/Guide Dashboard HotLink.pdf" download>
-        📥 Télécharger le guide complet en PDF
-    </a>
-</div>
-
-<hr>
-
 <!-- Le reste du contenu reste identique -->
 <h2>📊 Introduction</h2>
 <p>Ce guide vous accompagne dans l'utilisation du dashboard HotLink. Chaque section est décrite avec les actions à réaliser et les précautions à prendre.</p>
