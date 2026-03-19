@@ -79,6 +79,78 @@
         strong { color: #0077cc; }
         hr { border: none; height: 2px; background: #eee; margin: 30px 0; }
         @media (max-width: 768px) { body { margin: 0 10px; } }
+
+        /* NOUVEAUX STYLES POUR DTMF */
+        fieldset {
+            border: 2px solid #1976d2;
+            border-radius: 10px;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f5f7fa;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        fieldset legend {
+            font-weight: bold;
+            color: #1976d2;
+            font-size: 1.2em;
+            padding: 0 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        .content {
+            margin-top: 15px;
+        }
+        .code-dtmf {
+            background: #d32f2f;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .code-dtmf:hover {
+            background: #b71c1c;
+            transform: scale(1.05);
+        }
+        .btn-dtmf {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+            transition: all 0.3s;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+        .btn-dtmf:hover {
+            background: #1565c0;
+            transform: translateY(-2px);
+        }
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+        .alert-important {
+            border-color: #d32f2f !important;
+            background: #ffebee !important;
+        }
+        .warning-icon {
+            font-size: 1.5em;
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
@@ -89,6 +161,97 @@
 <div class="info-reseau">
     ⚠️ RNFA f62dmr.fr:5300 Mot de passe <strong>USER</strong> EN MAJUSCULES !
 </div>
+
+<!-- NOUVELLE SECTION DTMF AJOUTÉE ICI -->
+<!-- AVERTISSEMENT AJOUTÉ EN HAUT -->
+<fieldset class="alert-important">
+    <div style="font-size: 12pt; color: #d32f2f; margin-bottom: 10px;">
+        ⚠️ LES CODES DTMF CI-DESSOUS SONT <strong>UNIQUEMENT POUR LES HOTLINKS</strong> !
+    </div>
+    <div style="font-size: 10pt; line-height: 1.4;">
+        • Ne pas utiliser sur les relais standards ou nodes<br>
+        • HotLink = votre hotspot personnel connecté au Reflector<br>
+        • Vérifiez toujours la doc de votre radio pour les DTMF
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>.: 🎤 MODE PERROQUET :.</legend>
+    
+    <div class="content">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 15px; color: #1976d2;">
+            Tester votre retour audio et régler votre radio
+        </div>
+        
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>🔴 PROCÉDURE DTMF :</strong><br>
+            <span class="code-dtmf" role="button" tabindex="0" aria-label="Commande DTMF 1#">1#</span> <br><br>
+            
+            <button class="btn-dtmf" onclick="playPerroquet()">▶ Jouer DTMF "1#"</button><br>
+            
+            <strong>✅ QU'EST-CE QUI SE PASSE :</strong><br>
+            • Hotspot annonce <strong>"MODE PERROQUET ACTIVÉ"</strong><br>
+            • Parlez → vous vous entendez (test audio)<br>
+            • Sans PTT pendant ~10 secondes → retour au <strong>TG#59</strong><br><br>
+            
+            <div class="alert">
+                <strong>📡 DTMF :</strong> Pour exécuter un DTMF depuis votre radio, reportez-vous à la documentation de votre appareil.
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>.: 🌡️ TEMPÉRATURE ÉMETTEUR :.</legend>
+    
+    <div class="content">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 15px; color: #1976d2;">
+            Connaître la température de votre émetteur
+        </div>
+        
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>🔴 PROCÉDURE DTMF :</strong><br>
+            <span class="code-dtmf" role="button" tabindex="0" aria-label="Commande DTMF 26#">26#</span> <br><br>
+            
+            <button class="btn-dtmf" onclick="playTemperature()">▶ Jouer DTMF "26#"</button><br>
+            
+            <strong>✅ QU'EST-CE QUI SE PASSE :</strong><br>
+            • Hotspot lit la <strong>température actuelle de l'émetteur</strong><br>
+            • Annonce vocale : <strong>"Température XX degrés"</strong><br>
+            • ~10 secondes → retour au TG#59<br><br>
+            
+            <div class="alert">
+                <strong>📡 DTMF :</strong> Pour exécuter un DTMF depuis votre radio, reportez-vous à la documentation de votre appareil.            
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>.: 🔢 CHANGEMENT DE TG :.</legend>
+    
+    <div class="content">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 15px; color: #1976d2;">
+            Changer de TalkGroup pour discuter avec un copain ou des copines HI !
+        </div>
+        
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>🔴 PROCÉDURE DTMF :</strong><br>
+            <span class="code-dtmf" role="button" tabindex="0" aria-label="Commande DTMF TG62 ex: 51062#">551<TG>#</span> 
+            Ex: TG62 → <span class="code-dtmf" role="button" tabindex="0" aria-label="Exemple DTMF 51162#">55162#</span><br>
+            TG100 → <span class="code-dtmf" role="button" tabindex="0" aria-label="Exemple DTMF 51100#">551100#</span><br><br>
+            
+            <strong>✅ QU'EST-CE QUI SE PASSE :</strong><br>
+            • Hotspot confirme : <strong>"Vous êtes maintenant sur le TG XX"</strong><br>
+            • Vous pouvez discuter sur ce TG<br>
+            • Sans PTT pendant ~30 secondes → retour au <strong>TG#59</strong><br><br>
+            
+            <div class="alert">
+                <strong>📡 DTMF :</strong> Pour exécuter un DTMF depuis votre radio, reportez-vous à la documentation de votre appareil. Petite astuce : passer en PTT et faire le DTMF puis relâcher le PTT.
+            </div>
+        </div>
+    </div>
+</fieldset>
 
 <p style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; font-weight:bold; margin-top:10px;">
     ⚠️ Ces informations concernent exclusivement le réseau RNFA et son HotLink.<br><br>
@@ -128,7 +291,7 @@
             <li>Reboot</li>
             <li>Mise hors tension</li>
         </ul>
-        Il est d’ailleurs recommandé d’éteindre correctement le HotLink avec la mise hors tension.
+        Il est d’ailleurs recommandé d'éteindre correctement le HotLink avec la mise hors tension.
     </li>
 </ul>
 
@@ -307,6 +470,38 @@ document.addEventListener('DOMContentLoaded', function() {
         }, 2000);
     });
 });
+
+function playPerroquet() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const tones = {1: {f1:697, f2:1209}, '#': {f1:941, f2:1477}};
+    let time = 0;
+    ['1', '#'].forEach(key => {
+        const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator();
+        osc1.frequency.value = tones[key].f1; osc2.frequency.value = tones[key].f2;
+        osc1.connect(audioCtx.destination); osc2.connect(audioCtx.destination);
+        osc1.start(time); osc2.start(time);
+        setTimeout(() => {osc1.stop(); osc2.stop();}, 300);
+        time += 0.4;
+    });
+}
+
+function playTemperature() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const tones = {
+        '2': {f1:770, f2:1336},
+        '6': {f1:852, f2:1477},
+        '#': {f1:941, f2:1477}
+    };
+    let time = 0;
+    ['2', '6', '#'].forEach(key => {
+        const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator();
+        osc1.frequency.value = tones[key].f1; osc2.frequency.value = tones[key].f2;
+        osc1.connect(audioCtx.destination); osc2.connect(audioCtx.destination);
+        osc1.start(time); osc2.start(time);
+        setTimeout(() => {osc1.stop(); osc2.stop();}, 300);
+        time += 0.4;
+    });
+}
 </script>
 
 </body>
