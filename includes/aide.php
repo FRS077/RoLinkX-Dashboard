@@ -79,6 +79,59 @@
         strong { color: #0077cc; }
         hr { border: none; height: 2px; background: #eee; margin: 30px 0; }
         @media (max-width: 768px) { body { margin: 0 10px; } }
+
+        /* STYLES DTMF EXACTS */
+        fieldset {
+            border: 2px solid #1976d2;
+            border-radius: 10px;
+            margin: 25px 0;
+            padding: 20px;
+            background: #f5f7fa;
+        }
+        fieldset legend {
+            font-weight: bold;
+            color: #1976d2;
+            font-size: 1.2em;
+            padding: 0 10px;
+            background: white;
+            border-radius: 5px;
+        }
+        .content { margin-top: 15px; }
+        .code-dtmf {
+            background: #d32f2f;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            font-size: 1.3em;
+            font-weight: bold;
+            display: inline-block;
+            margin: 5px;
+            cursor: pointer;
+        }
+        .btn-dtmf {
+            background: #1976d2;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-size: 1em;
+            font-weight: bold;
+            cursor: pointer;
+            margin: 10px 0;
+        }
+        .alert {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 15px 0;
+            font-size: 0.95em;
+        }
+        .alert-important {
+            border-color: #d32f2f !important;
+            background: #ffebee !important;
+        }
     </style>
 </head>
 <body>
@@ -90,49 +143,102 @@
     ⚠️ RNFA f62dmr.fr:5300 Mot de passe <strong>USER</strong> EN MAJUSCULES !
 </div>
 
+<!-- AVERTISSEMENT AJOUTÉ EN HAUT -->
+<fieldset class="alert-important">
+    <div style="font-size: 12pt; color: #d32f2f; margin-bottom: 10px;">
+        ⚠️ LES CODES DTMF CI-DESSOUS SONT <strong>UNIQUEMENT POUR LES HOTLINKS</strong> !
+    </div>
+    <div style="font-size: 10pt; line-height: 1.4;">
+        • Ne pas utiliser sur les relais standards ou nodes<br>
+        • HotLink = votre hotspot personnel connecté au Reflector<br>
+        • Vérifiez toujours la doc de votre radio pour les DTMF
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>.: 🎤 MODE PERROQUET :.</legend>
+    
+    <div class="content">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 15px; color: #1976d2;">
+            Tester votre retour audio et régler votre radio
+        </div>
+        
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>🔴 PROCÉDURE DTMF :</strong><br>
+            <span class="code-dtmf" role="button" tabindex="0" aria-label="Commande DTMF 1#">1#</span> <br><br>
+            
+            <button class="btn-dtmf" onclick="playPerroquet()">▶ Jouer DTMF "1#"</button><br>
+            
+            <strong>✅ QU'EST-CE QUI SE PASSE :</strong><br>
+            • Hotspot annonce <strong>"MODE PERROQUET ACTIVÉ"</strong><br>
+            • Parlez → vous vous entendez (test audio)<br>
+            • Sans PTT pendant ~10 secondes → retour au <strong>TG#59</strong><br><br>
+            
+            <div class="alert">
+                <strong>📡 DTMF :</strong> Pour exécuter un DTMF depuis votre radio, reportez-vous à la documentation de votre appareil.
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>.: 🌡️ TEMPÉRATURE ÉMETTEUR :.</legend>
+    
+    <div class="content">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 15px; color: #1976d2;">
+            Connaître la température de votre émetteur
+        </div>
+        
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>🔴 PROCÉDURE DTMF :</strong><br>
+            <span class="code-dtmf" role="button" tabindex="0" aria-label="Commande DTMF 26#">26#</span> <br><br>
+            
+            <button class="btn-dtmf" onclick="playTemperature()">▶ Jouer DTMF "26#"</button><br>
+            
+            <strong>✅ QU'EST-CE QUI SE PASSE :</strong><br>
+            • Hotspot lit la <strong>température actuelle de l'émetteur</strong><br>
+            • Annonce vocale : <strong>"Température XX degrés"</strong><br>
+            • ~10 secondes → retour au TG#59<br><br>
+            
+            <div class="alert">
+                <strong>📡 DTMF :</strong> Pour exécuter un DTMF depuis votre radio, reportez-vous à la documentation de votre appareil.            
+            </div>
+        </div>
+    </div>
+</fieldset>
+
+<fieldset>
+    <legend>.: 🔢 CHANGEMENT DE TG :.</legend>
+    
+    <div class="content">
+        <div style="font-size: 12pt; font-weight: bold; margin-bottom: 15px; color: #1976d2;">
+            Changer de TalkGroup pour discuter avec un copain ou des copines HI !
+        </div>
+        
+        <div style="text-align: left; line-height: 1.8;">
+            <strong>🔴 PROCÉDURE DTMF :</strong><br>
+            <span class="code-dtmf" role="button" tabindex="0" aria-label="Commande DTMF TG62 ex: 51062#">551<TG>#</span> 
+            Ex: TG62 → <span class="code-dtmf" role="button" tabindex="0" aria-label="Exemple DTMF 51162#">55162#</span><br>
+            TG100 → <span class="code-dtmf" role="button" tabindex="0" aria-label="Exemple DTMF 51100#">551100#</span><br><br>
+            
+            <strong>✅ QU'EST-CE QUI SE PASSE :</strong><br>
+            • Hotspot confirme : <strong>"Vous êtes maintenant sur le TG XX"</strong><br>
+            • Vous pouvez discuter sur ce TG<br>
+            • Sans PTT pendant ~30 secondes → retour au <strong>TG#59</strong><br><br>
+            
+            <div class="alert">
+                <strong>📡 DTMF :</strong> Pour exécuter un DTMF depuis votre radio, reportez-vous à la documentation de votre appareil. Petite astuce : passer en PTT et faire le DTMF puis relâcher le PTT.
+            </div>
+        </div>
+    </div>
+</fieldset>
+
 <p style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; font-weight:bold; margin-top:10px;">
     ⚠️ Ces informations concernent exclusivement le réseau RNFA et son HotLink.<br><br>
     Pour toute utilisation avec un autre reflector, il est impératif de prendre contact avec le responsable du réseau concerné pour la configuration adaptée à son installation.<br><br>
     Ce dashboard a été créé pour une utilisation propre à notre installation RNFA. 
     Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
 </p>
-
-<!-- === AJOUT DTMF SIMPLE ET PROPRE === -->
-<div style="background: #e8f4fd; border: 3px solid #1976d2; border-radius: 12px; padding: 25px; margin: 30px 0;">
-    <h2 style="color: #d32f2f; text-align: center; margin-top: 0;">📻 COMMANDE DTMF HOTLINK</h2>
-    
-    <div style="background: #ffebee; border: 2px solid #f44336; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
-        <strong>⚠️ UNIQUEMENT HOTLINKS PERSOS ! Pas relais/nodes</strong>
-    </div>
-
-    <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
-        <tr style="background: #1976d2; color: white;">
-            <th style="padding: 15px;">Fonction</th>
-            <th style="padding: 15px;">Code DTMF</th>
-            <th style="padding: 15px;">Action</th>
-        </tr>
-        <tr style="border-bottom: 2px solid #eee;">
-            <td style="padding: 15px; font-weight: bold;">🎤 Mode Perroquet</td>
-            <td style="padding: 15px; font-family: monospace; font-size: 1.3em; color: #d32f2f; font-weight: bold;">1#</td>
-            <td style="padding: 15px;">Test audio → vous vous entendez (10s timeout)</td>
-        </tr>
-        <tr style="border-bottom: 2px solid #eee;">
-            <td style="padding: 15px; font-weight: bold;">🌡️ Température</td>
-            <td style="padding: 15px; font-family: monospace; font-size: 1.3em; color: #d32f2f; font-weight: bold;">26#</td>
-            <td style="padding: 15px;">"Température XX°" (10s timeout)</td>
-        </tr>
-        <tr>
-            <td style="padding: 15px; font-weight: bold;">🔢 Change TG</td>
-            <td style="padding: 15px; font-family: monospace; font-size: 1.3em; color: #d32f2f; font-weight: bold;">551<TG># ex: 55162#</td>
-            <td style="padding: 15px;">"Sur TG XX" (30s timeout)</td>
-        </tr>
-    </table>
-    
-    <p style="text-align: center; margin-top: 20px; font-style: italic;">
-        💡 Astuce : PTT + DTMF + relâcher PTT
-    </p>
-</div>
-<!-- === FIN AJOUT DTMF === -->
 
 <p><strong>Réalisé pour le réseau f62dmr.fr</strong></p>
 <p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
@@ -198,111 +304,22 @@
     <li>Dans <strong>Reflector (IP/DNS)</strong>, mettez l'adresse du serveur : <strong>f62dmr.fr</strong>.</li>
     <li><strong>Créez un nouveau profil</strong> et nommez-le <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
 </ol>
-<p><strong>💡 Note :</strong> Toutes les configurations sont prises en compte <strong>immédiatement</strong>, sans redémarrage du système.</p>
-
-<h3>🔄 Restauration d'usine</h3>
-<p>En cas de <strong>restore total</strong>, seuls les paramètres de <strong>SVXLink</strong> reviennent en mode par défaut avec l'indicatif <strong>USER</strong>.</p>
-<p>Il vous restera alors à :</p>
-<ol>
-    <li>Changer l'indicatif selon vos besoins.</li>
-    <li>Mettre dans <strong>Reflector (IP/DNS)</strong> : <strong>f62dmr.fr</strong>.</li>
-    <li><strong>Créer un nouveau profil</strong> : <strong>RNFA</strong>, puis <strong>sauvegardez</strong>.</li>
-</ol>
-<p><strong>Exception :</strong> Les paramètres du <strong>SA818/SA868</strong> ne seront pas réinitialisés lors d'une restauration d'usine.</p>
-
 
 <h2>📻 Section : Programmation du SA818 / SA868</h2>
-<p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink :</p>
-<ul>
-    <li>Configuration pour module SA818</li>
-    <li>Configuration pour module SA868</li>
-</ul>
-<p><strong>Rassurez-vous :</strong> Cette configuration est <strong>sans risque de dysfonctionnement</strong>. Vous pouvez modifier les paramètres en toute sécurité.</p>
+<p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink. Configuration <strong>sans risque</strong>.</p>
 
 <h2>💻 Section : Terminal</h2>
-<h3>Accès réservé</h3>
-<p>Cette section est réservée aux <strong>utilisateurs avertis</strong> ayant des connaissances Linux.</p>
-
-<h3>Identifiants d'accès</h3>
 <table>
-    <tr>
-        <th>Paramètre</th>
-        <th>Valeur</th>
-    </tr>
-    <tr>
-        <td>Login</td>
-        <td><code>root</code></td>
-    </tr>
-    <tr>
-        <td>Mot de passe</td>
-        <td><code>1234</code></td>
-    </tr>
+    <tr><th>Login</th><td><code>root</code></td></tr>
+    <tr><th>Mot de passe</th><td><code>1234</code></td></tr>
 </table>
-<p><strong>Attention :</strong> L'utilisation du terminal nécessite des compétences techniques. En cas de doute, contactez le support.</p>
-
-<h2>⚙️ Section : Config</h2>
-<p>Cette section contient les paramètres système par défaut du dashboard.</p>
-<p><strong>Tous les paramètres sont configurés par défaut.</strong></p>
-<p>Aucune action particulière n'est nécessaire dans cette section, sauf si vous souhaitez effectuer une mise à jour manuelle.</p>
-
-<h2>🗺️ Section : Node Info</h2>
-<h3>Fonction</h3>
-<p>Cette section permet d'envoyer des informations au serveur pour l'affichage sur la carte interactive du site <strong>f62dmr.fr</strong>.</p>
-
-<h3>Caractéristiques</h3>
-<ul>
-    <li>Envoi des informations <strong>facultatif</strong>.</li>
-    <li>Permet de localiser votre nœud sur la carte du réseau.</li>
-    <li>Aucune obligation de renseigner ces informations.</li>
-</ul>
-
-<h2>📋 Informations complémentaires</h2>
-<h3>🔄 Mise à jour automatique</h3>
-<p>Le dashboard HotLink effectue une <strong>mise à jour automatique</strong> selon les modalités suivantes :</p>
-<ul>
-    <li>Fréquence : tous les <strong>dimanches à 3h00 du matin</strong>.</li>
-    <li>Condition : le hotspot doit être <strong>en ligne</strong> au moment de la mise à jour.</li>
-</ul>
-
-<h3>🛠️ Mise à jour manuelle</h3>
-<ol>
-    <li>Accédez à la section <strong>Config</strong>.</li>
-    <li>Descendez en bas de page.</li>
-    <li>Cliquez sur le bouton Mettre à jour le Dashboard.</li>
-</ol>
-
-<h3>📞 Support technique</h3>
-<ul>
-    <li><strong>Email :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></li>
-    <li>N'hésitez pas à contacter le support avant toute action incertaine.</li>
-</ul>
+<p><strong>Réservé aux utilisateurs avertis Linux.</strong></p>
 
 <h2>✅ Récapitulatif des bonnes pratiques</h2>
 <table>
-    <tr>
-        <th>Section</th>
-        <th>Point clé</th>
-    </tr>
-    <tr>
-        <td>Configuration Wi-Fi</td>
-        <td>Toujours sauvegarder après modification</td>
-    </tr>
-    <tr>
-        <td>SVXLink Config</td>
-        <td>Créer nouveau profil avec RNFA après modification</td>
-    </tr>
-    <tr>
-        <td>SA818/SA868</td>
-        <td>Pas de risque, configuration libre</td>
-    </tr>
-    <tr>
-        <td>Terminal</td>
-        <td>Réservé aux utilisateurs avertis</td>
-    </tr>
-    <tr>
-        <td>Node Info</td>
-        <td>Facultatif, pour la carte du réseau</td>
-    </tr>
+    <tr><th>Section</th><th>Point clé</th></tr>
+    <tr><td>Wi-Fi</td><td>Toujours sauvegarder</td></tr>
+    <tr><td>SVXLink</td><td>Profil RNFA + f62dmr.fr</td></tr>
 </table>
 
 <p class="signature">
@@ -314,13 +331,10 @@ document.addEventListener('DOMContentLoaded', function() {
     const downloadBtn = document.getElementById('downloadBtn');
     
     downloadBtn.addEventListener('click', function(e) {
-        e.preventDefault(); // Empêche le changement de page
-        
-        // Ajoute l'effet visuel "téléchargement en cours"
+        e.preventDefault();
         downloadBtn.classList.add('downloading');
         downloadBtn.textContent = '⏳ Téléchargement en cours...';
         
-        // Crée et clique le lien de téléchargement en arrière-plan
         const link = document.createElement('a');
         link.href = 'http://hotlink/doc/Guide Dashboard HotLink.pdf';
         link.download = 'Guide-Dashboard-HotLink.pdf';
@@ -328,13 +342,44 @@ document.addEventListener('DOMContentLoaded', function() {
         link.click();
         document.body.removeChild(link);
         
-        // Retourne à l'état normal après 2 secondes
         setTimeout(() => {
             downloadBtn.classList.remove('downloading');
             downloadBtn.textContent = '📥 Télécharger le guide complet en PDF';
         }, 2000);
     });
 });
+
+function playPerroquet() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const tones = {1: {f1:697, f2:1209}, '#': {f1:941, f2:1477}};
+    let time = 0;
+    ['1', '#'].forEach(key => {
+        const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator();
+        osc1.frequency.value = tones[key].f1; osc2.frequency.value = tones[key].f2;
+        osc1.connect(audioCtx.destination); osc2.connect(audioCtx.destination);
+        osc1.start(time); osc2.start(time);
+        setTimeout(() => {osc1.stop(); osc2.stop();}, 300);
+        time += 0.4;
+    });
+}
+
+function playTemperature() {
+    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const tones = {
+        '2': {f1:770, f2:1336},
+        '6': {f1:852, f2:1477},
+        '#': {f1:941, f2:1477}
+    };
+    let time = 0;
+    ['2', '6', '#'].forEach(key => {
+        const osc1 = audioCtx.createOscillator(), osc2 = audioCtx.createOscillator();
+        osc1.frequency.value = tones[key].f1; osc2.frequency.value = tones[key].f2;
+        osc1.connect(audioCtx.destination); osc2.connect(audioCtx.destination);
+        osc1.start(time); osc2.start(time);
+        setTimeout(() => {osc1.stop(); osc2.stop();}, 300);
+        time += 0.4;
+    });
+}
 </script>
 
 </body>
