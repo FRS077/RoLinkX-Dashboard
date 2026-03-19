@@ -240,9 +240,6 @@
     Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
 </p>
 
-<p><strong>Réalisé pour le réseau f62dmr.fr</strong></p>
-<p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
-
 <div style="text-align: center; margin: 30px 0;">
     <a class="download" id="downloadBtn" href="http://hotlink/doc/Guide Dashboard HotLink.pdf" download>
         📥 Télécharger le guide complet en PDF
