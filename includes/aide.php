@@ -97,6 +97,43 @@
     Il est toutefois possible de l'utiliser avec d'autres distributions pour le RRF ou RI49, sous réserve d'être titulaire d'une licence radioamateur.
 </p>
 
+<!-- === AJOUT DTMF SIMPLE ET PROPRE === -->
+<div style="background: #e8f4fd; border: 3px solid #1976d2; border-radius: 12px; padding: 25px; margin: 30px 0;">
+    <h2 style="color: #d32f2f; text-align: center; margin-top: 0;">📻 COMMANDE DTMF HOTLINK</h2>
+    
+    <div style="background: #ffebee; border: 2px solid #f44336; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;">
+        <strong>⚠️ UNIQUEMENT HOTLINKS PERSOS ! Pas relais/nodes</strong>
+    </div>
+
+    <table style="width: 100%; background: white; border-radius: 8px; overflow: hidden; box-shadow: 0 4px 8px rgba(0,0,0,0.1);">
+        <tr style="background: #1976d2; color: white;">
+            <th style="padding: 15px;">Fonction</th>
+            <th style="padding: 15px;">Code DTMF</th>
+            <th style="padding: 15px;">Action</th>
+        </tr>
+        <tr style="border-bottom: 2px solid #eee;">
+            <td style="padding: 15px; font-weight: bold;">🎤 Mode Perroquet</td>
+            <td style="padding: 15px; font-family: monospace; font-size: 1.3em; color: #d32f2f; font-weight: bold;">1#</td>
+            <td style="padding: 15px;">Test audio → vous vous entendez (10s timeout)</td>
+        </tr>
+        <tr style="border-bottom: 2px solid #eee;">
+            <td style="padding: 15px; font-weight: bold;">🌡️ Température</td>
+            <td style="padding: 15px; font-family: monospace; font-size: 1.3em; color: #d32f2f; font-weight: bold;">26#</td>
+            <td style="padding: 15px;">"Température XX°" (10s timeout)</td>
+        </tr>
+        <tr>
+            <td style="padding: 15px; font-weight: bold;">🔢 Change TG</td>
+            <td style="padding: 15px; font-family: monospace; font-size: 1.3em; color: #d32f2f; font-weight: bold;">551<TG># ex: 55162#</td>
+            <td style="padding: 15px;">"Sur TG XX" (30s timeout)</td>
+        </tr>
+    </table>
+    
+    <p style="text-align: center; margin-top: 20px; font-style: italic;">
+        💡 Astuce : PTT + DTMF + relâcher PTT
+    </p>
+</div>
+<!-- === FIN AJOUT DTMF === -->
+
 <p><strong>Réalisé pour le réseau f62dmr.fr</strong></p>
 <p><strong>Date :</strong> Mars 2026 | <strong>Contact support :</strong> <a href="mailto:contact.amc62@orange.fr">contact.amc62@orange.fr</a></p>
 
@@ -128,7 +165,7 @@
             <li>Reboot</li>
             <li>Mise hors tension</li>
         </ul>
-        Il est d’ailleurs recommandé d’éteindre correctement le HotLink avec la mise hors tension.
+        Il est d'ailleurs recommandé d'éteindre correctement le HotLink avec la mise hors tension.
     </li>
 </ul>
 
@@ -146,18 +183,9 @@
         <li>Cliquez sur <strong><button>Sauvegarder</button></strong> pour valider la configuration.</li>
     </ol>
 
-    <div class="important-box">
-        <div>
-            <span class="warning-icon">⚠️</span>
-            <div class="warning-text">ATTENTION : Compatibilité Wi-Fi 2.4 GHz uniquement</div>
-            <div>La connexion Wi-Fi ne fonctionne qu'en bande <strong>2.4 GHz</strong> (et non 5 GHz), que ce soit sur votre box Internet ou en partage de connexion depuis votre téléphone.</div>
-            <div style="margin-top: 10px; font-size: 14px; color: #856404;">
-                Vérifiez les paramètres de votre box/partage et désactivez temporairement le 5 GHz si activé.
-            </div>
-        </div>
-        <div style="margin-top: 15px; font-style: italic; color: #666;">
-            💡 N'oubliez pas de sauvegarder après avoir saisi les informations, sinon elles ne seront pas appliquées.</li>
-</ol>
+    <div style="background:#fff3cd; border:2px solid #ffc107; padding:12px; border-radius:6px; margin:20px 0; font-weight:bold;">
+        ⚠️ ATTENTION : Compatibilité Wi-Fi 2.4 GHz uniquement
+    </div>
 
 <h2>🔧 Section : SVXLink Configuration</h2>
 <h3>Paramètres modifiables</h3>
