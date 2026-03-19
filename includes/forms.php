@@ -1070,7 +1070,6 @@ function aprsForm($ajax = false)
             <span class="input-group-text" style="width: 8rem;">Symbole</span>
             <select id="aprs_symbol" class="form-select">';
         $symbols = array(
-        'RNFA' => 'House',
         '/['     => 'Person',
         '\b'     => 'Bike',
         '/<'     => 'Motorcycle',
@@ -1078,6 +1077,8 @@ function aprsForm($ajax = false)
         '/k'     => 'Truck',
         '\k'     => 'SUV',
         '\j'     => 'Jeep',
+		'/b'   => 'Boat',
+		'/p'   => 'Plane',
         '/-'     => 'House',
     );
     foreach ($symbols as $sym => $name) {
