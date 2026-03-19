@@ -237,9 +237,6 @@
         • HotLink = votre hotspot personnel connecté au Reflector<br>
         • Vérifiez toujours la doc de votre radio pour les DTMF
     </div>
-</fieldset>
-
-<fieldset>
     <legend>.: 🎤 MODE PERROQUET :.</legend>
     
     <div class="content">
