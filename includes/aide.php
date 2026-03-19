@@ -207,7 +207,12 @@
 </ol>
 
 <h2>📻 Section : Programmation du SA818 / SA868</h2>
-<p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink. Configuration <strong>sans risque</strong>.</p>
+<p>Cette section permet de configurer l'émetteur/récepteur selon la version installée sur votre HotLink :</p>
+<ul>
+    <li>Configuration pour module SA818</li>
+    <li>Configuration pour module SA868</li>
+</ul>
+<p><strong>Rassurez-vous :</strong> Cette configuration est <strong>sans risque de dysfonctionnement</strong>. Vous pouvez modifier les paramètres en toute sécurité.</p>
 
 <h2>💻 Section : Terminal</h2>
 <table>
