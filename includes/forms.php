@@ -1176,6 +1176,7 @@ function ttyForm()
     $host     = parse_url($_SERVER['HTTP_HOST']);
     $host     = (empty($host['host']) ? $_SERVER['HTTP_HOST'] : $host['host']);
     $ttyFrame = '<h4 class="mt-2 alert alert-primary fw-bold">Terminal</h4>';
+    $ttyFrame .= '<div class="alert alert-secondary py-2 mb-2">Login: <strong>root</strong> | Passwd: <strong>1234</strong></div>';
     $ttyFrame .= '<div class="row">
         <div class="col-lg-12">
             <div class="card bg-light shadow border-0">
