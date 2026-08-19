@@ -310,53 +310,17 @@ function getPublicIP()
 {
     $ip     = 'Not available';
     $status = 'color:white;background:red';
-    $toggle = 'class="input-group-text" role="button"';
     $gotIP  = getExtIp();
     if ($gotIP) {
         $ip     = $gotIP;
         $status = 'background:lightgreen';
-        $toggle = 'class="input-group-text collapsed dropdown-toggle" role="button"';
     }
+
     $data = '<div class="input-group mb-2">
-        <span data-bs-toggle="tooltip" title="Cliquez pour révéler la <b>performance du réseau</b> outil">
-            <span ' . $toggle . ' data-bs-toggle="collapse" data-bs-target="#netPerf" aria-expanded="false" aria-controls="netPerf" style="width: 6.5rem;' . $status . '">IP externe</span>
-        </span>
+        <span class="input-group-text" style="width: 6.5rem;' . $status . '">IP externe</span>
         <input type="text" class="form-control" placeholder="' . $ip . '" readonly>
     </div>';
-    $data .= ($gotIP) ? '<div id="netPerf" class="accordion-collapse collapse">
-        <div class="accordion-body">
-            <div class="row">
-                <div class="col text-center pb-2">
-                    <button type="button" class="btn btn-info col-sm px-2" id="latencyCheck"><i class="icon-timer px-2" aria-hidden="true"></i>Exécuter un test</button>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-sm">
-                    <label for="tcp_bw" class="form-control-sm col-form-label">TCP Bandwidth</label>
-                    <input id="tcp_bw" type="text" class="form-control text-center" placeholder="..." readonly>
-                </div>
-                <div class="col-sm">
-                    <label for="tcp_lat" class="form-control-sm col-form-label">TCP Latency</label>
-                    <input id="tcp_lat" type="text" class="form-control text-center" placeholder="..." readonly>
-                </div>
-                <div class="col-sm">
-                    <label for="udp_sbw" class="form-control-sm col-form-label">UDP TX Bandwidth</label>
-                    <input id="udp_sbw" type="text" class="form-control text-center" placeholder="..." readonly>
-                </div>
-                <div class="col-sm">
-                    <label for="udp_rbw" class="form-control-sm col-form-label">UDP RX Bandwidth</label>
-                    <input id="udp_rbw" type="text" class="form-control text-center" placeholder="..." readonly>
-                </div>
-                <div class="col-sm">
-                    <label for="udp_lat" class="form-control-sm col-form-label">UDP Latency</label>
-                    <input id="udp_lat" type="text" class="form-control text-center" placeholder="..." readonly>
-                </div>
-            </div>
-            <div class="pt-3 text-center">
-                <small class="d-inline-flex px-2 py-1 font-monospace text-muted border rounded-3">Des performances optimales sont obtenues lorsque la bande passante est supérieure à 350 Ko/s et la latence est inférieure à 150 ms</small>
-            </div>
-        </div>
-    </div>' : null;
+
     return $data;
 }
 
