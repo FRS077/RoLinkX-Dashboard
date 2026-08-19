@@ -65,7 +65,7 @@ function getGPSDongle()
     if ($detected) {
         $status = 'background:lightgreen';
         $toggle = 'class="input-group-text collapsed dropdown-toggle" role="button"';
-        $gps    = 'Connected';
+        $gps    = 'Dongle connecté';
     }
     $data = '<div class="input-group mb-2">
         <span ' . $toggle . ' data-bs-toggle="collapse" data-bs-target="#gps" aria-expanded="false" aria-controls="gps" style="width: 6.5rem;' . $status . '">GPS</span>
