@@ -1176,7 +1176,28 @@ function ttyForm()
     $host     = parse_url($_SERVER['HTTP_HOST']);
     $host     = (empty($host['host']) ? $_SERVER['HTTP_HOST'] : $host['host']);
     $ttyFrame = '<h4 class="mt-2 alert alert-primary fw-bold">Terminal</h4>';
-    $ttyFrame .= '<div class="alert alert-secondary py-2 mb-2">Login: <strong>root</strong> | Passwd: <strong>1234</strong></div>';
+    
+    // ✅ Ajout du style CSS pour l'animation clignotante (texte uniquement)
+    $ttyFrame .= '<style>
+        @keyframes blink-text-red-green {
+            0%   { color: #dc3545; }
+            50%  { color: #198754; }
+            100% { color: #dc3545; }
+        }
+        .blink-text {
+            animation: blink-text-red-green 1s infinite;
+        }
+    </style>';
+    
+    $ttyFrame .= '<div class="alert alert-secondary py-2 mb-2">';
+    $ttyFrame .= 'Login: <strong class="blink-text">root</strong> | ';
+    $ttyFrame .= 'Passwd: <strong class="blink-text">1234</strong> ';
+    $ttyFrame .= '<span class="badge bg-warning text-dark ms-2" style="cursor: help;" ';
+    $ttyFrame .= 'data-bs-toggle="tooltip" data-bs-placement="top" ';
+    $ttyFrame .= 'title="Pour changer le mot de passe, exécutez :<br><code>passwd</code><br>dans le terminal ci-dessous">';
+    $ttyFrame .= '⚠️ Changez le mot de passe !</span>';
+    $ttyFrame .= '</div>';
+    
     $ttyFrame .= '<div class="row">
         <div class="col-lg-12">
             <div class="card bg-light shadow border-0">
