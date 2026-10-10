@@ -591,7 +591,7 @@ function dtmfSender()
                     <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info btn-sm mb-1" value="5#">Météo aéroport</button>
                     <button data-bs-toggle="tooltip" title="Annonce l&rsquo;adresse IP locale de votre hotspot" id="sendDTMF_IP" type="button" class="btn btn-info btn-sm mb-1" value="25#">IP Hotspot</button>
                     <button data-bs-toggle="tooltip" title="Redémarre le hotspot (après une annonce vocale, environ 8 secondes)" id="sendDTMF_Restart" type="button" class="btn btn-danger btn-sm mb-1" value="97#" onclick="return confirm(&quot;Redémarrer le hotspot ?&quot;);">Restart &#128260;</button>
-                    <button data-bs-toggle="tooltip" title="Arrête complètement le hotspot (après une annonce vocale, environ 8 secondes). Un accès physique sera nécessaire pour le rallumer." id="sendDTMF_Halt" type="button" class="btn btn-danger btn-sm mb-1" value="98#" onclick="return confirm(&quot;Arrêter le hotspot ? Il faudra le rallumer physiquement.&quot;);">Halt &#9211;</button>
+                    <button data-bs-toggle="tooltip" title="Arrête complètement le hotspot (après une annonce vocale, environ 8 secondes). Un accès physique sera nécessaire pour le rallumer." id="sendDTMF_Halt" type="button" class="btn btn-danger btn-sm mb-1" value="98#" onclick="return confirm(&quot;Arrêter le hotspot ? Il faudra le rallumer physiquement.&quot;);">Stop &#9940;</button>
                     <button data-bs-toggle="tooltip" title="Désactive tous les codes DTMF actifs" id="sendDTMF_AllOff" type="button" class="btn btn-warning btn-sm mb-1" value="#">Tout stopper #</button>
                 </div>
             </div>
