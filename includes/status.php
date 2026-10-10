@@ -561,35 +561,36 @@ function dtmfSender()
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
             </div>
             <div class="modal-body">
-                <div class="alert alert-info small" role="alert">
+                <div class="alert alert-secondary small py-2" role="alert">
                     <strong>Comment changer de TG ?</strong>
                     <ol class="mb-1 ps-3">
                         <li>Cliquez sur un bouton TG ci-dessous (ex. <b>TG#59</b>), puis sur <b>Envoyer</b> si la commande n&rsquo;est pas envoyée automatiquement.</li>
                         <li>Ou saisissez la commande à la main dans le champ : <b>551</b> + numéro du TG + <b>#</b>.</li>
                     </ol>
                     Exemples : <code>55159#</code> pour le TG 59, <code>551100#</code> pour le TG 100.<br>
-                    <code>551#</code> active la liaison, <code>55#</code> la désactive.
+                    <code>551#</code> active la liaison, <code>55#</code> la désactive, <code>#</code> désactive tous les codes DTMF.
                 </div>
-                <div class="input-group flex-nowrap">
-                    <span data-bs-toggle="tooltip" title="Commandes DTMF à envoyer à SVXLink." class="input-group-text" id="addon-wrapping">Commande :</span>
+                <div class="input-group input-group-sm flex-nowrap">
+                    <span data-bs-toggle="tooltip" title="Commandes DTMF à envoyer à SVXLink." class="input-group-text" id="addon-wrapping">Cmd :</span>
                     <input type="tel" id="dtmfCommand" class="form-control" aria-label="Commande" aria-describedby="addon-wrapping">
+                    <button data-bs-toggle="tooltip" title="Cliquez pour envoyer les données du champ <b>Commande</b>" data-bs-placement="bottom" id="sendDTMF" type="button" class="btn btn-danger">Envoyer</button>
                 </div>
                 <div class="alert alert-success m-1" id="dtmfConsole" role="alert" style="display:none;"></div>
             </div>
             <div class="modal-footer">
                 <div class="col">
-                    <button data-bs-toggle="tooltip" title="Active la liaison et transmet l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_EnableLink" type="button" class="btn btn-info mb-1" value="551#">Activer &#128279;</button>
-                    <button data-bs-toggle="tooltip" title="Désactive la liaison et coupe l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_DisableLink" type="button" class="btn btn-info mb-1" value="55#">Désactiver &#128279;</button>
-                    <button data-bs-toggle="tooltip" title="TG59 LOCAL" id="sendDTMF_TG9" type="button" class="btn btn-info mb-1" value="55159#">TG#59</button>
-                    <button data-bs-toggle="tooltip" title="TG62 QSY" id="sendDTMF_TG62" type="button" class="btn btn-info mb-1" value="55162#">TG#62</button>
-                    <button data-bs-toggle="tooltip" title="TG100 SSTV" id="sendDTMF_TG100" type="button" class="btn btn-info mb-1" value="551100#">TG#100</button>
-                    <button data-bs-toggle="tooltip" title="TG101 PKT RADIO" id="sendDTMF_TG101" type="button" class="btn btn-info mb-1" value="551101#">TG#101</button>
-                    <button data-bs-toggle="tooltip" title="Active le perroquet pour tester votre audio. <em>Note : après 60 secondes d&rsquo;inactivité, le perroquet sera désactivé et l&rsquo;audio reprendra son flux normal.</em>" id="sendDTMF_ParrotOn" type="button" class="btn btn-info mb-1" value="1#">Perroquet On</button>
-                    <button data-bs-toggle="tooltip" title="Désactive le module perroquet (s&rsquo;il est actif)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info mb-1" value="#">Perroquet Off</button>
-                    <button data-bs-toggle="tooltip" title="Aide : liste des fonctions disponibles" id="sendDTMF_Help" type="button" class="btn btn-info mb-1" value="0#">Aide</button>
-                    <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info mb-1" value="5#">Météo aéroport</button>
+                    <button data-bs-toggle="tooltip" title="Active la liaison et transmet l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_EnableLink" type="button" class="btn btn-info btn-sm mb-1" value="551#">Activer &#128279;</button>
+                    <button data-bs-toggle="tooltip" title="Désactive la liaison et coupe l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_DisableLink" type="button" class="btn btn-info btn-sm mb-1" value="55#">Désactiver &#128279;</button>
+                    <button data-bs-toggle="tooltip" title="TG59 LOCAL" id="sendDTMF_TG9" type="button" class="btn btn-info btn-sm mb-1" value="55159#">TG#59</button>
+                    <button data-bs-toggle="tooltip" title="TG62 QSY" id="sendDTMF_TG62" type="button" class="btn btn-info btn-sm mb-1" value="55162#">TG#62</button>
+                    <button data-bs-toggle="tooltip" title="TG100 SSTV" id="sendDTMF_TG100" type="button" class="btn btn-info btn-sm mb-1" value="551100#">TG#100</button>
+                    <button data-bs-toggle="tooltip" title="TG101 PKT RADIO" id="sendDTMF_TG101" type="button" class="btn btn-info btn-sm mb-1" value="551101#">TG#101</button>
+                    <button data-bs-toggle="tooltip" title="Active le perroquet pour tester votre audio. <em>Note : après 60 secondes d&rsquo;inactivité, le perroquet sera désactivé et l&rsquo;audio reprendra son flux normal.</em>" id="sendDTMF_ParrotOn" type="button" class="btn btn-info btn-sm mb-1" value="1#">Perroquet On</button>
+                    <button data-bs-toggle="tooltip" title="Désactive le module perroquet (s&rsquo;il est actif)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info btn-sm mb-1" value="#">Perroquet Off</button>
+                    <button data-bs-toggle="tooltip" title="Aide : liste des fonctions disponibles" id="sendDTMF_Help" type="button" class="btn btn-info btn-sm mb-1" value="0#">Aide</button>
+                    <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info btn-sm mb-1" value="5#">Météo aéroport</button>
+                    <button data-bs-toggle="tooltip" title="Désactive tous les codes DTMF actifs" id="sendDTMF_AllOff" type="button" class="btn btn-warning btn-sm mb-1" value="#">Tout stopper #</button>
                 </div>
-                <button data-bs-toggle="tooltip" title="Cliquez pour envoyer les données du champ <b>Commande</b>" data-bs-placement="bottom" id="sendDTMF" type="button" class="btn btn-danger btn-lg">Envoyer</button>
             </div>
         </div>
     </div>
