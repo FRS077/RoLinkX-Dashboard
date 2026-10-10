@@ -589,6 +589,7 @@ function dtmfSender()
                     <button data-bs-toggle="tooltip" title="Désactive le module perroquet (s&rsquo;il est actif)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info btn-sm mb-1" value="#">Perroquet Off</button>
                     <button data-bs-toggle="tooltip" title="Aide : liste des fonctions disponibles" id="sendDTMF_Help" type="button" class="btn btn-info btn-sm mb-1" value="0#">Aide</button>
                     <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info btn-sm mb-1" value="5#">Météo aéroport</button>
+                    <button data-bs-toggle="tooltip" title="Annonce l&rsquo;adresse IP locale de votre hotspot" id="sendDTMF_IP" type="button" class="btn btn-info btn-sm mb-1" value="25#">IP Hotspot</button>
                     <button data-bs-toggle="tooltip" title="Désactive tous les codes DTMF actifs" id="sendDTMF_AllOff" type="button" class="btn btn-warning btn-sm mb-1" value="#">Tout stopper #</button>
                 </div>
             </div>
