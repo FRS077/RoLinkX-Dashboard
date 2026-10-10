@@ -586,6 +586,8 @@ function dtmfSender()
                     <button data-bs-toggle="tooltip" title="TG101 PKT RADIO" id="sendDTMF_TG101" type="button" class="btn btn-info mb-1" value="551101#">TG#101</button>
                     <button data-bs-toggle="tooltip" title="Active le perroquet pour tester votre audio. <em>Note : après 60 secondes d&rsquo;inactivité, le perroquet sera désactivé et l&rsquo;audio reprendra son flux normal.</em>" id="sendDTMF_ParrotOn" type="button" class="btn btn-info mb-1" value="1#">Perroquet On</button>
                     <button data-bs-toggle="tooltip" title="Désactive le module perroquet (s&rsquo;il est actif)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info mb-1" value="#">Perroquet Off</button>
+                    <button data-bs-toggle="tooltip" title="Aide : liste des fonctions disponibles" id="sendDTMF_Help" type="button" class="btn btn-info mb-1" value="0#">Aide</button>
+                    <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info mb-1" value="5#">Météo aéroport</button>
                 </div>
                 <button data-bs-toggle="tooltip" title="Cliquez pour envoyer les données du champ <b>Commande</b>" data-bs-placement="bottom" id="sendDTMF" type="button" class="btn btn-danger btn-lg">Envoyer</button>
             </div>
