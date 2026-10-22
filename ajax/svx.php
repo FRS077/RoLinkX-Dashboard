@@ -452,10 +452,13 @@ switch ($frmModules) {
         $newVar[25] = '${2}' . 'ModuleParrot';
         break;
     case '2':
-        $newVar[25] = '${2}' . 'ModuleEchoLink';
+        $newVar[25] = '${2}' . 'ModuleHelp';
+        break;
+	case '3':
+        $newVar[25] = '${2}' . 'ModuleMetarInfo';
         break;
     case '9':
-        $newVar[25] = '${2}' . 'ModuleParrot,ModuleEchoLink';
+        $newVar[25] = '${2}' . 'ModuleParrot,ModuleHelp,ModuleMetarInfo';
         break;
 }
 if ($modulesValue != $frmModules) {
