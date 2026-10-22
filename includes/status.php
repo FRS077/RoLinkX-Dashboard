@@ -573,26 +573,28 @@ function dtmfSender()
                 <div class="input-group input-group-sm flex-nowrap">
                     <span data-bs-toggle="tooltip" title="Commandes DTMF à envoyer à SVXLink." class="input-group-text" id="addon-wrapping">Cmd :</span>
                     <input type="tel" id="dtmfCommand" class="form-control" aria-label="Commande" aria-describedby="addon-wrapping">
-                    <button data-bs-toggle="tooltip" title="Cliquez pour envoyer les données du champ <b>Commande</b>" data-bs-placement="bottom" id="sendDTMF" type="button" class="btn btn-danger">Envoyer</button>
+                    <button data-bs-toggle="tooltip" title="Cliquez pour envoyer les données du champ <b>Commande</b>" data-bs-placement="bottom" id="sendDTMF" type="button" class="btn btn-danger">Envoyer &#128228;</button>
                 </div>
                 <div class="alert alert-success m-1" id="dtmfConsole" role="alert" style="display:none;"></div>
             </div>
             <div class="modal-footer">
                 <div class="col">
                     <button data-bs-toggle="tooltip" title="Active la liaison et transmet l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_EnableLink" type="button" class="btn btn-info btn-sm mb-1" value="551#">Activer &#128279;</button>
-                    <button data-bs-toggle="tooltip" title="Désactive la liaison et coupe l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_DisableLink" type="button" class="btn btn-info btn-sm mb-1" value="55#">Désactiver &#128279;</button>
-                    <button data-bs-toggle="tooltip" title="TG59 LOCAL" id="sendDTMF_TG9" type="button" class="btn btn-info btn-sm mb-1" value="55159#">TG#59</button>
-                    <button data-bs-toggle="tooltip" title="TG62 QSY" id="sendDTMF_TG62" type="button" class="btn btn-info btn-sm mb-1" value="55162#">TG#62</button>
-                    <button data-bs-toggle="tooltip" title="TG100 SSTV" id="sendDTMF_TG100" type="button" class="btn btn-info btn-sm mb-1" value="551100#">TG#100</button>
-                    <button data-bs-toggle="tooltip" title="TG101 PKT RADIO" id="sendDTMF_TG101" type="button" class="btn btn-info btn-sm mb-1" value="551101#">TG#101</button>
-                    <button data-bs-toggle="tooltip" title="Active le perroquet pour tester votre audio. <em>Note : après 60 secondes d&rsquo;inactivité, le perroquet sera désactivé et l&rsquo;audio reprendra son flux normal.</em>" id="sendDTMF_ParrotOn" type="button" class="btn btn-info btn-sm mb-1" value="1#">Perroquet On</button>
-                    <button data-bs-toggle="tooltip" title="Désactive le module perroquet (s&rsquo;il est actif)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info btn-sm mb-1" value="#">Perroquet Off</button>
-                    <button data-bs-toggle="tooltip" title="Aide : liste des fonctions disponibles" id="sendDTMF_Help" type="button" class="btn btn-info btn-sm mb-1" value="0#">Aide</button>
-                    <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info btn-sm mb-1" value="5#">Météo aéroport</button>
-                    <button data-bs-toggle="tooltip" title="Annonce l&rsquo;adresse IP locale de votre hotspot" id="sendDTMF_IP" type="button" class="btn btn-info btn-sm mb-1" value="25#">IP Hotspot</button>
-                    <button data-bs-toggle="tooltip" title="Redémarre le hotspot (après une annonce vocale, environ 5 secondes)" id="sendDTMF_Restart" type="button" class="btn btn-danger btn-sm mb-1" value="97#" onclick="return confirm(&quot;Redémarrer le hotspot ?&quot;);">Restart &#128260;</button>
+                    <button data-bs-toggle="tooltip" title="Désactive la liaison et coupe l&rsquo;audio vers et depuis le réflecteur auquel vous êtes connecté." id="sendDTMF_DisableLink" type="button" class="btn btn-info btn-sm mb-1" value="55#">Désactiver &#128683;</button>
+                    <button data-bs-toggle="tooltip" title="TG59 LOCAL" id="sendDTMF_TG9" type="button" class="btn btn-info btn-sm mb-1" value="55159#">TG#59 &#127968;</button>
+                    <button data-bs-toggle="tooltip" title="TG62 QSY" id="sendDTMF_TG62" type="button" class="btn btn-info btn-sm mb-1" value="55162#">TG#62 &#128251;</button>
+                    <button data-bs-toggle="tooltip" title="TG100 SSTV" id="sendDTMF_TG100" type="button" class="btn btn-info btn-sm mb-1" value="551100#">TG#100 &#128247;</button>
+                    <button data-bs-toggle="tooltip" title="TG101 PKT RADIO" id="sendDTMF_TG101" type="button" class="btn btn-info btn-sm mb-1" value="551101#">TG#101 &#128246;</button>
+                    <button data-bs-toggle="tooltip" title="Active le perroquet pour tester votre audio. <em>Note : après 60 secondes d&rsquo;inactivité, le perroquet sera désactivé et l&rsquo;audio reprendra son flux normal.</em>" id="sendDTMF_ParrotOn" type="button" class="btn btn-info btn-sm mb-1" value="1#">Perroquet On &#129436;</button>
+                    <button data-bs-toggle="tooltip" title="Désactive le module perroquet (s&rsquo;il est actif)" id="sendDTMF_ParrotOff" type="button" class="btn btn-info btn-sm mb-1" value="#">Perroquet Off &#128263;</button>
+                    <button data-bs-toggle="tooltip" title="Aide : liste des fonctions disponibles" id="sendDTMF_Help" type="button" class="btn btn-info btn-sm mb-1" value="0#">Aide &#10067;</button>
+                    <button data-bs-toggle="tooltip" title="Météo aéroport" id="sendDTMF_Meteo" type="button" class="btn btn-info btn-sm mb-1" value="5#">Météo aéroport &#9925;</button>
+                    <button data-bs-toggle="tooltip" title="Annonce l&rsquo;adresse IP locale de votre hotspot" id="sendDTMF_IP" type="button" class="btn btn-info btn-sm mb-1" value="25#">IP Hotspot &#127760;</button>
+                    <button data-bs-toggle="tooltip" title="Annonce la température du hotspot" id="sendDTMF_Temp" type="button" class="btn btn-info btn-sm mb-1" value="26#">Température &#127777;</button>
+                    <button data-bs-toggle="tooltip" title="Lance le ventilateur du hotspot" id="sendDTMF_Fan" type="button" class="btn btn-info btn-sm mb-1" value="37#">Ventilo on&#10052;</button>
+					<button data-bs-toggle="tooltip" title="Redémarre le hotspot (après une annonce vocale, environ 5 secondes)" id="sendDTMF_Restart" type="button" class="btn btn-danger btn-sm mb-1" value="97#" onclick="return confirm(&quot;Redémarrer le hotspot ?&quot;);">Restart &#128260;</button>
                     <button data-bs-toggle="tooltip" title="Arrête complètement le hotspot (après une annonce vocale, environ 5 secondes). Un accès physique sera nécessaire pour le rallumer." id="sendDTMF_Halt" type="button" class="btn btn-danger btn-sm mb-1" value="98#" onclick="return confirm(&quot;Arrêter le hotspot ? Il faudra le rallumer physiquement.&quot;);">Stop &#9940;</button>
-                    <button data-bs-toggle="tooltip" title="Désactive tous les codes DTMF actifs" id="sendDTMF_AllOff" type="button" class="btn btn-warning btn-sm mb-1" value="#">Tout stopper #</button>
+                    <button data-bs-toggle="tooltip" title="Désactive tous les codes DTMF actifs" id="sendDTMF_AllOff" type="button" class="btn btn-warning btn-sm mb-1" value="#">Tout stopper &#9209;</button>
                 </div>
             </div>
         </div>
