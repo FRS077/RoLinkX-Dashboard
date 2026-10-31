@@ -243,6 +243,12 @@ $(document).ready(function () {
     });
   };
   // SA818 Programming
+  // Normalise une fréquence saisie (145,5 -> 145.5000) ; renvoie la valeur brute si illisible (le serveur la refusera)
+  function saNorm(v) {
+    if (v === undefined || v === null || v === '') return '';
+    var f = parseFloat(String(v).replace(',', '.'));
+    return isNaN(f) ? String(v) : f.toFixed(4);
+  }
   $("#sa_grp").select2({
     theme: "bootstrap-5"
   });
@@ -267,7 +273,8 @@ $(document).ready(function () {
       type: 'POST',
       url: 'ajax/trx.php',
       data: {
-        grp: $('#sa_grp').val(),
+        grp: saNorm($('#sa_freq_in').val()) || $('#sa_grp').val(),
+        grp_tx: ($('#sa_same').prop('checked') ? '' : saNorm($('#sa_freq_tx').val())),
         dev: $('#sa_dev').val(),
         tpl_rx: $('#sa_tpl_rx').val(),
         tpl_tx: $('#sa_tpl_tx').val(),

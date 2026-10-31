@@ -34,6 +34,8 @@ $tpl_tx = (isset($_POST['tpl_tx'])) ? filter_input(INPUT_POST, 'tpl_tx', FILTER_
 $sql    = (isset($_POST['sql'])) ? filter_input(INPUT_POST, 'sql', FILTER_SANITIZE_ADD_SLASHES) : '';
 $vol    = (isset($_POST['vol'])) ? filter_input(INPUT_POST, 'vol', FILTER_SANITIZE_ADD_SLASHES) : '';
 $flt    = (isset($_POST['flt'])) ? filter_input(INPUT_POST, 'flt', FILTER_SANITIZE_ADD_SLASHES) : '';
+/* Fréquence TX (optionnelle) : si absente, TX = RX comme avant */
+$grpTx  = (isset($_POST['grp_tx'])) ? filter_input(INPUT_POST, 'grp_tx', FILTER_SANITIZE_ADD_SLASHES) : '';
 
 $ctcssVars = [
     "0"  => "None", "1"   => "67.0", "2"   => "71.9", "3"   => "74.4", "4"  => "77.0", "5" => "79.7",
@@ -53,13 +55,23 @@ if (empty($grp) && empty($vol) && empty($flt)) {
     exit(1);
 }
 
+/* Fréquences RX (grp) et TX (grp_tx) : format 123.4567, bandes VHF 134-174 / UHF 400-480 MHz */
+$freqOk = function ($f) {
+    return preg_match('/^\d{3}\.\d{4}$/', $f) && (($f >= 134 && $f <= 174) || ($f >= 400 && $f <= 480));
+};
+$txFreq = (!empty($grpTx)) ? $grpTx : $grp;
+if (!empty($grp) && (!$freqOk($grp) || !$freqOk($txFreq))) {
+    echo 'Fréquence invalide.<br/>Format attendu : 145.5000 (VHF 134-174 / UHF 400-480 MHz).';
+    exit(1);
+}
+
 /* Update configuration info sent to reflector */
 if (!empty($grp)) {
     $nfoParam           = json_decode(file_get_contents($cfgRefFile), true);
     $nfoParam['pl_in']  = $ctcssVars[floatval($tpl_rx)];
     $nfoParam['pl_out'] = $ctcssVars[floatval($tpl_tx)];
     $nfoParam['rx_frq'] = sprintf("%0.3f", $grp);
-    $nfoParam['tx_frq'] = sprintf("%0.3f", $grp);
+    $nfoParam['tx_frq'] = sprintf("%0.3f", $txFreq);
     $nfoParam['isx']    = 2;
     toggleFS(true);
     $nfoParams = json_encode($nfoParam, JSON_PRETTY_PRINT);
@@ -76,7 +88,7 @@ unstick();
 /* Build the AT commands */
 if (!empty($grp) && isset($dev) && !empty($tpl_rx) && !empty($tpl_tx) && !empty($sql)) {
     // Frequency, Deviation, CTCSS, SQL
-    $pgmGroup = 'AT+DMOSETGROUP=' . $dev . ',' . $grp . ',' . $grp . ',' . $tpl_tx . ',' . $sql . ',' . $tpl_rx;
+    $pgmGroup = 'AT+DMOSETGROUP=' . $dev . ',' . $txFreq . ',' . $grp . ',' . $tpl_tx . ',' . $sql . ',' . $tpl_rx;
     $groupCmd = writeToSerial($pgmGroup, $config['cfgTty'], 2);
 }
 if (!empty($vol)) {
@@ -118,6 +130,7 @@ function writeToSerial($command, $tty = 1, $delay = 1)
 $last              = array();
 $last['date']      = time();
 $last['frequency'] = $grp;
+$last['frequencyTx'] = $txFreq;
 $last['deviation'] = $dev;
 $last['ctcssRx']   = $tpl_rx;
 $last['ctcssTx']   = $tpl_tx;

@@ -697,87 +697,126 @@ function sa818Form()
         '1,0,1' => 'Enable Pre/De-Emphasis & Low Pass',
         '1,1,1' => 'Enable All',
     ];
+    /* --- Saisie directe des fréquences RX / TX + clavier (le <select id="sa_grp"> reste intact) --- */
+    /* Tous les handlers sont inline : ils ne dépendent pas de l'exécution d'un <script> */
+    $saFmt = "if(i.value===''){i.classList.remove('is-invalid');return;}"
+        . "var v=parseFloat(i.value.replace(',','.'));"
+        . "if(isNaN(v)||!((v>=134&&v<=174)||(v>=400&&v<=480))){i.classList.add('is-invalid');return;}"
+        . "i.classList.remove('is-invalid');var t=(Math.round(Math.round(v*1e6)/100)/10000).toFixed(4);i.value=t;";
+    $saToSel = "var s=document.getElementById('sa_grp');var o=null;"
+        . "for(var n=0;n<s.options.length;n++){if(s.options[n].value===t){o=s.options[n];break;}}"
+        . "if(!o){o=document.createElement('option');o.value=t;o.text=t.replace('.',',')+' MHz';s.add(o);}"
+        . "s.value=t;if(window.jQuery){jQuery(s).trigger('change');}";
+    $saRxChange = htmlspecialchars("var i=this;" . $saFmt . $saToSel, ENT_QUOTES);
+    $saTxChange = htmlspecialchars("var i=this;" . $saFmt, ENT_QUOTES);
+    /* Petit bip (Web Audio) : touches du clavier à l'écran + frappes numériques au clavier physique */
+    $saBeep = function ($hz) {
+        return "try{var A=window.AudioContext||window.webkitAudioContext;window._sac=window._sac||new A();var c=window._sac;"
+            . "if(c.state==='suspended'){c.resume();}var o=c.createOscillator(),g=c.createGain();o.type='sine';o.frequency.value=" . $hz . ";"
+            . "g.gain.value=0.06;o.connect(g);g.connect(c.destination);o.start();o.stop(c.currentTime+0.06);}catch(e){}";
+    };
+    /* Pas (step) : ajoute/retire le pas choisi (en kHz) à la fréquence du champ actif, bornes VHF/UHF respectées */
+    $saStepCode = "if(i.disabled){return;}var v=parseFloat(i.value.replace(',','.'));if(isNaN(v)){return;}"
+        . "var dh=parseInt(i.getAttribute('data-hz'));var b=Math.round(v*1e6);if(!isNaN(dh)&&Math.round(dh/100)*100===b){b=dh;}"
+        . "var hz=b+d*Math.round(parseFloat(document.getElementById('sa_step').value)*1000);"
+        . "var m=hz/1e6;if(!((m>=134&&m<=174)||(m>=400&&m<=480))){i.classList.add('is-invalid');return;}"
+        . "i.classList.remove('is-invalid');var t=(Math.round(hz/100)/10000).toFixed(4);i.value=t;i.setAttribute('data-hz',hz);"
+        . "if(i.id==='sa_freq_in'){" . $saToSel . "}";
+    $saKbBeep = htmlspecialchars("if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();var d=(event.key==='ArrowUp')?1:-1;var i=this;"
+        . $saBeep(1100) . $saStepCode . "return;}if(/^[0-9.,]$/.test(event.key)){" . $saBeep(880) . "}", ENT_QUOTES);
+    $saStepBtn = function ($dir, $label) use ($saBeep, $saStepCode) {
+        $js = $saBeep(1100) . "var d=" . $dir . ";var i=document.getElementById(document.getElementById('sa_keypad').getAttribute('data-target'));" . $saStepCode;
+        return '<button type="button" class="btn btn-outline-primary" onclick="' . htmlspecialchars($js, ENT_QUOTES) . '">' . $label . '</button>';
+    };
+    /* Décalage relais : TX = RX + décalage (MHz) */
+    $saOffBtn = function ($off, $label) use ($saBeep) {
+        $js = $saBeep(1100) . "var r=parseFloat(document.getElementById('sa_freq_in').value.replace(',','.'));var t=document.getElementById('sa_freq_tx');"
+            . "if(isNaN(r)){document.getElementById('sa_freq_in').classList.add('is-invalid');return;}"
+            . "var hz=Math.round(r*1e6)+Math.round(" . $off . "*1e6);var m=hz/1e6;"
+            . "if(!((m>=134&&m<=174)||(m>=400&&m<=480))){t.classList.add('is-invalid');return;}"
+            . "document.getElementById('sa_same').checked=false;t.disabled=false;t.classList.remove('is-invalid');"
+            . "t.value=(Math.round(hz/100)/10000).toFixed(4);"
+            . "document.getElementById('sa_keypad').setAttribute('data-target','sa_freq_tx');document.getElementById('sa_target').textContent='Clavier : TX';";
+        return '<button type="button" class="btn btn-outline-secondary" onclick="' . htmlspecialchars($js, ENT_QUOTES) . '">' . $label . '</button>';
+    };
+    $saSteps = ['5' => '5 kHz', '6.25' => '6,25 kHz', '10' => '10 kHz', '12.5' => '12,5 kHz', '20' => '20 kHz', '25' => '25 kHz', '50' => '50 kHz', '100' => '100 kHz', '1000' => '1 MHz'];
+    $saStepOpts = '';
+    foreach ($saSteps as $kHz => $lbl) {
+        $saStepOpts .= '<option value="' . $kHz . '"' . (($kHz === '12.5') ? ' selected' : '') . '>' . $lbl . '</option>';
+    }
+    $saFocus = function ($id, $label) {
+        return htmlspecialchars("document.getElementById('sa_keypad').setAttribute('data-target','" . $id . "');"
+            . "document.getElementById('sa_target').textContent='Clavier : " . $label . "';", ENT_QUOTES);
+    };
+    $saSame = htmlspecialchars("var t=document.getElementById('sa_freq_tx');t.disabled=this.checked;"
+        . "if(this.checked){t.value='';t.classList.remove('is-invalid');}"
+        . "else{if(t.value===''){t.value=document.getElementById('sa_freq_in').value;}t.focus();}", ENT_QUOTES);
+    $saKey = function ($k, $label, $cls, $col = 4) use ($saFmt, $saToSel, $saBeep) {
+        $js = $saBeep(($k === 'ok') ? 1320 : (($k === 'back' || $k === 'clear') ? 660 : 880)) . "var i=document.getElementById(document.getElementById('sa_keypad').getAttribute('data-target'));"
+            . "if(i.disabled){return;}i.classList.remove('is-invalid');";
+        if ($k === 'back') {
+            $js .= "i.value=i.value.slice(0,-1);";
+        } elseif ($k === 'clear') {
+            $js .= "i.value='';";
+        } elseif ($k === 'ok') {
+            $js .= $saFmt . "if(i.id==='sa_freq_in'){" . $saToSel . "}";
+        } elseif ($k === '.') {
+            $js .= "if(i.value!==''&&i.value.indexOf('.')<0){i.value+='.';}";
+        } else {
+            $js .= "if(i.value.length<9){i.value+='" . $k . "';}";
+        }
+        return '<div class="col-' . $col . '"><button type="button" class="btn ' . $cls . ' btn-lg w-100" onclick="'
+            . htmlspecialchars($js, ENT_QUOTES) . '">' . $label . '</button></div>';
+    };
+    $sec = 'btn-outline-secondary';
+    $lastFreq = (is_array($lastPgmData) && isset($lastPgmData['frequency'])) ? htmlspecialchars($lastPgmData['frequency'], ENT_QUOTES) : '';
+    $lastTx   = (is_array($lastPgmData) && !empty($lastPgmData['frequencyTx']) && $lastPgmData['frequencyTx'] != $lastPgmData['frequency'])
+        ? htmlspecialchars($lastPgmData['frequencyTx'], ENT_QUOTES) : '';
+    $saHelper = '<div class="mb-3">'
+        . '<div class="input-group mb-2"><span class="input-group-text" style="width: 4.5rem;">RX</span>'
+        . '<input id="sa_freq_in" type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-lg text-center fw-bold" placeholder="ex : 438.6500" value="' . $lastFreq . '" onfocus="' . $saFocus('sa_freq_in', 'RX') . '" onkeydown="' . $saKbBeep . '" onchange="' . $saRxChange . '">'
+        . '<span class="input-group-text">MHz</span>'
+        . '<div class="invalid-feedback">Fréquence invalide (VHF 134-174 / UHF 400-480 MHz)</div></div>'
+        . '<div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="sa_same"' . (($lastTx === '') ? ' checked' : '') . ' onchange="' . $saSame . '">'
+        . '<label class="form-check-label" for="sa_same">TX identique à RX</label></div>'
+        . '<div class="input-group mb-2"><span class="input-group-text" style="width: 4.5rem;">TX</span>'
+        . '<input id="sa_freq_tx" type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-lg text-center fw-bold" placeholder="ex : 431.0500" value="' . $lastTx . '"' . (($lastTx === '') ? ' disabled' : '') . ' onfocus="' . $saFocus('sa_freq_tx', 'TX') . '" onkeydown="' . $saKbBeep . '" onchange="' . $saTxChange . '">'
+        . '<span class="input-group-text">MHz</span>'
+        . '<div class="invalid-feedback">Fréquence invalide (VHF 134-174 / UHF 400-480 MHz)</div></div>'
+        . '<div class="alert alert-info small py-1 mb-2"><b>Exemple (relais)</b> : RX <b>438.6500</b> (ce que le module reçoit) / TX <b>431.0500</b> (ce qu\'il émet). '
+        . 'Pour une simple fréquence (simplex), laisse « TX identique à RX » coché.</div>'
+        . '<div class="input-group input-group-sm mb-2"><span class="input-group-text">Pas</span>'
+        . '<select id="sa_step" class="form-select">' . $saStepOpts . '</select>'
+        . $saStepBtn(-1, '&#9660; &minus;') . $saStepBtn(1, '&#9650; +') . '</div>'
+        . '<div class="small text-muted mb-1">TX = RX + décalage relais (MHz) :</div>'
+        . '<div class="btn-group btn-group-sm w-100 mb-2" role="group">'
+        . $saOffBtn(-7.6, '&minus;7,6') . $saOffBtn(-0.6, '&minus;0,6') . $saOffBtn(0.6, '+0,6') . $saOffBtn(7.6, '+7,6') . '</div>'
+        . '<div class="alert alert-warning small py-1 mb-2">Le pas s\'applique au champ actif (RX ou TX) avec ▼ ▲, ou avec les flèches &uarr; &darr; du clavier physique. '
+        . 'Le SA818 / SA868 est annoncé pour des canaux de 12,5 et 25 kHz : les autres pas (5, 6,25, 10, 20) sont acceptés ici mais le module peut arrondir au canal le plus proche.</div>'
+        . '<div id="sa_target" class="small text-muted text-center mb-1">Clavier : RX</div>'
+        . '<div id="sa_keypad" data-target="sa_freq_in" class="mx-auto" style="max-width: 18rem;">'
+        . '<div class="row g-2 mb-2">' . $saKey('1', '1', $sec) . $saKey('2', '2', $sec) . $saKey('3', '3', $sec) . '</div>'
+        . '<div class="row g-2 mb-2">' . $saKey('4', '4', $sec) . $saKey('5', '5', $sec) . $saKey('6', '6', $sec) . '</div>'
+        . '<div class="row g-2 mb-2">' . $saKey('7', '7', $sec) . $saKey('8', '8', $sec) . $saKey('9', '9', $sec) . '</div>'
+        . '<div class="row g-2 mb-2">' . $saKey('.', '.', $sec) . $saKey('0', '0', $sec) . $saKey('back', '&#9003;', 'btn-outline-warning') . '</div>'
+        . '<div class="row g-2">' . $saKey('clear', 'Effacer', 'btn-outline-danger', 6) . $saKey('ok', 'OK', 'btn-success', 6) . '</div>'
+        . '</div></div>';
+
 $sa818Form = '<h4 class="mt-2 alert alert-danger fw-bold">Programmation du SA818 ou SA868</h4>
     <div class="card mb-2">
         <h4 class="card-header fs-5">Fréquence</h4>
         <div class="card-body">
-            <div class="form-floating mb-1">
+            ' . $saHelper . '
+            <div class="form-floating mb-1" style="display:none">
                 <select id="sa_grp" class="form-select" aria-label="Fréquence (MHz)">
-                <option selected disabled>Sélectionnez une valeur</option>
-				<optgroup label="------- PMR446 (pas 12.5 kHz) -------">';
-    for ($f = 446.00625 ; $f <= 446.19375; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-}
-
-$sa818Form .= '</optgroup>
-                <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- RELAIS 446.200 -------">';
-    for ($f = 446.200 ; $f <= 446.200; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-    }
-	
-$sa818Form .= '</optgroup>
-                <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- UHF 430 - 440 MHz (pas 12.5 kHz) -------">';
-    for ($f = 430 ; $f <= 440; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-	
-	// construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-    }
-	
-$sa818Form .= '</optgroup>
-                <option disabled hidden>&nbsp;</option> 
-                <optgroup label="------- VHF 144 - 146 MHz (pas 12.5 kHz) -------">';
-    for ($f = 144 ; $f <= 146; $f += 0.0125) {
-    // format avec 4 décimales
-    $freqFmt = number_format($f, 5, ',', ''); 
-    // ajout de l’unité MHz
-    $freqFmt .= ' MHz';
-
-    // construction des <option>
-    $sa818Form .= '<option ' 
-        . (($lastPgmData['frequency'] == sprintf("%0.4f", $f)) ? 'selected' : '') 
-        . ' value="' . sprintf("%0.4f", $f) . '">' 
-        . $freqFmt 
-        . '</option>' . PHP_EOL;
-    }
-
-   $sa818Form .= '</select>
-<div class="alert alert-info small py-1 mb-2">
-    <strong>Wide (25 kHz)</strong> : Meilleure sensibilité RX pour répéteurs<br>
-    <strong>Narrow (12.5 kHz)</strong> : Plus sélectif (zones urbaines)
-</div>
-<label for="sa_grp">Fréquence (MHz)</label>
-</div>
-<div class="form-floating mb-1">
+                <option disabled' . (($lastFreq === '') ? ' selected' : '') . '>Sélectionnez une valeur</option>' . (($lastFreq !== '') ? '<option selected value="' . $lastFreq . '">' . $lastFreq . ' MHz</option>' : '') . '</select>
+                <label for="sa_grp">Fréquence (MHz)</label>
+            </div>
+            <div class="alert alert-info small py-1 mb-2">
+                <strong>Wide (25 kHz)</strong> : Meilleure sensibilité RX pour répéteurs<br>
+                <strong>Narrow (12.5 kHz)</strong> : Plus sélectif (zones urbaines)
+            </div>
+            '; $sa818Form .= '<div class="form-floating mb-1">
     <select id="sa_dev" class="form-select" aria-label="Mode FM (kHz)">
         <option selected disabled>Sélectionnez une valeur</option>
         <option ' . ((isset($lastPgmData['deviation']) && $lastPgmData['deviation'] == 0) ? 'selected' : null) . ' value="0">Narrow (12.5kHz)</option>
@@ -1387,4 +1426,3 @@ function cfgForm()
     $configData .= '</div>' . PHP_EOL;
     return $configData;
 }
-

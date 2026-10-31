@@ -109,7 +109,8 @@ function scanWifi($ext = 0)
     }
 
     if (!empty($networks)) {
-        $cnt = 1;
+ //       $cnt = 1;
+          $cnt    = 1;
         $apList = '<table class="table table-sm"><thead><tr>
             <th scope="col">#</th>
             <th scope="col">SSID</th>
@@ -255,7 +256,7 @@ function wifiForm()
             $("#heading button").text("Scan terminé (cliquez pour ouvrir/fermer)")
                                .removeClass("bg-info").addClass("bg-success");
         });
-    }, 6000);
+    }, 9000);
     </script>' . PHP_EOL;
     
     return $wifiForm;
@@ -467,14 +468,11 @@ function svxForm()
           <select id="svx_mod" class="form-select">
             <option value="0"' . (($modulesValue === '#') ? ' selected' : '') . '>None</option>
             <option value="1"' . ((empty($modulesValue) && in_array('moduleparrot', $modulesEnabled)) ? ' selected' : '') . '>Parrot</option>
-            <option value="2"' . ((empty($modulesValue) && in_array('moduleecholink', $modulesEnabled)) ? ' selected' : '') . '>EchoLink</option>
+			<option value="2"' . ((empty($modulesValue) && in_array('modulehelp', $modulesEnabled)) ? ' selected' : '') . '>Help</option>
+			<option value="3"' . ((empty($modulesValue) && in_array('ModuleMetarInfo', $modulesEnabled)) ? ' selected' : '') . '>Metar_Info</option>
             <option value="9"' . ((empty($modulesValue) && count($modulesEnabled) > 1) ? ' selected' : '') . '>All</option>
           </select>
         </div>';
-    if (empty($modulesValue) && in_array('moduleecholink', $modulesEnabled)) {
-        $svxForm .= '<div class="separator mb-1">EchoLink Module</div>';
-        $svxForm .= echoLinkForm();
-    }
     $svxForm .= '<div class="separator mb-1">Avancée</div>';
     $svxForm .= '<div class="input-group input-group-sm mb-1">
             <label class="input-group-text" for="svx_rxp" style="width: 8rem;">RX GPIO pin</label>
@@ -1314,7 +1312,8 @@ function cfgForm()
     </div>
     <div class="form-floating m-2">
         <input id="accessPassword" type="text" class="form-control" aria-label="Password"';
-    $label = null;
+//    $label = null;
+      $label    = null;
     $password = dashPassword("get");
     if (empty($password)) {
         $configData .= ' placeholder=""';
