@@ -34,6 +34,8 @@ $tpl_tx = (isset($_POST['tpl_tx'])) ? filter_input(INPUT_POST, 'tpl_tx', FILTER_
 $sql    = (isset($_POST['sql'])) ? filter_input(INPUT_POST, 'sql', FILTER_SANITIZE_ADD_SLASHES) : '';
 $vol    = (isset($_POST['vol'])) ? filter_input(INPUT_POST, 'vol', FILTER_SANITIZE_ADD_SLASHES) : '';
 $flt    = (isset($_POST['flt'])) ? filter_input(INPUT_POST, 'flt', FILTER_SANITIZE_ADD_SLASHES) : '';
+/* Bande choisie dans la page (interrupteur) : uhf ou vhf */
+$band   = (isset($_POST['band'])) ? filter_input(INPUT_POST, 'band', FILTER_SANITIZE_ADD_SLASHES) : '';
 /* Fréquence TX (optionnelle) : si absente, TX = RX comme avant */
 $grpTx  = (isset($_POST['grp_tx'])) ? filter_input(INPUT_POST, 'grp_tx', FILTER_SANITIZE_ADD_SLASHES) : '';
 
@@ -55,13 +57,28 @@ if (empty($grp) && empty($vol) && empty($flt)) {
     exit(1);
 }
 
-/* Fréquences RX (grp) et TX (grp_tx) : format 123.4567, bandes VHF 134-174 / UHF 400-480 MHz */
-$freqOk = function ($f) {
-    return preg_match('/^\d{3}\.\d{4}$/', $f) && (($f >= 134 && $f <= 174) || ($f >= 400 && $f <= 480));
+/* Fréquences RX (grp) et TX (grp_tx) : format 123.4567, dans la bande choisie (MHz)
+ * uhf : 400-470 | vhf : 134-174 | sans interrupteur (ancien JS) : les deux
+ * (mêmes limites que dans includes/forms.php) */
+$saAll   = ['uhf' => [[400, 470]], 'vhf' => [[134, 174]]];
+$saBands = isset($saAll[$band]) ? $saAll[$band] : [[134, 174], [400, 470]];
+$saBandTxt = implode(' / ', array_map(function ($b) {
+    return $b[0] . '-' . $b[1];
+}, $saBands)) . ' MHz';
+$freqOk = function ($f) use ($saBands) {
+    if (!preg_match('/^\d{3}\.\d{4}$/', $f)) {
+        return false;
+    }
+    foreach ($saBands as $b) {
+        if ($f >= $b[0] && $f <= $b[1]) {
+            return true;
+        }
+    }
+    return false;
 };
 $txFreq = (!empty($grpTx)) ? $grpTx : $grp;
 if (!empty($grp) && (!$freqOk($grp) || !$freqOk($txFreq))) {
-    echo 'Fréquence invalide.<br/>Format attendu : 145.5000 (VHF 134-174 / UHF 400-480 MHz).';
+    echo 'Fréquence invalide.<br/>Format attendu : 438.6500 (bande autorisée : ' . $saBandTxt . ').';
     exit(1);
 }
 
@@ -131,6 +148,7 @@ $last              = array();
 $last['date']      = time();
 $last['frequency'] = $grp;
 $last['frequencyTx'] = $txFreq;
+$last['band']      = (isset($saAll[$band])) ? $band : '';
 $last['deviation'] = $dev;
 $last['ctcssRx']   = $tpl_rx;
 $last['ctcssTx']   = $tpl_tx;

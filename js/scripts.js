@@ -249,6 +249,271 @@ $(document).ready(function () {
     var f = parseFloat(String(v).replace(',', '.'));
     return isNaN(f) ? String(v) : f.toFixed(4);
   }
+  // --- SA818 extras BEGIN : mémoires, résumé avant envoi, avertissements ---
+  function saEl(id) {
+    return document.getElementById(id);
+  }
+  function saFire(el) {
+    if (el) {
+      el.dispatchEvent(new Event('change', { bubbles: true }));
+    }
+  }
+  // valeur / texte de l'option sélectionnée (vide si c'est le texte « Sélectionnez une valeur »)
+  function saSelVal(id) {
+    var s = saEl(id);
+    if (!s || s.selectedIndex < 0) return '';
+    var o = s.options[s.selectedIndex];
+    return (o && !o.disabled) ? o.value : '';
+  }
+  function saSelText(id) {
+    var s = saEl(id);
+    if (!s || s.selectedIndex < 0) return '';
+    var o = s.options[s.selectedIndex];
+    return (o && !o.disabled) ? o.text : '';
+  }
+  function saSetSel(id, val) {
+    var s = saEl(id);
+    if (!s || !val) return;
+    s.value = val;
+    if (s.value === val) saFire(s);
+  }
+  function saCt(id) {
+    var t = saSelText(id);
+    if (t === '') return 'non défini';
+    return (t === 'Aucune') ? t : t + ' Hz';
+  }
+  function saFreqNum(s) {
+    var n = parseFloat(String(s || '').replace(',', '.'));
+    return isNaN(n) ? null : n;
+  }
+  // État actuel du formulaire
+  function saState() {
+    var same = saEl('sa_same') ? saEl('sa_same').checked : true;
+    var inp = saEl('sa_freq_in');
+    var txi = saEl('sa_freq_tx');
+    return {
+      band: (saEl('sa_band_v') && saEl('sa_band_v').checked) ? 'VHF' : 'UHF',
+      rx: saNorm(inp ? inp.value : '') || saSelVal('sa_grp'),
+      tx: same ? '' : saNorm(txi ? txi.value : ''),
+      same: same,
+      dev: saSelVal('sa_dev'),
+      ctcssRx: saSelVal('sa_tpl_rx'),
+      ctcssTx: saSelVal('sa_tpl_tx'),
+      sql: saSelVal('sa_sql')
+    };
+  }
+  // Bandes où l'émission est normalement possible : radioamateur 144-146 et 430-440 MHz (France / Région 1), PMR446
+  function saTxAllowed(f) {
+    return (f >= 144 && f <= 146) || (f >= 430 && f <= 440) || (f >= 446 && f <= 446.2);
+  }
+  // Avertissements : [{lvl: 'warning'|'info', t: texte}]
+  function saWarnList() {
+    var st = saState();
+    var out = [];
+    var txs = st.tx || st.rx;
+    var f = saFreqNum(txs);
+    if (f !== null && !saTxAllowed(f)) {
+      out.push({
+        lvl: 'warning',
+        t: 'TX ' + f.toFixed(4) + ' MHz hors des bandes radioamateur (144-146 / 430-440 MHz) et PMR446 : émission probablement non autorisée. Vérifie ta licence et la réglementation.'
+      });
+    }
+    if (st.ctcssRx !== '' && st.ctcssTx !== '' && st.ctcssRx !== st.ctcssTx) {
+      out.push({
+        lvl: 'info',
+        t: 'CTCSS différents : RX ' + saCt('sa_tpl_rx') + ' / TX ' + saCt('sa_tpl_tx') + ' (normal sur certains relais, sinon à vérifier).'
+      });
+    }
+    return out;
+  }
+  function saWarn() {
+    var box = saEl('sa_warn');
+    if (!box) return;
+    var html = '';
+    saWarnList().forEach(function (w) {
+      html += '<div class="alert alert-' + w.lvl + ' small py-1 mb-1">' + (w.lvl === 'warning' ? '⚠ ' : 'ℹ ') + w.t + '</div>';
+    });
+    box.innerHTML = html;
+  }
+  // Résumé affiché avant l'envoi
+  function saSummary() {
+    var st = saState();
+    var L = [];
+    var missing = (st.dev === '' || st.ctcssRx === '' || st.ctcssTx === '' || st.sql === '' || st.sql === '0');
+    if (st.rx) {
+      var txs = st.tx || st.rx;
+      var rn = saFreqNum(st.rx);
+      var tn = saFreqNum(txs);
+      L.push('Bande : ' + st.band);
+      L.push('RX : ' + st.rx + ' MHz');
+      if (!st.tx || st.tx === st.rx) {
+        L.push('TX : ' + txs + ' MHz (identique à RX)');
+      } else {
+        var d = (rn !== null && tn !== null) ? Math.round((tn - rn) * 1e6) / 1e6 : null;
+        L.push('TX : ' + txs + ' MHz' + (d === null ? '' : ' (décalage ' + (d > 0 ? '+' : '−') + String(parseFloat(Math.abs(d).toFixed(4))).replace('.', ',') + ' MHz)'));
+      }
+      L.push('Mode : ' + (saSelText('sa_dev') || 'non défini'));
+      L.push('CTCSS RX : ' + saCt('sa_tpl_rx') + ' | CTCSS TX : ' + saCt('sa_tpl_tx'));
+      L.push('Squelch : ' + (saSelText('sa_sql') || 'non défini'));
+    } else {
+      L.push('Fréquence : inchangée');
+    }
+    L.push('Volume : ' + (saSelText('sa_vol') || 'Aucun changement'));
+    L.push('Filtre : ' + (saSelText('sa_flt') || 'Aucun changement'));
+    var w = saWarnList();
+    if (st.rx && missing) {
+      w.push({
+        lvl: 'warning',
+        t: 'Mode, CTCSS ou squelch non choisi (le squelch 0 compte comme non choisi) : la fréquence ne sera pas envoyée au module.'
+      });
+    }
+    if (w.length) {
+      L.push('');
+      w.forEach(function (x) {
+        L.push((x.lvl === 'warning' ? '⚠ ' : 'ℹ ') + x.t);
+      });
+    }
+    return 'Programmer le module SA818 / SA868 ?\n\n' + L.join('\n');
+  }
+  // Mémoires nommées (stockées dans ce navigateur)
+  var SA_MEM_KEY = 'sa818_mems';
+  function saMemRead() {
+    try {
+      var a = JSON.parse(localStorage.getItem(SA_MEM_KEY) || '[]');
+      return Array.isArray(a) ? a : [];
+    } catch (e) {
+      return [];
+    }
+  }
+  function saMemWrite(list) {
+    try {
+      localStorage.setItem(SA_MEM_KEY, JSON.stringify(list));
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
+  function saMemIndex(list, name) {
+    var idx = -1;
+    list.forEach(function (m, k) {
+      if (m && m.name === name) idx = k;
+    });
+    return idx;
+  }
+  function saMemRefresh(selected) {
+    var s = saEl('sa_mem');
+    if (!s) return;
+    var list = saMemRead().filter(function (m) {
+      return m && typeof m.name === 'string';
+    }).sort(function (a, b) {
+      return a.name.localeCompare(b.name);
+    });
+    s.innerHTML = '';
+    var o0 = document.createElement('option');
+    o0.value = '';
+    o0.text = list.length ? '— Choisir une mémoire —' : '— Aucune mémoire —';
+    s.add(o0);
+    list.forEach(function (m) {
+      var o = document.createElement('option');
+      o.value = m.name;
+      o.text = m.name;
+      s.add(o);
+    });
+    if (selected) s.value = selected;
+  }
+  function saMemSave() {
+    var inp = saEl('sa_mem_name');
+    var name = (inp.value || '').trim();
+    if (!name) {
+      alert('Donne un nom à la mémoire.');
+      inp.focus();
+      return;
+    }
+    if ((saEl('sa_freq_in') && saEl('sa_freq_in').classList.contains('is-invalid')) || (saEl('sa_freq_tx') && saEl('sa_freq_tx').classList.contains('is-invalid'))) {
+      alert('Corrige les fréquences en rouge avant d’enregistrer.');
+      return;
+    }
+    var st = saState();
+    if (!st.rx) {
+      alert('Saisis d’abord une fréquence RX.');
+      return;
+    }
+    var list = saMemRead();
+    var i = saMemIndex(list, name);
+    if (i >= 0 && !confirm('La mémoire « ' + name + ' » existe déjà. La remplacer ?')) return;
+    if (i >= 0) list[i] = { name: name, st: st };
+    else list.push({ name: name, st: st });
+    if (!saMemWrite(list)) {
+      alert('Impossible d’enregistrer : le stockage du navigateur est indisponible.');
+      return;
+    }
+    saMemRefresh(name);
+    inp.value = '';
+  }
+  function saMemLoad() {
+    var s = saEl('sa_mem');
+    if (!s || !s.value) return;
+    var list = saMemRead();
+    var i = saMemIndex(list, s.value);
+    if (i < 0) return;
+    var st = list[i].st || {};
+    var u = saEl('sa_band_u');
+    var v = saEl('sa_band_v');
+    var wantV = (st.band === 'VHF');
+    v.checked = wantV;
+    u.checked = !wantV;
+    saFire(wantV ? v : u);
+    var rx = saEl('sa_freq_in');
+    rx.value = st.rx || '';
+    saFire(rx);
+    var same = saEl('sa_same');
+    same.checked = !!st.same || !st.tx;
+    saFire(same);
+    if (!same.checked) {
+      var tx = saEl('sa_freq_tx');
+      tx.value = st.tx;
+      saFire(tx);
+    }
+    saSetSel('sa_dev', st.dev);
+    saSetSel('sa_tpl_rx', st.ctcssRx);
+    saSetSel('sa_tpl_tx', st.ctcssTx);
+    saSetSel('sa_sql', st.sql);
+    saWarn();
+  }
+  function saMemDelete() {
+    var s = saEl('sa_mem');
+    if (!s || !s.value) return;
+    var name = s.value;
+    if (!confirm('Supprimer la mémoire « ' + name + ' » ?')) return;
+    saMemWrite(saMemRead().filter(function (m) {
+      return m && m.name !== name;
+    }));
+    saMemRefresh();
+  }
+  document.addEventListener('click', function (e) {
+    var t = e.target;
+    if (!t || !t.closest) return;
+    if (t.closest('#sa_mem_save')) saMemSave();
+    else if (t.closest('#sa_mem_load')) saMemLoad();
+    else if (t.closest('#sa_mem_del')) saMemDelete();
+    if (t.closest('#sa_helper')) setTimeout(saWarn, 0);
+  });
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Enter' && e.target && e.target.id === 'sa_mem_name') {
+      e.preventDefault();
+      saMemSave();
+    }
+  });
+  ['input', 'change'].forEach(function (ev) {
+    document.addEventListener(ev, function (e) {
+      var t = e.target;
+      if (!t || !t.closest) return;
+      if (t.closest('#sa_helper') || t.id === 'sa_tpl_rx' || t.id === 'sa_tpl_tx') setTimeout(saWarn, 0);
+    });
+  });
+  saMemRefresh();
+  saWarn();
+  // --- SA818 extras END ---
   $("#sa_grp").select2({
     theme: "bootstrap-5"
   });
@@ -256,6 +521,16 @@ $(document).ready(function () {
   $('#sa_grp').parent('div').children('span').children('span').children('span').children('span').css('margin-top', '18px');
   $('#sa_grp').parent('div').find('label').css('z-index', '1');
   $('#programm').click(function () {
+    // Contrôle + résumé avant l'envoi au module
+    if (saEl('sa_freq_in')) {
+      if ($('#sa_freq_in').hasClass('is-invalid') || $('#sa_freq_tx').hasClass('is-invalid')) {
+        alert('Corrige les fréquences en rouge avant d’envoyer.');
+        return;
+      }
+      if (!confirm(saSummary())) {
+        return;
+      }
+    }
     $(this).prop('disabled', true).fadeTo('fast', 0.15);
     $('#sysmsg').iziModal('destroy');
     $('#sysmsg').iziModal({
@@ -275,6 +550,7 @@ $(document).ready(function () {
       data: {
         grp: saNorm($('#sa_freq_in').val()) || $('#sa_grp').val(),
         grp_tx: ($('#sa_same').prop('checked') ? '' : saNorm($('#sa_freq_tx').val())),
+        band: $('input[name="sa_band"]:checked').val(),
         dev: $('#sa_dev').val(),
         tpl_rx: $('#sa_tpl_rx').val(),
         tpl_tx: $('#sa_tpl_tx').val(),

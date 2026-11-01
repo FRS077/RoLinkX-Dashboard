@@ -699,9 +699,37 @@ function sa818Form()
     ];
     /* --- Saisie directe des fréquences RX / TX + clavier (le <select id="sa_grp"> reste intact) --- */
     /* Tous les handlers sont inline : ils ne dépendent pas de l'exécution d'un <script> */
+    /* ===== BANDES (MHz) : interrupteur UHF / VHF dans la page =====
+     * SA818-U / SA868-U = UHF | SA818-V / SA868-V = VHF
+     * Les limites sont à garder identiques dans ajax/trx.php */
+    $saLim = ['uhf' => [400, 470], 'vhf' => [134, 174]];
+    $saEx  = ['uhf' => ['438.6500', '431.0500'], 'vhf' => ['145.7500', '145.1500']];
+    $saBandSel = 'uhf';
+    if (is_array($lastPgmData) && !empty($lastPgmData['band']) && isset($saLim[$lastPgmData['band']])) {
+        $saBandSel = $lastPgmData['band'];
+    } elseif (is_array($lastPgmData) && !empty($lastPgmData['frequency'])
+        && $lastPgmData['frequency'] >= $saLim['vhf'][0] && $lastPgmData['frequency'] <= $saLim['vhf'][1]) {
+        $saBandSel = 'vhf';
+    }
+    /* Condition JS "la valeur $v est dans la bande choisie par l'interrupteur" */
+    $saBandJs = function ($v) use ($saLim) {
+        return "(document.getElementById('sa_band_v').checked?("
+            . $v . ">=" . $saLim['vhf'][0] . "&&" . $v . "<=" . $saLim['vhf'][1] . "):("
+            . $v . ">=" . $saLim['uhf'][0] . "&&" . $v . "<=" . $saLim['uhf'][1] . "))";
+    };
+    $saBandTxt = $saLim[$saBandSel][0] . '-' . $saLim[$saBandSel][1] . ' MHz';
+    $saBandChange = htmlspecialchars("var v=document.getElementById('sa_band_v').checked;"
+        . "document.getElementById('sa_band_txt').textContent=v?'" . $saLim['vhf'][0] . "-" . $saLim['vhf'][1] . " MHz':'" . $saLim['uhf'][0] . "-" . $saLim['uhf'][1] . " MHz';"
+        . "document.getElementById('sa_ex_rx').textContent=v?'" . $saEx['vhf'][0] . "':'" . $saEx['uhf'][0] . "';"
+        . "document.getElementById('sa_ex_tx').textContent=v?'" . $saEx['vhf'][1] . "':'" . $saEx['uhf'][1] . "';"
+        . "var a=document.getElementById('sa_freq_in'),b=document.getElementById('sa_freq_tx');"
+        . "a.placeholder='ex : '+(v?'" . $saEx['vhf'][0] . "':'" . $saEx['uhf'][0] . "');b.placeholder='ex : '+(v?'" . $saEx['vhf'][1] . "':'" . $saEx['uhf'][1] . "');"
+        . "var lo=v?" . $saLim['vhf'][0] . ":" . $saLim['uhf'][0] . ",hi=v?" . $saLim['vhf'][1] . ":" . $saLim['uhf'][1] . ";"
+        . "[a,b].forEach(function(x){var n=parseFloat(x.value.replace(',','.'));"
+        . "if(x.value!==''&&(isNaN(n)||n<lo||n>hi)){x.classList.add('is-invalid');}else{x.classList.remove('is-invalid');}});", ENT_QUOTES);
     $saFmt = "if(i.value===''){i.classList.remove('is-invalid');return;}"
         . "var v=parseFloat(i.value.replace(',','.'));"
-        . "if(isNaN(v)||!((v>=134&&v<=174)||(v>=400&&v<=480))){i.classList.add('is-invalid');return;}"
+        . "if(isNaN(v)||!" . $saBandJs('v') . "){i.classList.add('is-invalid');return;}"
         . "i.classList.remove('is-invalid');var t=(Math.round(Math.round(v*1e6)/100)/10000).toFixed(4);i.value=t;";
     $saToSel = "var s=document.getElementById('sa_grp');var o=null;"
         . "for(var n=0;n<s.options.length;n++){if(s.options[n].value===t){o=s.options[n];break;}}"
@@ -719,7 +747,7 @@ function sa818Form()
     $saStepCode = "if(i.disabled){return;}var v=parseFloat(i.value.replace(',','.'));if(isNaN(v)){return;}"
         . "var dh=parseInt(i.getAttribute('data-hz'));var b=Math.round(v*1e6);if(!isNaN(dh)&&Math.round(dh/100)*100===b){b=dh;}"
         . "var hz=b+d*Math.round(parseFloat(document.getElementById('sa_step').value)*1000);"
-        . "var m=hz/1e6;if(!((m>=134&&m<=174)||(m>=400&&m<=480))){i.classList.add('is-invalid');return;}"
+        . "var m=hz/1e6;if(!" . $saBandJs('m') . "){i.classList.add('is-invalid');return;}"
         . "i.classList.remove('is-invalid');var t=(Math.round(hz/100)/10000).toFixed(4);i.value=t;i.setAttribute('data-hz',hz);"
         . "if(i.id==='sa_freq_in'){" . $saToSel . "}";
     $saKbBeep = htmlspecialchars("if(event.key==='ArrowUp'||event.key==='ArrowDown'){event.preventDefault();var d=(event.key==='ArrowUp')?1:-1;var i=this;"
@@ -729,11 +757,11 @@ function sa818Form()
         return '<button type="button" class="btn btn-outline-primary" onclick="' . htmlspecialchars($js, ENT_QUOTES) . '">' . $label . '</button>';
     };
     /* Décalage relais : TX = RX + décalage (MHz) */
-    $saOffBtn = function ($off, $label) use ($saBeep) {
+    $saOffBtn = function ($off, $label) use ($saBeep, $saBandJs) {
         $js = $saBeep(1100) . "var r=parseFloat(document.getElementById('sa_freq_in').value.replace(',','.'));var t=document.getElementById('sa_freq_tx');"
             . "if(isNaN(r)){document.getElementById('sa_freq_in').classList.add('is-invalid');return;}"
             . "var hz=Math.round(r*1e6)+Math.round(" . $off . "*1e6);var m=hz/1e6;"
-            . "if(!((m>=134&&m<=174)||(m>=400&&m<=480))){t.classList.add('is-invalid');return;}"
+            . "if(!" . $saBandJs('m') . "){t.classList.add('is-invalid');return;}"
             . "document.getElementById('sa_same').checked=false;t.disabled=false;t.classList.remove('is-invalid');"
             . "t.value=(Math.round(hz/100)/10000).toFixed(4);"
             . "document.getElementById('sa_keypad').setAttribute('data-target','sa_freq_tx');document.getElementById('sa_target').textContent='Clavier : TX';";
@@ -772,18 +800,27 @@ function sa818Form()
     $lastFreq = (is_array($lastPgmData) && isset($lastPgmData['frequency'])) ? htmlspecialchars($lastPgmData['frequency'], ENT_QUOTES) : '';
     $lastTx   = (is_array($lastPgmData) && !empty($lastPgmData['frequencyTx']) && $lastPgmData['frequencyTx'] != $lastPgmData['frequency'])
         ? htmlspecialchars($lastPgmData['frequencyTx'], ENT_QUOTES) : '';
-    $saHelper = '<div class="mb-3">'
+    $saHelper = '<div class="mb-3" id="sa_helper">'
+        . '<div class="alert alert-warning small py-1 mb-2"><b>Important :</b> il faut savoir si ton module SA818 / SA868 est un <b>UHF</b> (référence <b>-U</b>, ' . $saLim['uhf'][0] . '-' . $saLim['uhf'][1] . ' MHz) ou un <b>VHF</b> (référence <b>-V</b>, ' . $saLim['vhf'][0] . '-' . $saLim['vhf'][1] . ' MHz). '
+        . 'La référence est inscrite sur le module. Choisis la bonne bande, sinon la programmation sera refusée ou le module ne fonctionnera pas.</div>'
+        . '<div class="d-flex justify-content-center mb-1"><div class="btn-group btn-group-sm" role="group" style="width:5cm" aria-label="Bande du module">'
+        . '<input type="radio" class="btn-check" name="sa_band" id="sa_band_u" value="uhf" autocomplete="off"' . (($saBandSel === 'uhf') ? ' checked' : '') . ' onchange="' . $saBandChange . '">'
+        . '<label class="btn btn-outline-primary" style="flex:1 1 0" for="sa_band_u">UHF</label>'
+        . '<input type="radio" class="btn-check" name="sa_band" id="sa_band_v" value="vhf" autocomplete="off"' . (($saBandSel === 'vhf') ? ' checked' : '') . ' onchange="' . $saBandChange . '">'
+        . '<label class="btn btn-outline-primary" style="flex:1 1 0" for="sa_band_v">VHF</label></div></div>'
+        . '<div class="small text-muted text-center mb-2">Bande autorisée : <b id="sa_band_txt">' . $saBandTxt . '</b></div>'
         . '<div class="input-group mb-2"><span class="input-group-text" style="width: 4.5rem;">RX</span>'
-        . '<input id="sa_freq_in" type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-lg text-center fw-bold" placeholder="ex : 438.6500" value="' . $lastFreq . '" onfocus="' . $saFocus('sa_freq_in', 'RX') . '" onkeydown="' . $saKbBeep . '" onchange="' . $saRxChange . '">'
+        . '<input id="sa_freq_in" type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-lg text-center fw-bold" placeholder="ex : ' . $saEx[$saBandSel][0] . '" value="' . $lastFreq . '" onfocus="' . $saFocus('sa_freq_in', 'RX') . '" onkeydown="' . $saKbBeep . '" onchange="' . $saRxChange . '">'
         . '<span class="input-group-text">MHz</span>'
-        . '<div class="invalid-feedback">Fréquence invalide (VHF 134-174 / UHF 400-480 MHz)</div></div>'
+        . '<div class="invalid-feedback">Fréquence hors de la bande choisie (UHF / VHF)</div></div>'
         . '<div class="form-check mb-2"><input class="form-check-input" type="checkbox" id="sa_same"' . (($lastTx === '') ? ' checked' : '') . ' onchange="' . $saSame . '">'
         . '<label class="form-check-label" for="sa_same">TX identique à RX</label></div>'
         . '<div class="input-group mb-2"><span class="input-group-text" style="width: 4.5rem;">TX</span>'
-        . '<input id="sa_freq_tx" type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-lg text-center fw-bold" placeholder="ex : 431.0500" value="' . $lastTx . '"' . (($lastTx === '') ? ' disabled' : '') . ' onfocus="' . $saFocus('sa_freq_tx', 'TX') . '" onkeydown="' . $saKbBeep . '" onchange="' . $saTxChange . '">'
+        . '<input id="sa_freq_tx" type="text" inputmode="decimal" autocomplete="off" class="form-control form-control-lg text-center fw-bold" placeholder="ex : ' . $saEx[$saBandSel][1] . '" value="' . $lastTx . '"' . (($lastTx === '') ? ' disabled' : '') . ' onfocus="' . $saFocus('sa_freq_tx', 'TX') . '" onkeydown="' . $saKbBeep . '" onchange="' . $saTxChange . '">'
         . '<span class="input-group-text">MHz</span>'
-        . '<div class="invalid-feedback">Fréquence invalide (VHF 134-174 / UHF 400-480 MHz)</div></div>'
-        . '<div class="alert alert-info small py-1 mb-2"><b>Exemple (relais)</b> : RX <b>438.6500</b> (ce que le module reçoit) / TX <b>431.0500</b> (ce qu\'il émet). '
+        . '<div class="invalid-feedback">Fréquence hors de la bande choisie (UHF / VHF)</div></div>'
+        . '<div id="sa_warn"></div>'
+        . '<div class="alert alert-info small py-1 mb-2"><b>Exemple (relais)</b> : RX <b id="sa_ex_rx">' . $saEx[$saBandSel][0] . '</b> (ce que le module reçoit) / TX <b id="sa_ex_tx">' . $saEx[$saBandSel][1] . '</b> (ce qu\'il émet). '
         . 'Pour une simple fréquence (simplex), laisse « TX identique à RX » coché.</div>'
         . '<div class="input-group input-group-sm mb-2"><span class="input-group-text">Pas</span>'
         . '<select id="sa_step" class="form-select">' . $saStepOpts . '</select>'
@@ -792,7 +829,7 @@ function sa818Form()
         . '<div class="btn-group btn-group-sm w-100 mb-2" role="group">'
         . $saOffBtn(-7.6, '&minus;7,6') . $saOffBtn(-0.6, '&minus;0,6') . $saOffBtn(0.6, '+0,6') . $saOffBtn(7.6, '+7,6') . '</div>'
         . '<div class="alert alert-warning small py-1 mb-2">Le pas s\'applique au champ actif (RX ou TX) avec ▼ ▲, ou avec les flèches &uarr; &darr; du clavier physique. '
-        . 'Le SA818 / SA868 est annoncé pour des canaux de 12,5 et 25 kHz : les autres pas (5, 6,25, 10, 20) sont acceptés ici mais le module peut arrondir au canal le plus proche.</div>'
+        . 'Le SA818 est annoncé pour des canaux de 12,5 et 25 kHz : les autres pas (5, 6,25, 10, 20) sont acceptés ici mais le module peut arrondir au canal le plus proche.</div>'
         . '<div id="sa_target" class="small text-muted text-center mb-1">Clavier : RX</div>'
         . '<div id="sa_keypad" data-target="sa_freq_in" class="mx-auto" style="max-width: 18rem;">'
         . '<div class="row g-2 mb-2">' . $saKey('1', '1', $sec) . $saKey('2', '2', $sec) . $saKey('3', '3', $sec) . '</div>'
@@ -803,6 +840,21 @@ function sa818Form()
         . '</div></div>';
 
 $sa818Form = '<h4 class="mt-2 alert alert-danger fw-bold">Programmation du SA818 ou SA868</h4>
+    <div class="card mb-2">
+        <h4 class="card-header fs-5">Mémoires</h4>
+        <div class="card-body">
+            <div class="input-group input-group-sm mb-2">
+                <select id="sa_mem" class="form-select" aria-label="Mémoires"><option value="">— Aucune mémoire —</option></select>
+                <button id="sa_mem_load" type="button" class="btn btn-outline-primary">Charger</button>
+                <button id="sa_mem_del" type="button" class="btn btn-outline-danger">Supprimer</button>
+            </div>
+            <div class="input-group input-group-sm">
+                <input id="sa_mem_name" type="text" class="form-control" maxlength="40" autocomplete="off" placeholder="Nom (ex : Réseau RNFA)" aria-label="Nom de la mémoire">
+                <button id="sa_mem_save" type="button" class="btn btn-outline-success">Enregistrer</button>
+            </div>
+            <div class="small text-muted mt-1">Enregistre la bande, RX, TX, mode, CTCSS et squelch. Les mémoires restent dans ce navigateur.</div>
+        </div>
+    </div>
     <div class="card mb-2">
         <h4 class="card-header fs-5">Fréquence</h4>
         <div class="card-body">
