@@ -842,6 +842,7 @@ function sa818Form()
 $sa818Form = '<h4 class="mt-2 alert alert-danger fw-bold">Programmation du SA818 ou SA868</h4>
     <div class="card mb-2">
         <h4 class="card-header fs-5">Mémoires</h4>
+		<p class="text-muted mb-2">Cette étape n’est pas obligatoire. Vous pouvez passer directement à la programmation de la fréquence.</p>
         <div class="card-body">
             <div class="input-group input-group-sm mb-2">
                 <select id="sa_mem" class="form-select" aria-label="Mémoires"><option value="">— Aucune mémoire —</option></select>
