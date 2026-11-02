@@ -64,8 +64,10 @@ $frmCallsign    = (empty($_POST['cal'])) ? 'USER' : preg_replace('/[^\w-]/', '',
 $frmAuthKey     = (empty($_POST['key'])) ? 'USER' : trim(filter_input(INPUT_POST, 'key', FILTER_SANITIZE_ADD_SLASHES));
 $frmBeacon      = (empty($_POST['clb'])) ? 'USER' : preg_replace('/[^\w-]/', '', filter_input(INPUT_POST, 'clb', FILTER_SANITIZE_ADD_SLASHES));
 $frmVoice       = (empty($_POST['vop'])) ? 'fr_FR' : filter_input(INPUT_POST, 'vop', FILTER_SANITIZE_ADD_SLASHES);
-$frmShortId     = (empty($_POST['sid'])) ? '30' : filter_input(INPUT_POST, 'sid', FILTER_SANITIZE_ADD_SLASHES);
-$frmLongId      = (empty($_POST['lid'])) ? '60' : filter_input(INPUT_POST, 'lid', FILTER_SANITIZE_ADD_SLASHES);
+//$frmShortId     = (empty($_POST['sid'])) ? '30' : filter_input(INPUT_POST, 'sid', FILTER_SANITIZE_ADD_SLASHES);
+//$frmLongId      = (empty($_POST['lid'])) ? '60' : filter_input(INPUT_POST, 'lid', FILTER_SANITIZE_ADD_SLASHES);
+$frmShortId     = (isset($_POST['sid']) && $_POST['sid'] !== '') ? filter_input(INPUT_POST, 'sid', FILTER_SANITIZE_NUMBER_INT) : '30';
+$frmLongId      = (isset($_POST['lid']) && $_POST['lid'] !== '') ? filter_input(INPUT_POST, 'lid', FILTER_SANITIZE_NUMBER_INT) : '60';
 $frmType        = (empty($_POST['tip'])) ? '1' : filter_input(INPUT_POST, 'tip', FILTER_SANITIZE_ADD_SLASHES);
 $frmBitrate     = (empty($_POST['cbr'])) ? '20000' : filter_input(INPUT_POST, 'cbr', FILTER_SANITIZE_ADD_SLASHES);
 $frmRogerBeep   = (empty($_POST['rgr'])) ? '1' : filter_input(INPUT_POST, 'rgr', FILTER_SANITIZE_NUMBER_INT);
