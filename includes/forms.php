@@ -382,49 +382,81 @@ function svxForm()
         }
         $profileOption .= '</select>
         <button id="delsvxprofile" class="btn btn-outline-danger" type="button">Delete</button>
-        </div>
-        <div class="separator">General</div>';
+        </div>';
     }
 
+    /* Mode débutant (aides visibles) / expert (aides masquées) */
+    $modeChange = htmlspecialchars("var w=document.getElementById('svx_wrap');w.classList.toggle('svx-expert',!this.checked);try{localStorage.setItem('svxMode',this.checked?'debutant':'expert');}catch(e){}", ENT_QUOTES);
     $svxForm = '<h4 class="mt-2 alert alert-warning fw-bold">SVXLink configuration</h4>';
+    $svxForm .= '<style>#svx_wrap.svx-expert .form-text{display:none;}</style>';
+    $svxForm .= '<div class="form-check form-switch mb-3">
+          <input class="form-check-input" type="checkbox" role="switch" id="svx_mode" checked onchange="' . $modeChange . '">
+          <label class="form-check-label" for="svx_mode"><strong>Mode débutant</strong> (afficher les aides) &mdash; décochez pour le <strong>mode expert</strong></label>
+        </div>';
+    $svxForm .= '<div id="svx_wrap">';
     $svxForm .= $profileOption;
+    $svxForm .= '<div class="separator" style="cursor:pointer;" data-bs-toggle="collapse" data-bs-target="#svx_general" aria-expanded="true" aria-controls="svx_general">General &#9662; <small>(cliquer pour afficher / masquer)</small></div>';
+    $svxForm .= '<div class="collapse show" id="svx_general">';
     $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text bg-info text-white" style="width: 10rem;">Créer un nouveau profil</span>
-          <input id="svx_prn" type="text" class="form-control" placeholder="Donnez un nom à votre profil" aria-label="Profile name" aria-describedby="inputGroup-sizing-sm">
+          <input id="svx_prn" type="text" class="form-control" placeholder="Donnez un nom à votre profil" aria-label="Profile name" aria-describedby="svx_prn_help">
+        </div>
+        <div id="svx_prn_help" class="form-text mb-2">
+          Donnez un nom &agrave; la configuration actuelle pour l&rsquo;enregistrer sous forme de profil r&eacute;utilisable.
         </div>';
     $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Reflector (IP/DNS)</span>
-          <input id="svx_ref" type="text" class="form-control" placeholder="f62dmr.fr" aria-label="Server address" aria-describedby="inputGroup-sizing-sm" ' . $reflectorValue . '>
+          <input id="svx_ref" type="text" class="form-control" placeholder="f62dmr.fr" aria-label="Server address" aria-describedby="svx_ref_help" ' . $reflectorValue . '>
+        </div>
+        <div id="svx_ref_help" class="form-text mb-2">
+          Adresse (nom de domaine ou IP) du serveur reflector auquel votre hotspot se connecte. Exemple : <strong>f62dmr.fr</strong>.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Port</span>
-          <input id="svx_prt" type="text" class="form-control" placeholder="5300" aria-label="Port" aria-describedby="inputGroup-sizing-sm" ' . $portValue . '>
+          <input id="svx_prt" type="text" class="form-control" placeholder="5300" aria-label="Port" aria-describedby="svx_prt_help" ' . $portValue . '>
+        </div>
+        <div id="svx_prt_help" class="form-text mb-2">
+          Port TCP du serveur reflector. Valeur habituelle : <strong>5300</strong>, &agrave; modifier uniquement si votre administrateur vous en indique un autre.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Indicatif</span>
-          <input id="svx_cal" type="text" class="form-control" placeholder="FRSXXX" aria-label="Callsign" aria-describedby="inputGroup-sizing-sm" ' . $callSignValue . '>
+          <input id="svx_cal" type="text" class="form-control" placeholder="FRSXXX" aria-label="Callsign" aria-describedby="svx_cal_help" ' . $callSignValue . '>
+        </div>
+        <div id="svx_cal_help" class="form-text mb-2">
+          Merci de changer l&rsquo;indicatif <strong>USER</strong> par le v&ocirc;tre, en <strong>MAJUSCULES</strong>.
         </div>
         <div id="auth_key" class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Passwd</span>
-          <input id="svx_key" type="password" class="form-control" placeholder="nod_portabil" aria-label="Auth Key" aria-describedby="inputGroup-sizing-sm" ' . $authKeyValue . '>
+          <input id="svx_key" type="password" class="form-control" placeholder="nod_portabil" aria-label="Auth Key" aria-describedby="svx_key_help" ' . $authKeyValue . '>
           <button id="show_hide" class="input-group-text" role="button"><i class="icon-visibility" aria-hidden="true"></i></button>
+        </div>
+        <div id="svx_key_help" class="form-text mb-2">
+          Mot de passe d&rsquo;authentification (cl&eacute;) fourni par l&rsquo;administrateur du reflector pour votre indicatif. Utilisez l&rsquo;ic&ocirc;ne &agrave; droite pour l&rsquo;afficher ou le masquer.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Indicatif (Balise)</span>
-          <input id="svx_clb" type="text" class="form-control" placeholder="FRSXXX" aria-label="Callsign" aria-describedby="inputGroup-sizing-sm" ' . $beaconValue . '>
+          <input id="svx_clb" type="text" class="form-control" placeholder="ER-FRSXXX ou EL-FRSXXX" aria-label="Callsign" aria-describedby="svx_clb_help" ' . $beaconValue . '>
+        </div>
+        <div id="svx_clb_help" class="form-text mb-2">
+          Il est conseill&eacute; de faire pr&eacute;c&eacute;der l&rsquo;indicatif de la balise de
+          <strong>ER-</strong> pour les relais ou de <strong>EL-</strong> pour les hotspots
+          (ex. : ER-FRSXXX, EL-FRSXXX).
         </div>';
     $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Roger Beep</span>
-          <select id="svx_rgr" class="form-select">
+          <select id="svx_rgr" class="form-select" aria-describedby="svx_rgr_help">
             <option value="0"' . (($rogerBeepValue == 0) ? ' selected' : '') . '>Non</option>
             <option value="1"' . (($rogerBeepValue == 1) ? ' selected' : '') . '>Oui</option>
           </select>
+        </div>
+        <div id="svx_rgr_help" class="form-text mb-2">
+          Petit bip &eacute;mis &agrave; la fin de chaque transmission pour signaler que le hotspot est de nouveau &agrave; l&rsquo;&eacute;coute.
         </div>';
     /* Voice language detection/selection */
     $svxForm .= '<div class="input-group input-group-sm mb-1">
         <span class="input-group-text" style="width: 8rem;">Pack vocal</span>' . PHP_EOL;
     if (is_dir($voicesPath)) {
-        $svxForm .= '<select id="svx_vop" class="form-select">' . PHP_EOL;
+        $svxForm .= '<select id="svx_vop" class="form-select" aria-describedby="svx_vop_help">' . PHP_EOL;
         foreach (glob($voicesPath . '/*', GLOB_ONLYDIR) as $voiceDir) {
             $availableVoicePacks = str_replace($voicesPath . '/', '', $voiceDir);
             $vsel                = ($availableVoicePacks == $varVoicePack[2]) ? ' selected' : null;
@@ -436,10 +468,13 @@ function svxForm()
         $svxForm .= '<button type="button" id="getVoices" class="btn btn-primary btn-lg btn-block">Download &amp; install voices</button>' . PHP_EOL;
     }
     $svxForm .= '</div>' . PHP_EOL;
+    $svxForm .= '<div id="svx_vop_help" class="form-text mb-2">
+          Langue des annonces vocales du hotspot. Le bouton &agrave; droite permet de t&eacute;l&eacute;charger ou d&rsquo;actualiser les packs vocaux.
+        </div>' . PHP_EOL;
     $svxForm .= '
         <div class="input-group input-group-sm mb-1">
           <label class="input-group-text" for="svx_sid" style="width: 8rem;">Balise courte</label>
-          <select id="svx_sid" class="form-select">
+          <select id="svx_sid" class="form-select" aria-describedby="svx_sid_help">
              <option value="0">Disabled</option>' . PHP_EOL;
     /* Generate 5 minutes intervals up to 60 & identify stored value on file */
     for ($sid = 5; $sid <= 120; $sid += 5) {
@@ -448,9 +483,12 @@ function svxForm()
     }
     $svxForm .= '</select>
         </div>
+        <div id="svx_sid_help" class="form-text mb-2">
+          Intervalle entre deux annonces courtes de l&rsquo;indicatif, en minutes. <strong>Disabled</strong> d&eacute;sactive l&rsquo;annonce.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <label class="input-group-text" for="svx_lid" style="width: 8rem;">Balise longue</label>
-          <select id="svx_lid" class="form-select">
+          <select id="svx_lid" class="form-select" aria-describedby="svx_lid_help">
              <option value="0">Disabled</option>' . PHP_EOL;
     /* Generate 5 minutes intervals up to 60 & identify stored value on file */
     for ($lid = 5; $lid <= 300; $lid += 5) {
@@ -459,24 +497,35 @@ function svxForm()
     }
     $svxForm .= '</select>
         </div>
+        <div id="svx_lid_help" class="form-text mb-2">
+          Intervalle entre deux annonces longues de l&rsquo;indicatif (annonce compl&egrave;te), en minutes. <strong>Disabled</strong> d&eacute;sactive l&rsquo;annonce.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Type</span>
-          <input id="svx_tip" type="text" class="form-control" placeholder="Node SVXLink" aria-label="Description" aria-describedby="inputGroup-sizing-sm" value="' . $cfgRefData['tip'] . '">
+          <input id="svx_tip" type="text" class="form-control" placeholder="Node SVXLink" aria-label="Description" aria-describedby="svx_tip_help" value="' . $cfgRefData['tip'] . '">
         </div>
-        <div class="input-group input-group-sm mb-3">
+        <div id="svx_tip_help" class="form-text mb-2">
+          Description de votre Node, transmise au reflector. Exemple : <strong>Node SVXLink</strong>.
+        </div>
+        <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Modules</span>
-          <select id="svx_mod" class="form-select">
+          <select id="svx_mod" class="form-select" aria-describedby="svx_mod_help">
             <option value="0"' . (($modulesValue === '#') ? ' selected' : '') . '>None</option>
             <option value="1"' . ((empty($modulesValue) && in_array('moduleparrot', $modulesEnabled)) ? ' selected' : '') . '>Parrot</option>
 			<option value="2"' . ((empty($modulesValue) && in_array('modulehelp', $modulesEnabled)) ? ' selected' : '') . '>Help</option>
 			<option value="3"' . ((empty($modulesValue) && in_array('ModuleMetarInfo', $modulesEnabled)) ? ' selected' : '') . '>Metar_Info</option>
             <option value="9"' . ((empty($modulesValue) && count($modulesEnabled) > 1) ? ' selected' : '') . '>All</option>
           </select>
+        </div>
+        <div id="svx_mod_help" class="form-text mb-3">
+          Modules SvxLink activ&eacute;s sur le n&oelig;ud : <strong>Parrot</strong> (r&eacute;p&egrave;te votre transmission pour tester la modulation), <strong>Help</strong> (aide vocale), <strong>Metar_Info</strong> (m&eacute;t&eacute;o a&eacute;ronautique). <strong>None</strong> d&eacute;sactive tout, <strong>All</strong> active l&rsquo;ensemble.
         </div>';
-    $svxForm .= '<div class="separator mb-1">Avancée</div>';
+    $svxForm .= '</div>';
+    $svxForm .= '<div class="separator mb-1" style="cursor:pointer;" data-bs-toggle="collapse" data-bs-target="#svx_avance" aria-expanded="true" aria-controls="svx_avance">Avancée &#9662; <small>(cliquer pour afficher / masquer)</small></div>';
+    $svxForm .= '<div class="collapse show" id="svx_avance">';
     $svxForm .= '<div class="input-group input-group-sm mb-1">
             <label class="input-group-text" for="svx_rxp" style="width: 8rem;">RX GPIO pin</label>
-            <select id="svx_rxp" class="form-select">' . PHP_EOL;
+            <select id="svx_rxp" class="form-select" aria-describedby="svx_rxp_help">' . PHP_EOL;
     foreach ($svxPinsArray as $rxpin) {
         $inverted     = (strpos($rxpin, '!') !== false) ? ' (inverted)' : null;
         $defaultRxPin = ($rxpin == 'gpio10') ? ' (default)' : null;
@@ -484,9 +533,12 @@ function svxForm()
     }
     $svxForm .= '</select>
         </div>
+        <div id="svx_rxp_help" class="form-text mb-2">
+          Broche GPIO utilis&eacute;e pour lire le signal de squelch (r&eacute;ception). <strong>inverted</strong> = logique invers&eacute;e.
+        </div>
         <div class="input-group input-group-sm mb-1">
             <label class="input-group-text" for="svx_txp" style="width: 8rem;">TX GPIO pin</label>
-            <select id="svx_txp" class="form-select">' . PHP_EOL;
+            <select id="svx_txp" class="form-select" aria-describedby="svx_txp_help">' . PHP_EOL;
     foreach ($svxPinsArray as $txpin) {
         $inverted     = (strpos($txpin, '!') !== false) ? ' (inverted)' : null;
         $defaultTxPin = ($txpin == 'gpio7') ? ' (default)' : null;
@@ -494,74 +546,113 @@ function svxForm()
     }
     $svxForm .= '</select>
         </div>
+        <div id="svx_txp_help" class="form-text mb-2">
+          Broche GPIO utilis&eacute;e pour commander l&rsquo;&eacute;mission (PTT). <strong>inverted</strong> = logique invers&eacute;e.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Délai du Squelch</span>
-          <input id="svx_sqd" type="text" class="form-control" placeholder="100" aria-label="Squelch Delay" aria-describedby="inputGroup-sizing-sm" ' . $sqlDelayValue . '>
+          <input id="svx_sqd" type="text" class="form-control" placeholder="100" aria-label="Squelch Delay" aria-describedby="svx_sqd_help" ' . $sqlDelayValue . '>
+        </div>
+        <div id="svx_sqd_help" class="form-text mb-2">
+          Temps, en millisecondes, pendant lequel le squelch doit rester ouvert avant de valider la r&eacute;ception. Aide &agrave; &eacute;viter les d&eacute;clenchements parasites.
         </div>';
     if (!is_array($saDetect)) {
         $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">TX Delay</span>
-          <input id="svx_txd" type="text" class="form-control" placeholder="875" aria-label="TX Delay" aria-describedby="inputGroup-sizing-sm" ' . $txDelayValue . '>
+          <input id="svx_txd" type="text" class="form-control" placeholder="875" aria-label="TX Delay" aria-describedby="svx_txd_help" ' . $txDelayValue . '>
+        </div>
+        <div id="svx_txd_help" class="form-text mb-2">
+          D&eacute;lai, en millisecondes, entre la mise en &eacute;mission (PTT) et le d&eacute;but de l&rsquo;audio, pour laisser l&rsquo;&eacute;metteur se stabiliser.
         </div>';
     }
     $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">TG par défaut</span>
-          <input id="svx_dtg" type="text" class="form-control" placeholder="59" aria-label="Default TG" aria-describedby="inputGroup-sizing-sm" ' . $defaultTgValue . '>
+          <input id="svx_dtg" type="text" class="form-control" placeholder="59" aria-label="Default TG" aria-describedby="svx_dtg_help" ' . $defaultTgValue . '>
+        </div>
+        <div id="svx_dtg_help" class="form-text mb-2">
+          Num&eacute;ro du TalkGroup utilis&eacute; par d&eacute;faut, auquel le hotspot revient apr&egrave;s le timeout.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Surveiller les TG</span>
-          <input id="svx_mtg" type="text" class="form-control" placeholder="59" aria-label="Monitor TGs" aria-describedby="inputGroup-sizing-sm" ' . $monitorTgsValue . '>
+          <input id="svx_mtg" type="text" class="form-control" placeholder="59" aria-label="Monitor TGs" aria-describedby="svx_mtg_help" ' . $monitorTgsValue . '>
+        </div>
+        <div id="svx_mtg_help" class="form-text mb-2">
+          TalkGroups &eacute;cout&eacute;s en plus du TG par d&eacute;faut. S&eacute;parez les num&eacute;ros par des virgules.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Timeout du TG (s)</span>
-          <input id="svx_tgt" type="text" class="form-control" placeholder="30" aria-label="TG Timeout" aria-describedby="inputGroup-sizing-sm" ' . $tgSelTimeOutValue . '>
+          <input id="svx_tgt" type="text" class="form-control" placeholder="30" aria-label="TG Timeout" aria-describedby="svx_tgt_help" ' . $tgSelTimeOutValue . '>
+        </div>
+        <div id="svx_tgt_help" class="form-text mb-2">
+          D&eacute;lai d&rsquo;inactivit&eacute; en secondes avant que le hotspot quitte automatiquement le TalkGroup (TG) s&eacute;lectionn&eacute; et revienne au TG par d&eacute;faut.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 9rem;">Reconnexion après (s)</span>
-          <input id="svx_res" type="text" class="form-control" placeholder="5" aria-label="Reconnect After" aria-describedby="inputGroup-sizing-sm" ' . $reconnectSecondsValue . '>
+          <input id="svx_res" type="text" class="form-control" placeholder="5" aria-label="Reconnect After" aria-describedby="svx_res_help" ' . $reconnectSecondsValue . '>
+        </div>
+        <div id="svx_res_help" class="form-text mb-2">
+          D&eacute;lai, en secondes, avant de retenter la connexion au reflector apr&egrave;s une coupure.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 9rem;">État de la connexion</span>
-          <input id="svx_acs" type="text" class="form-control" placeholder="1" aria-label="Connection Status" aria-describedby="inputGroup-sizing-sm" ' . $announceConnectionStatusValue . '>
+          <input id="svx_acs" type="text" class="form-control" placeholder="1" aria-label="Connection Status" aria-describedby="svx_acs_help" ' . $announceConnectionStatusValue . '>
+        </div>
+        <div id="svx_acs_help" class="form-text mb-2">
+          Param&egrave;tre d&rsquo;annonce vocale de l&rsquo;&eacute;tat de la connexion au reflector. <strong>0</strong> d&eacute;sactive l&rsquo;annonce.
         </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">TX Timeout</span>
-          <input id="svx_txt" type="text" class="form-control" placeholder="180" aria-label="TX Timeout" aria-describedby="inputGroup-sizing-sm" ' . $txTimeOutValue . '>
+          <input id="svx_txt" type="text" class="form-control" placeholder="180" aria-label="TX Timeout" aria-describedby="svx_txt_help" ' . $txTimeOutValue . '>
+        </div>
+        <div id="svx_txt_help" class="form-text mb-2">
+          Dur&eacute;e maximale d&rsquo;une transmission continue, en secondes. Pass&eacute; ce d&eacute;lai, l&rsquo;&eacute;mission est coup&eacute;e automatiquement (Anti-Bavard). Valeur conseill&eacute;e : <strong>180</strong>.
         </div>';
     if (!is_array($saDetect)) {
         $svxForm .= '<div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">De-Emphasis (RX)</span>
-          <select id="svx_rxe" class="form-select">
+          <select id="svx_rxe" class="form-select" aria-describedby="svx_rxe_help">
             <option value="0"' . (($deEmphasisValue == 0) ? ' selected' : '') . '>No</option>
             <option value="1"' . (($deEmphasisValue == 1) ? ' selected' : '') . '>Yes</option>
           </select>
         </div>
+        <div id="svx_rxe_help" class="form-text mb-2">
+          Correction audio appliqu&eacute;e &agrave; la r&eacute;ception. &Agrave; activer uniquement si votre interface fournit un signal pr&eacute;-accentu&eacute;.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Pre-Emphasis (TX)</span>
-          <select id="svx_txe" class="form-select">
+          <select id="svx_txe" class="form-select" aria-describedby="svx_txe_help">
             <option value="0"' . (($preEmphasisValue == 0) ? ' selected' : '') . '>No</option>
             <option value="1"' . (($preEmphasisValue == 1) ? ' selected' : '') . '>Yes</option>
           </select>
+        </div>
+        <div id="svx_txe_help" class="form-text mb-2">
+          Correction audio appliqu&eacute;e &agrave; l&rsquo;&eacute;mission. &Agrave; activer uniquement si votre interface en a besoin.
         </div>';
     }
     $svxForm .= '<div class="input-group input-group-sm mb-1">
             <label class="input-group-text" for="svx_mag" style="width: 8rem;">Master Gain (TX)</label>
-            <select id="svx_mag" class="form-select">' . PHP_EOL;
+            <select id="svx_mag" class="form-select" aria-describedby="svx_mag_help">' . PHP_EOL;
     for ($gain = 6; $gain >= -6; $gain -= .25) {
         $svxForm .= '<option value="' . $gain . '"' . ($gain == $masterGainValue ? ' selected' : '') . '>' . (($gain > 0) ? '+' . $gain : $gain) . ' dB</option>' . PHP_EOL;
     }
     $svxForm .= '</select>
         </div>
+        <div id="svx_mag_help" class="form-text mb-2">
+                    Gain appliqu&eacute; &agrave; l&rsquo;audio &eacute;mis (de -6 &agrave; +6 dB) pour r&eacute;gler le niveau de modulation. Valeur par d&eacute;faut : <strong>0 dB</strong>.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Compresseur audio</span>
-          <select id="svx_lim" class="form-select">
+          <select id="svx_lim" class="form-select" aria-describedby="svx_lim_help">
             <option value="-6"' . (($limiterValue != 0) ? ' selected' : '') . '>Normal</option>
             <option value="0"' . (($limiterValue == 0) ? ' selected' : '') . '>Enhanced (defaut)</option>
           </select>
         </div>
+        <div id="svx_lim_help" class="form-text mb-2">
+          Limite la dynamique de l&rsquo;audio &eacute;mis pour &eacute;viter la surmodulation. <strong>Enhanced</strong> est la valeur par d&eacute;faut.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <label class="input-group-text" for="svx_cbr" style="width: 8rem;">Codec Bitrate</label>
-          <select id="svx_cbr" class="form-select">' . PHP_EOL;
+          <select id="svx_cbr" class="form-select" aria-describedby="svx_cbr_help">' . PHP_EOL;
     if (isset($varCodecBitRate[2])) {
         /* Generate codec bitrates */
         for ($cbr = 8000; $cbr <= 32000; $cbr += 2000) {
@@ -575,16 +666,34 @@ function svxForm()
     $svxForm .= '
           </select>
         </div>
+        <div id="svx_cbr_help" class="form-text mb-2">
+          D&eacute;bit du codec audio utilis&eacute; avec le reflector (20 kb/s par d&eacute;faut). Plus il est &eacute;lev&eacute;, meilleure est la qualit&eacute;, mais plus la bande passante consomm&eacute;e est importante.
+        </div>
         <div class="input-group input-group-sm mb-1">
           <span class="input-group-text" style="width: 8rem;">Fan Start</span>
-          <input id="svx_fan" type="text" class="form-control" placeholder="180" aria-label="Fan Start after" aria-describedby="inputGroup-sizing-sm" ' . $fanStartValue . '>
+          <input id="svx_fan" type="text" class="form-control" placeholder="180" aria-label="Fan Start after" aria-describedby="svx_fan_help" ' . $fanStartValue . '>
+        </div>
+        <div id="svx_fan_help" class="form-text mb-2">
+          Seuil de d&eacute;marrage du ventilateur (si votre bo&icirc;tier en poss&egrave;de un). Conservez <strong>0</strong> la valeur par d&eacute;faut en cas de doute.
         </div>
         <input type="hidden" id="autoConnect" name="autoConnect" value="' . $config['cfgAutoConnect'] . '" />';
+    $svxForm .= '</div>';
     $svxForm .= '
         <div class="d-flex justify-content-center mt-4">
             <button id="savesvxcfg" type="submit" class="btn btn-danger btn-lg m-2">Sauvegarder</button>
             <button id="restore" type="submit" class="btn btn-info btn-lg m-2">Restore defaults</button>
             </div>' . PHP_EOL;
+    $svxForm .= '</div>';
+    $svxForm .= '<script>
+    (function () {
+        try {
+            if (localStorage.getItem("svxMode") === "expert") {
+                var w = document.getElementById("svx_wrap"), c = document.getElementById("svx_mode");
+                if (w && c) { w.classList.add("svx-expert"); c.checked = false; }
+            }
+        } catch (e) {}
+    })();
+    </script>' . PHP_EOL;
     return $svxForm;
 }
 
