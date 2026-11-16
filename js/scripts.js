@@ -95,6 +95,14 @@ function gpioStatus() {
  * jQuery stuff
  */
 $(document).ready(function () {
+  // Jeton CSRF : envoyé automatiquement avec chaque requête AJAX
+  // (nécessite <meta name="csrf-token" content="..."> dans le <head> de la page)
+  var csrfToken = $('meta[name="csrf-token"]').attr('content');
+  if (csrfToken) {
+    $.ajaxSetup({
+      headers: { 'X-CSRF-Token': csrfToken }
+    });
+  }
   // Events (Talker, GPIO, CPU Stats)
   if (events && window.location.search === '') {
     var localRx = false;
@@ -223,7 +231,7 @@ $(document).ready(function () {
       }
     }, 1000);
   }
-  $('[data-bs-toggle="tooltip"').on("click", function () {
+  $('[data-bs-toggle="tooltip"]').on("click", function () {
     $(this).tooltip("hide");
   });
   $.fn.showNotice = function (data, timeOutVal) {
@@ -794,18 +802,63 @@ $(document).ready(function () {
         wn3: $('#wlan_network_3').val(),
         wk3: $('#wlan_authkey_3').val(),
         wn4: $('#wlan_network_4').val(),
-        wk4: $('#wlan_authkey_4').val()
+        wk4: $('#wlan_authkey_4').val(),
+        // 5e emplacement géré par wifi.php (champs vides si absents de la page)
+        wn5: $('#wlan_network_5').val() || '',
+        wk5: $('#wlan_authkey_5').val() || ''
       },
       success: function (data) {
         if (data) {
           $('#savewifi').prop('disabled', false).fadeTo('fast', 1);
           $('#sysmsg').showNotice(data, 3000);
-          if (data.match(/stored/)) {
+          if (data.match(/enregistr/)) {
             setTimeout(function () {
               location.reload(true);
             }, 3200);
           }
         }
+      },
+      error: function (xhr) {
+        $('#savewifi').prop('disabled', false).fadeTo('fast', 1);
+        $('#sysmsg').showNotice(xhr.responseText || 'Erreur de communication avec ajax/wifi.php', 4000);
+      }
+    });
+  });
+  // WiFi : suppression d'un réseau enregistré (bouton « Supprimer » de chaque emplacement)
+  $(document).on('click', '.wifiDel', function () {
+    var btn = $(this);
+    var slot = parseInt(btn.data('slot'), 10);
+    var name = btn.data('name') || ('réseau ' + slot);
+    if (!slot) {
+      return;
+    }
+    var msg = 'Supprimer le réseau « ' + name + ' » ?';
+    if (String(btn.data('active')) === '1') {
+      msg += '\n\nAttention : c\'est le réseau actuellement connecté, la connexion au dashboard peut être coupée.';
+    }
+    if (!confirm(msg)) {
+      return;
+    }
+    btn.prop('disabled', true);
+    var payload = {};
+    payload['wn' + slot] = '-';
+    $.ajax({
+      type: 'POST',
+      url: 'ajax/wifi.php',
+      data: payload,
+      success: function (data) {
+        $('#sysmsg').showNotice(data || 'Réseau supprimé', 3000);
+        if (data && data.match(/enregistr/)) {
+          setTimeout(function () {
+            location.reload(true);
+          }, 3200);
+        } else {
+          btn.prop('disabled', false);
+        }
+      },
+      error: function (xhr) {
+        btn.prop('disabled', false);
+        $('#sysmsg').showNotice(xhr.responseText || 'Erreur de communication avec ajax/wifi.php', 4000);
       }
     });
   });
@@ -830,6 +883,94 @@ $(document).ready(function () {
       url: 'ajax/sys.php',
       data: {
         reboot: 1
+      }
+    });
+  });
+  // WPS (Push Button) : connexion Wi-Fi automatique
+  var wpsPoll = null;
+  function wpsStop() {
+    if (wpsPoll) {
+      clearInterval(wpsPoll);
+      wpsPoll = null;
+    }
+    $('#wpsStart').prop('disabled', false).fadeTo('fast', 1);
+    $('#wpsCancel').hide();
+  }
+  function wpsMsg(cls, txt) {
+    $('#wpsStatus').removeClass('alert-secondary alert-info alert-success alert-danger alert-warning')
+      .addClass('alert-' + cls).text(txt).show();
+  }
+  function wpsCheck() {
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: 'ajax/wps.php',
+      data: { action: 'status' },
+      success: function (d) {
+        if (d.state === 'pending') {
+          wpsMsg('info', 'Appuyez maintenant sur le bouton WPS de votre box… (' + d.remaining + ' s restantes)');
+        } else if (d.state === 'success') {
+          wpsStop();
+          if (d.saved === false) {
+            // Connecté mais réseau non enregistré (save_config a échoué) : on affiche l'avertissement sans recharger
+            wpsMsg('warning', d.msg);
+            return;
+          }
+          wpsMsg('success', d.msg);
+          $('#sysmsg').showNotice(d.msg, 3000);
+          setTimeout(function () {
+            location.reload(true);
+          }, 3500);
+        } else if (d.state === 'timeout' || d.state === 'error') {
+          wpsStop();
+          wpsMsg('danger', d.msg || 'Erreur WPS');
+        } else {
+          wpsStop();
+        }
+      },
+      error: function () {
+        // la connexion peut se couper brièvement pendant le changement de réseau : on réessaie au prochain tour
+        wpsMsg('warning', 'Connexion en cours, patientez…');
+      }
+    });
+  }
+  $('#wpsStart').click(function () {
+    $(this).prop('disabled', true).fadeTo('fast', 0.15);
+    wpsMsg('info', 'Démarrage du WPS…');
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: 'ajax/wps.php',
+      data: { action: 'start' },
+      success: function (d) {
+        if (d.state === 'pending') {
+          $('#wpsCancel').show();
+          wpsMsg('info', 'Appuyez maintenant sur le bouton WPS de votre box…');
+          wpsPoll = setInterval(wpsCheck, 3000);
+        } else {
+          wpsStop();
+          wpsMsg('danger', d.msg || 'Impossible de lancer le WPS');
+        }
+      },
+      error: function (xhr) {
+        wpsStop();
+        var m = 'Erreur de communication avec ajax/wps.php';
+        if (xhr.responseJSON && xhr.responseJSON.msg) {
+          m = xhr.responseJSON.msg;
+        }
+        wpsMsg('danger', m);
+      }
+    });
+  });
+  $('#wpsCancel').click(function () {
+    $.ajax({
+      type: 'POST',
+      dataType: 'json',
+      url: 'ajax/wps.php',
+      data: { action: 'cancel' },
+      complete: function () {
+        wpsStop();
+        wpsMsg('secondary', 'WPS annulé');
       }
     });
   });
