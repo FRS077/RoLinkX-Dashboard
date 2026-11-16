@@ -10,6 +10,10 @@ if (isset($_GET['scan'])) {
 
 /*
  * Jeton CSRF pour ajax/wifi.php et ajax/wps.php.
+ * WPS (Push Button) - connexion Wi-Fi via wpa_cli
+ *
+ * @author FRS3843 Didier
+ * @copyright Groupe RNFA
  */
 function wifiCsrfMeta()
 {

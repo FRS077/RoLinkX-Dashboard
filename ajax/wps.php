@@ -1,26 +1,9 @@
 <?php
-/*
+/**
  * WPS (Push Button) - connexion Wi-Fi via wpa_cli
  *
- * Actions POST :
- *   start  : prépare la configuration puis lance le WPS
- *   status : vérifie la connexion et enregistre le réseau
- *   cancel : annule le WPS
- *
- * Dépendance :
- *   includes/functions.php doit fournir toggleFS().
- *
- * Important :
- *   X-Requested-With est un contrôle complémentaire,
- *   pas un remplacement de l'authentification ou du CSRF.
- *   Conserver les protections du dashboard.
- *
- * La création utilise la même commande cp que ajax/wifi.php :
- *   sudo /usr/bin/cp /tmp/wpa_supplicant.tmp
- *       /etc/wpa_supplicant/wpa_supplicant.conf
- *
- * Les commandes wpa_cli utilisées doivent être autorisées
- * par la politique sudo de l'installation.
+ * @author FRS3843 Didier
+ * @copyright Groupe RNFA
  */
 
 require_once __DIR__ . '/../includes/functions.php';
